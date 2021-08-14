@@ -1710,8 +1710,8 @@ bool KeyValues::LoadFromBuffer(char const *resourceName, CUtlBuffer &buf, IFileS
 
 bool KeyValues::LoadFromBuffer(char const *resourceName, const char *pBuffer, IFileSystem* pFileSystem, const char *pPathID)
 {
-	if (!pBuffer)
-		return true;
+    if (!pBuffer || !pBuffer[0])
+        return true;
 
 	int nLen = Q_strlen(pBuffer);
 	CUtlBuffer buf(pBuffer, nLen, CUtlBuffer::READ_ONLY | CUtlBuffer::TEXT_BUFFER);
