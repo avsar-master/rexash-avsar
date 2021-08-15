@@ -49,8 +49,8 @@ convar_t	*cl_nodelta;
 convar_t	*cl_crosshair;
 convar_t	*cl_cmdbackup;
 convar_t	*cl_showerror;
-convar_t    *cl_nosmooth;
-convar_t    *cl_smoothtime;
+convar_t	*cl_nosmooth;
+convar_t	*cl_smoothtime;
 convar_t	*cl_draw_particles;
 convar_t	*cl_lightstyle_lerping;
 convar_t	*cl_idealpitchscale;
@@ -62,7 +62,7 @@ convar_t	*cl_allow_fragment;
 convar_t	*cl_lw;
 convar_t	*cl_trace_events;
 convar_t	*cl_trace_stufftext;
-convar_t    *cl_trace_messages;
+convar_t	*cl_trace_messages;
 convar_t	*cl_charset;
 convar_t	*cl_sprite_nearest;
 convar_t	*cl_updaterate;
@@ -71,14 +71,13 @@ convar_t	*hud_scale;
 convar_t	*cl_maxpacket;
 convar_t	*cl_maxpayload;
 
-convar_t    *r_bmodelinterp;
+convar_t	*r_bmodelinterp;
 
 convar_t	*hud_utf8;
 
-convar_t    *ui_renderworld;
-//
-// userinfo
-//
+convar_t	*ui_renderworld;
+
+/* userinfo */
 convar_t	*name;
 convar_t	*model;
 convar_t	*topcolor;
@@ -982,6 +981,7 @@ void CL_Connect_f( void )
 	cls.state = ca_connecting;
 	Q_strncpy( cls.servername, server, sizeof( cls.servername ));
 	cls.connect_time = MAX_HEARTBEAT; // CL_CheckForResend() will fire immediately
+	Q_strcpy( cls.retry_address, cls.servername );
 }
 
 
@@ -1332,6 +1332,26 @@ void CL_Packet_f( void )
 }
 
 /*
+================
+CL_Retry_f
+
+Retry last connection (e.g., after we enter a password)
+
+================
+*/
+void CL_Retry_f ( void )
+{
+	if ( !cls.retry_address[ 0 ] )
+	{
+		Con_Printf( "Can't retry, no previous connection\n" );
+		return;
+	}
+
+	Con_Printf( "Commencing connection retry to %s\n", cls.retry_address );
+	Cbuf_AddText( va( "connect %s\n", cls.retry_address ) );
+}
+
+/*
 =================
 CL_Reconnect_f
 
@@ -1364,6 +1384,15 @@ void CL_Reconnect_f( void )
 		cl.last_command_ack = -1;
 
 		CL_StartupDemoHeader ();
+		return;
+	}
+
+	if ( cls.state == ca_disconnected || cls.state == ca_connecting )
+	{
+		if ( cls.retry_address[ 0 ] )
+		{
+			CL_Retry_f();
+		}
 		return;
 	}
 
@@ -2198,6 +2227,7 @@ void CL_InitLocal( void )
 	Cmd_AddCommand ("escape", CL_Escape_f, "escape from game to menu" );
 	Cmd_AddCommand ("pointfile", CL_ReadPointFile_f, "show leaks on a map (if present of course)" );
 	Cmd_AddCommand ("linefile", CL_ReadLineFile_f, "show leaks on a map (if present of course)" );
+	Cmd_AddCommand ("retry", CL_Retry_f, "reconnect to last server" );
 
 	Cmd_AddCommand ("quit", CL_Quit_f, "quit from game" );
 	Cmd_AddCommand ("exit", CL_Quit_f, "quit from game" );
@@ -2216,7 +2246,7 @@ void CL_InitLocal( void )
 	Cmd_AddCommand ("rcon", CL_Rcon_f, "sends a command to the server console (rcon_password and rcon_address required)" );
 
 	// this is dangerous to leave in
-// 	Cmd_AddCommand ("packet", CL_Packet_f, "send a packet with custom contents" );
+	//Cmd_AddCommand ("packet", CL_Packet_f, "send a packet with custom contents" );
 
 	Cmd_AddCommand ("precache", CL_Precache_f, "precache specified resource (by index)" );
 	Cmd_AddCommand( "trysaveconfig", CL_TrySaveConfig_f, "schedule config save on disconnected state" );

@@ -466,6 +466,7 @@ typedef struct
 	string		servername;		// name of server from original connect
 	netadr_t    serveradr;     // for checking some connectionless packets
 	double		connect_time;		// for connection retransmits
+	char		retry_address[260]; // idk 260 is max length of a filesystem pathname
 
 
 	sizebuf_t		datagram;			// unreliable stuff. gets sent in CL_Move about cl_cmdrate times per second.
