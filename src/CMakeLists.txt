@@ -1,0 +1,5 @@
+add_subdirectory(SDL2)
+add_subdirectory(SourceSDK)
+add_subdirectory(vgui2_support)
+add_subdirectory(imgui_support)
+add_subdirectory(engine)
