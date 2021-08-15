@@ -28,7 +28,7 @@ COM_ParseFile
 text parser
 ==============
 */
-char* GAME_EXPORT COM_ParseFile(char* data, char* token)
+char* COM_ParseFile(char* data, char* token)
 {
 	int	c, len;
 
@@ -121,7 +121,7 @@ COM_FileSize
 
 =============
 */
-int GAME_EXPORT COM_FileSize( const char *filename )
+int COM_FileSize( const char *filename )
 {
 	return FS_FileSize( filename, false );
 }
@@ -132,7 +132,7 @@ COM_AddAppDirectoryToSearchPath
 
 =============
 */
-void GAME_EXPORT COM_AddAppDirectoryToSearchPath( const char *pszBaseDir, const char *appName )
+void COM_AddAppDirectoryToSearchPath( const char *pszBaseDir, const char *appName )
 {
 	string	dir;
 
@@ -155,7 +155,7 @@ Finds the file in the search path, copies over the name with the full path name.
 This doesn't search in the pak file.
 ===========
 */
-int GAME_EXPORT COM_ExpandFilename( const char *fileName, char *nameOutBuffer, int nameOutBufferSize )
+int COM_ExpandFilename( const char *fileName, char *nameOutBuffer, int nameOutBufferSize )
 {
 	const char	*path;
 	char		result[MAX_SYSPATH];
@@ -203,7 +203,7 @@ COM_MemFgets
 
 =============
 */
-char *GAME_EXPORT COM_MemFgets( byte *pMemFile, int fileSize, int *filePos, char *pBuffer, int bufferSize )
+char* COM_MemFgets( byte *pMemFile, int fileSize, int *filePos, char *pBuffer, int bufferSize )
 {
 	int	i, last, stop;
 
@@ -275,7 +275,7 @@ COM_LoadFileForMe
 
 =============
 */
-byte* GAME_EXPORT COM_LoadFileForMe( const char *filename, int *pLength )
+byte* COM_LoadFileForMe( const char *filename, int *pLength )
 {
 	string	name;
 	byte	*file, *pfile;
@@ -311,7 +311,7 @@ COM_LoadFile
 
 =============
 */
-byte *GAME_EXPORT COM_LoadFile( const char *filename, int usehunk, int *pLength )
+byte* COM_LoadFile( const char *filename, int usehunk, int *pLength )
 {
 	string	name;
 	byte	*file, *pfile;
@@ -349,7 +349,7 @@ COM_FreeFile
 
 =============
 */
-void GAME_EXPORT COM_FreeFile( void *buffer )
+void COM_FreeFile( void *buffer )
 {
 	free( buffer ); 
 }
@@ -360,7 +360,7 @@ pfnGetModelType
 
 =============
 */
-int GAME_EXPORT pfnGetModelType( model_t *mod )
+int pfnGetModelType( model_t *mod )
 {
 	if( !mod ) return mod_bad;
 	return mod->type;
@@ -372,7 +372,7 @@ pfnGetModelBounds
 
 =============
 */
-void GAME_EXPORT pfnGetModelBounds( model_t *mod, float *mins, float *maxs )
+void pfnGetModelBounds( model_t *mod, float *mins, float *maxs )
 {
 	if( mod )
 	{
@@ -394,7 +394,7 @@ pfnCVarGetPointer
 can return NULL
 =============
 */
-cvar_t *GAME_EXPORT pfnCVarGetPointer( const char *szVarName )
+cvar_t* pfnCVarGetPointer( const char *szVarName )
 {
 	cvar_t	*cvPtr;
 
@@ -410,7 +410,7 @@ Con_Printf
 
 =============
 */
-void GAME_EXPORT Con_Printf( const char *szFmt, ... )
+void Con_Printf( const char *szFmt, ... )
 {
 	static char	buffer[16384];	// must support > 1k messages
 	va_list		args;
@@ -431,7 +431,7 @@ Con_DPrintf
 
 =============
 */
-void GAME_EXPORT Con_DPrintf( const char *szFmt, ... )
+void Con_DPrintf( const char *szFmt, ... )
 {
 	static char	buffer[16384];	// must support > 1k messages
 	va_list		args;
@@ -452,7 +452,7 @@ COM_CompareFileTime
 
 =============
 */
-int GAME_EXPORT COM_CompareFileTime( const char *filename1, const char *filename2, int *iCompare )
+int COM_CompareFileTime( const char *filename1, const char *filename2, int *iCompare )
 {
 	int	bRet = 0;
 
@@ -479,7 +479,7 @@ pfnGetGameDir
 
 =============
 */
-void GAME_EXPORT pfnGetGameDir( char *szGetGameDir )
+void pfnGetGameDir( char *szGetGameDir )
 {
 	if( !szGetGameDir ) return;
 	Q_strcpy( szGetGameDir, GI->gamefolder );
@@ -492,7 +492,7 @@ pfnSequenceGet
 used by CS:CZ
 =============
 */
-void *GAME_EXPORT pfnSequenceGet( const char *fileName, const char *entryName )
+void* pfnSequenceGet( const char *fileName, const char *entryName )
 {
 	Msg( "Sequence_Get: file %s, entry %s\n", fileName, entryName );
 
@@ -507,7 +507,7 @@ pfnSequencePickSentence
 used by CS:CZ
 =============
 */
-void *GAME_EXPORT pfnSequencePickSentence( const char *groupName, int pickMethod, int *picked )
+void* pfnSequencePickSentence( const char *groupName, int pickMethod, int *picked )
 {
 	Msg( "Sequence_PickSentence: group %s, pickMethod %i\n", groupName, pickMethod );
 
@@ -522,7 +522,7 @@ pfnIsCareerMatch
 used by CS:CZ (client stub)
 =============
 */
-int GAME_EXPORT GAME_EXPORT pfnIsCareerMatch( void )
+int pfnIsCareerMatch( void )
 {
 	return 0;
 }
@@ -534,7 +534,7 @@ pfnRegisterTutorMessageShown
 only exists in PlayStation version
 =============
 */
-void GAME_EXPORT pfnRegisterTutorMessageShown( int mid )
+void pfnRegisterTutorMessageShown( int mid )
 {
 }
 
@@ -545,7 +545,7 @@ pfnGetTimesTutorMessageShown
 only exists in PlayStation version
 =============
 */
-int GAME_EXPORT pfnGetTimesTutorMessageShown( int mid )
+int pfnGetTimesTutorMessageShown( int mid )
 {
 	return 0;
 }
@@ -557,7 +557,7 @@ pfnProcessTutorMessageDecayBuffer
 only exists in PlayStation version
 =============
 */
-void GAME_EXPORT pfnProcessTutorMessageDecayBuffer( int *buffer, int bufferLength )
+void pfnProcessTutorMessageDecayBuffer( int *buffer, int bufferLength )
 {
 }
 
@@ -568,7 +568,7 @@ pfnConstructTutorMessageDecayBuffer
 only exists in PlayStation version
 =============
 */
-void GAME_EXPORT pfnConstructTutorMessageDecayBuffer( int *buffer, int bufferLength )
+void pfnConstructTutorMessageDecayBuffer( int *buffer, int bufferLength )
 {
 }
 
@@ -579,6 +579,6 @@ pfnResetTutorMessageDecayData
 only exists in PlayStation version
 =============
 */
-void GAME_EXPORT pfnResetTutorMessageDecayData( void )
+void pfnResetTutorMessageDecayData( void )
 {
 }

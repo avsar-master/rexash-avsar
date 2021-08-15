@@ -90,12 +90,6 @@ GNU General Public License for more details.
 #define xash_force_inline
 #endif
 
-#if defined __i386__ &&  defined __GNUC__
-#define GAME_EXPORT __attribute__((force_align_arg_pointer))
-#else
-#define GAME_EXPORT
-#endif
-
 #ifdef XASH_BIG_ENDIAN
 #define LittleLong(x) (((int)(((x)&255)<<24)) + ((int)((((x)>>8)&255)<<16)) + ((int)(((x)>>16)&255)<<8) + (((x) >> 24)&255))
 #define LittleLongSW(x) (x = LittleLong(x) )
@@ -886,7 +880,7 @@ void HPAK_FlushHostQueue( void );
 //
 void ID_Init( void );
 const char *ID_GetMD5( void );
-void GAME_EXPORT ID_SetCustomClientID( const char *id );
+void ID_SetCustomClientID( const char *id );
 
 //
 // keys.c

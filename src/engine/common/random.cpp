@@ -81,7 +81,7 @@ float fran1( void )
 	return temp;
 }
 
-float GAME_EXPORT Com_RandomFloat( float flLow, float flHigh )
+float Com_RandomFloat( float flLow, float flHigh )
 {
 	float	fl;
 
@@ -91,7 +91,7 @@ float GAME_EXPORT Com_RandomFloat( float flLow, float flHigh )
 	return (fl * (flHigh - flLow)) + flLow; // float in [low, high)
 }
 
-int GAME_EXPORT Com_RandomLong( int lLow, int lHigh )
+int Com_RandomLong( int lLow, int lHigh )
 {
 	dword	maxAcceptable;
 	dword	n, x = lHigh-lLow + 1; 	

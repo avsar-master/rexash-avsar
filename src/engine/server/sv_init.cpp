@@ -63,7 +63,7 @@ int SV_ModelIndex( const char *filename )
 	return i;
 }
 
-int GAME_EXPORT SV_SoundIndex( const char *filename )
+int SV_SoundIndex( const char *filename )
 {
 	char	name[64];
 	int	i;
@@ -141,7 +141,7 @@ int SV_EventIndex( const char *filename )
 	return i;
 }
 
-int GAME_EXPORT SV_GenericIndex( const char *filename )
+int SV_GenericIndex( const char *filename )
 {
 	char	name[64];
 	int	i;

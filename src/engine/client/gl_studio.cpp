@@ -334,7 +334,7 @@ pfnGetCurrentEntity
 
 ===============
 */
-static cl_entity_t *GAME_EXPORT pfnGetCurrentEntity( void )
+static cl_entity_t* pfnGetCurrentEntity( void )
 {
 	return RI.currententity;
 }
@@ -345,7 +345,7 @@ pfnPlayerInfo
 
 ===============
 */
-static player_info_t *GAME_EXPORT pfnPlayerInfo( int index )
+static player_info_t* pfnPlayerInfo( int index )
 {
 	if( cls.key_dest == key_menu && !index )
 		return &menu.playerinfo;
@@ -361,7 +361,7 @@ pfnGetPlayerState
 
 ===============
 */
-entity_state_t *GAME_EXPORT R_StudioGetPlayerState( int index )
+entity_state_t* R_StudioGetPlayerState( int index )
 {
 	if( index < 0 || index > cl.maxclients )
 		return NULL;
@@ -374,7 +374,7 @@ pfnGetViewEntity
 
 ===============
 */
-static cl_entity_t *GAME_EXPORT pfnGetViewEntity( void )
+static cl_entity_t* pfnGetViewEntity( void )
 {
 	return &clgame.viewent;
 }
@@ -385,7 +385,7 @@ pfnGetEngineTimes
 
 ===============
 */
-static void GAME_EXPORT pfnGetEngineTimes( int *framecount, double *current, double *old )
+static void pfnGetEngineTimes( int *framecount, double *current, double *old )
 {
 	if( framecount ) *framecount = tr.framecount;
 	if( current ) *current = cl.time;
@@ -398,7 +398,7 @@ pfnGetViewInfo
 
 ===============
 */
-static void GAME_EXPORT pfnGetViewInfo( float *origin, float *upv, float *rightv, float *forwardv )
+static void pfnGetViewInfo( float *origin, float *upv, float *rightv, float *forwardv )
 {
 	if( origin ) VectorCopy( RI.vieworg, origin );
 	if( forwardv ) VectorCopy( RI.vforward, forwardv );
@@ -412,7 +412,7 @@ R_GetChromeSprite
 
 ===============
 */
-static model_t *GAME_EXPORT R_GetChromeSprite( void )
+static model_t* R_GetChromeSprite( void )
 {
 	if( cls.hChromeSprite <= 0 || cls.hChromeSprite > ( MAX_IMAGES - 1 ))
 		return NULL; // bad sprite
@@ -425,7 +425,7 @@ pfnGetModelCounters
 
 ===============
 */
-static void GAME_EXPORT pfnGetModelCounters( int **s, int **a )
+static void pfnGetModelCounters( int **s, int **a )
 {
 	*s = &g_nStudioCount;
 	*a = (int *)&r_stats.c_studio_models_drawn;
@@ -437,7 +437,7 @@ pfnGetAliasScale
 
 ===============
 */
-static void GAME_EXPORT pfnGetAliasScale( float *x, float *y )
+static void pfnGetAliasScale( float *x, float *y )
 {
 	if( x ) *x = aliasXscale;
 	if( y ) *y = aliasYscale;
@@ -449,7 +449,7 @@ pfnStudioGetBoneTransform
 
 ===============
 */
-static float ****GAME_EXPORT pfnStudioGetBoneTransform( void )
+static float **** pfnStudioGetBoneTransform( void )
 {
 	return (float ****)g_bonestransform;
 }
@@ -460,7 +460,7 @@ pfnStudioGetLightTransform
 
 ===============
 */
-static float ****GAME_EXPORT pfnStudioGetLightTransform( void )
+static float **** pfnStudioGetLightTransform( void )
 {
 	return (float ****)g_lighttransform;
 }
@@ -471,7 +471,7 @@ pfnStudioGetAliasTransform
 
 ===============
 */
-static float ***GAME_EXPORT pfnStudioGetAliasTransform( void )
+static float *** pfnStudioGetAliasTransform( void )
 {
 	return (float ***)g_aliastransform;
 }
@@ -482,7 +482,7 @@ pfnStudioGetRotationMatrix
 
 ===============
 */
-static float ***GAME_EXPORT pfnStudioGetRotationMatrix( void )
+static float *** pfnStudioGetRotationMatrix( void )
 {
 	return (float ***)g_rotationmatrix;
 }
@@ -1404,7 +1404,7 @@ pfnStudioSetupModel
 
 ===============
 */
-static void GAME_EXPORT R_StudioSetupModel( int bodypart, void **ppbodypart, void **ppsubmodel )
+static void R_StudioSetupModel( int bodypart, void **ppbodypart, void **ppsubmodel )
 {
 	int	index;
 
@@ -1438,7 +1438,7 @@ R_StudioCheckBBox
 
 ===============
 */
-static int GAME_EXPORT R_StudioCheckBBox( void )
+static int R_StudioCheckBBox( void )
 {
 	if( R_CullStudioModel( RI.currententity ))
 		return false;
@@ -1480,7 +1480,7 @@ R_StudioDynamicLight
 
 ===============
 */
-void GAME_EXPORT R_StudioDynamicLight( cl_entity_t *ent, alight_t *lightinfo )
+void R_StudioDynamicLight( cl_entity_t *ent, alight_t *lightinfo )
 {
 	uint		lnum, i;
 	studiolight_t	*plight;
@@ -1596,7 +1596,7 @@ pfnStudioEntityLight
 
 ===============
 */
-void GAME_EXPORT R_StudioEntityLight( alight_t *lightinfo )
+void R_StudioEntityLight( alight_t *lightinfo )
 {
 	uint		lnum, i;
 	studiolight_t	*plight;
@@ -1682,7 +1682,7 @@ R_StudioSetupLighting
 
 ===============
 */
-void GAME_EXPORT R_StudioSetupLighting( alight_t *lightinfo )
+void R_StudioSetupLighting( alight_t *lightinfo )
 {
 	studiolight_t	*plight;
 	int		i;
@@ -1814,7 +1814,7 @@ R_StudioSetupSkin
 
 ===============
 */
-static void GAME_EXPORT R_StudioSetupSkin( mstudiotexture_t *ptexture, int index )
+static void R_StudioSetupSkin( mstudiotexture_t *ptexture, int index )
 {
 	short	*pskinref;
 	int	m_skinnum;
@@ -1881,7 +1881,7 @@ mstudiotexture_t *R_StudioGetTexture( cl_entity_t *e )
 	return ptexture;
 }
 
-void GAME_EXPORT R_StudioSetRenderamt( int iRenderamt )
+void R_StudioSetRenderamt( int iRenderamt )
 {
 	if( !RI.currententity ) return;
 
@@ -1896,7 +1896,7 @@ R_StudioSetCullState
 sets true for enable backculling (for left-hand viewmodel)
 ===============
 */
-void GAME_EXPORT R_StudioSetCullState( int iCull )
+void R_StudioSetCullState( int iCull )
 {
 	g_iBackFaceCull = iCull;
 }
@@ -1908,7 +1908,7 @@ R_StudioRenderShadow
 just a prefab for render shadow
 ===============
 */
-void GAME_EXPORT R_StudioRenderShadow( int iSprite, float *p1, float *p2, float *p3, float *p4 )
+void R_StudioRenderShadow( int iSprite, float *p1, float *p2, float *p3, float *p4 )
 {
 	if( !p1 || !p2 || !p3 || !p4 )
 		return;
@@ -2474,7 +2474,7 @@ R_StudioDrawPoints
 
 ===============
 */
-static void GAME_EXPORT R_StudioDrawPoints( void )
+static void R_StudioDrawPoints( void )
 {
 	int		i, j, m_skinnum;
 	byte		*pvertbone;
@@ -2576,7 +2576,7 @@ R_StudioDrawHulls
 
 ===============
 */
-static void GAME_EXPORT R_StudioDrawHulls( void )
+static void R_StudioDrawHulls( void )
 {
 	int	i, j;
 	float	alpha;
@@ -2670,7 +2670,7 @@ R_StudioDrawAbsBBox
 
 ===============
 */
-static void GAME_EXPORT R_StudioDrawAbsBBox( void )
+static void R_StudioDrawAbsBBox( void )
 {
 	vec3_t	bbox[8];
 	int	i;
@@ -2715,7 +2715,7 @@ R_StudioDrawBones
 
 ===============
 */
-static void GAME_EXPORT R_StudioDrawBones( void )
+static void R_StudioDrawBones( void )
 {
 	mstudiobone_t	*pbones = (mstudiobone_t *) ((byte *)m_pStudioHeader + m_pStudioHeader->boneindex);
 	vec3_t		point;
@@ -2816,7 +2816,7 @@ R_StudioSetRemapColors
 
 ===============
 */
-void GAME_EXPORT R_StudioSetRemapColors( int newTop, int newBottom )
+void R_StudioSetRemapColors( int newTop, int newBottom )
 {
 	// update colors for viewentity
 	if( RI.currententity == &clgame.viewent )
@@ -2846,7 +2846,7 @@ R_StudioSetupPlayerModel
 
 ===============
 */
-static model_t *GAME_EXPORT R_StudioSetupPlayerModel( int index )
+static model_t* R_StudioSetupPlayerModel( int index )
 {
 	player_info_t	*info;
 	string		modelpath;
@@ -2890,7 +2890,7 @@ R_StudioClientEvents
 
 ===============
 */
-static void GAME_EXPORT R_StudioClientEvents( void )
+static void R_StudioClientEvents( void )
 {
 	mstudioseqdesc_t	*pseqdesc;
 	mstudioevent_t	*pevent;
@@ -2927,7 +2927,7 @@ R_StudioGetForceFaceFlags
 
 ===============
 */
-int GAME_EXPORT R_StudioGetForceFaceFlags( void )
+int R_StudioGetForceFaceFlags( void )
 {
 	return g_nForceFaceFlags;
 }
@@ -2938,7 +2938,7 @@ R_StudioSetForceFaceFlags
 
 ===============
 */
-void GAME_EXPORT R_StudioSetForceFaceFlags( int flags )
+void R_StudioSetForceFaceFlags( int flags )
 {
 	g_nForceFaceFlags = flags;
 }
@@ -2949,7 +2949,7 @@ pfnStudioSetHeader
 
 ===============
 */
-void GAME_EXPORT R_StudioSetHeader( studiohdr_t *pheader )
+void R_StudioSetHeader( studiohdr_t *pheader )
 {
 	m_pStudioHeader = pheader;
 
@@ -2963,7 +2963,7 @@ R_StudioSetRenderModel
 
 ===============
 */
-void GAME_EXPORT R_StudioSetRenderModel( model_t *model )
+void R_StudioSetRenderModel( model_t *model )
 {
 	RI.currentmodel = model;
 }
@@ -2974,7 +2974,7 @@ R_StudioSetupRenderer
 
 ===============
 */
-static void GAME_EXPORT R_StudioSetupRenderer( int rendermode )
+static void R_StudioSetupRenderer( int rendermode )
 {
 	g_iRenderMode = bound( 0, rendermode, kRenderTransAdd );
 	pglShadeModel( GL_SMOOTH );	// enable gouraud shading
@@ -2997,7 +2997,7 @@ R_StudioRestoreRenderer
 
 ===============
 */
-static void GAME_EXPORT R_StudioRestoreRenderer( void )
+static void R_StudioRestoreRenderer( void )
 {
 	pglTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 	pglShadeModel( GL_FLAT );
@@ -3021,7 +3021,7 @@ R_StudioSetChromeOrigin
 
 ===============
 */
-void GAME_EXPORT R_StudioSetChromeOrigin( void )
+void R_StudioSetChromeOrigin( void )
 {
 	VectorNegate( RI.vieworg, g_chrome_origin );
 }
@@ -3033,7 +3033,7 @@ pfnIsHardware
 Xash3D is always works in hardware mode
 ===============
 */
-static int GAME_EXPORT pfnIsHardware( void )
+static int pfnIsHardware( void )
 {
 	return 1;	// 0 is Software, 1 is OpenGL, 2 is Direct3D
 }
@@ -3096,7 +3096,7 @@ GL_StudioDrawShadow
 NOTE: this code sucessfully working with ShadowHack only in Release build
 ===============
 */
-static void GAME_EXPORT GL_StudioDrawShadow( void )
+static void GL_StudioDrawShadow( void )
 {
 	int	rendermode;
 	float	shadow_alpha;
@@ -3360,7 +3360,7 @@ R_StudioDrawPlayer
 
 ===============
 */
-static int GAME_EXPORT R_StudioDrawPlayer( int flags, entity_state_t *pplayer )
+static int R_StudioDrawPlayer( int flags, entity_state_t *pplayer )
 {
 	int	m_nPlayerIndex;
 	float	gaitframe = 0.0f, gaityaw = 0.0f;
@@ -3533,7 +3533,7 @@ R_StudioDrawModel
 
 ===============
 */
-static int GAME_EXPORT R_StudioDrawModel( int flags )
+static int R_StudioDrawModel( int flags )
 {
 	alight_t	lighting;
 	vec3_t	dir;

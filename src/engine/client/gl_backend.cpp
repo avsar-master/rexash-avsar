@@ -404,7 +404,7 @@ void GL_FrontFace( GLenum front )
 	glState.frontFace = front;
 }
 
-void GAME_EXPORT GL_SetRenderMode( int mode )
+void GL_SetRenderMode( int mode )
 {
 	pglTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 

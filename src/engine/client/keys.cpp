@@ -573,7 +573,7 @@ Key_Event
 Called by the system for both key up and key down events
 ===================
 */
-void GAME_EXPORT Key_Event( int key, qboolean down )
+void Key_Event( int key, qboolean down )
 {
 	const char	*kb;
 	char		cmd[1024];

@@ -65,17 +65,17 @@ void VGUI_ShowCursor( void )
 	SDL_ShowCursor();
 }*/
 
-void GAME_EXPORT *VGUI_EngineMalloc(size_t size)
+void *VGUI_EngineMalloc(size_t size)
 {
 	return Z_Malloc( size );
 }
 
-qboolean GAME_EXPORT VGUI_IsInGame( void )
+qboolean VGUI_IsInGame( void )
 {
 	return cls.state == ca_active && cls.key_dest == key_game;
 }
 
-void GAME_EXPORT VGUI_GetMousePos( int *_x, int *_y )
+void VGUI_GetMousePos( int *_x, int *_y )
 {
 	float xscale = scr_width->value / (float)clgame.scrInfo.iWidth;
 	float yscale = scr_height->value / (float)clgame.scrInfo.iHeight;
@@ -107,7 +107,7 @@ void VGUI_InitCursors( void )
 #endif
 }
 
-void GAME_EXPORT VGUI_CursorSelect(enum VGUI_DefaultCursor cursor )
+void VGUI_CursorSelect(enum VGUI_DefaultCursor cursor )
 {
 	qboolean visible;
 	if( cls.key_dest != key_game || cl.refdef.paused )
@@ -146,14 +146,14 @@ void GAME_EXPORT VGUI_CursorSelect(enum VGUI_DefaultCursor cursor )
 	host.mouse_visible = visible;
 }
 
-byte GAME_EXPORT VGUI_GetColor( int i, int j)
+byte VGUI_GetColor( int i, int j)
 {
 	return g_color_table[i][j];
 }
 
 // Define and initialize vgui API
 
-void GAME_EXPORT VGUI_SetVisible( qboolean state )
+void VGUI_SetVisible( qboolean state )
 {
 	host.mouse_visible=state;
 #ifdef XASH_SDL
@@ -165,7 +165,7 @@ void GAME_EXPORT VGUI_SetVisible( qboolean state )
 #endif
 }
 
-int GAME_EXPORT VGUI_UtfProcessChar( int in )
+int VGUI_UtfProcessChar( int in )
 {
 	if( vgui_utf8->integer )
 		return Con_UtfProcessCharForce( in );
@@ -541,7 +541,7 @@ VGUI_DrawInit
 Startup VGUI backend
 ================
 */
-void GAME_EXPORT VGUI_DrawInit( void )
+void VGUI_DrawInit( void )
 {
 	Q_memset( g_textures, 0, sizeof( g_textures ));
 	g_textureId = g_iBoundTexture = 0;
@@ -554,7 +554,7 @@ VGUI_DrawShutdown
 Release all textures
 ================
 */
-void GAME_EXPORT VGUI_DrawShutdown( void )
+void VGUI_DrawShutdown( void )
 {
 	int	i;
 
@@ -571,7 +571,7 @@ VGUI_GenerateTexture
 generate unique texture number
 ================
 */
-int GAME_EXPORT VGUI_GenerateTexture( void )
+int VGUI_GenerateTexture( void )
 {
 	if( ++g_textureId >= VGUI_MAX_TEXTURES )
 		Sys_Error( "VGUI_GenerateTexture: VGUI_MAX_TEXTURES limit exceeded\n" );
@@ -585,7 +585,7 @@ VGUI_UploadTexture
 Upload texture into video memory
 ================
 */
-void GAME_EXPORT VGUI_UploadTexture( int id, const char *buffer, int width, int height )
+void VGUI_UploadTexture( int id, const char *buffer, int width, int height )
 {
 	rgbdata_t	r_image;
 	char	texName[32];
@@ -618,7 +618,7 @@ VGUI_CreateTexture
 Create empty rgba texture and upload them into video memory
 ================
 */
-void GAME_EXPORT VGUI_CreateTexture( int id, int width, int height )
+void VGUI_CreateTexture( int id, int width, int height )
 {
 	rgbdata_t	r_image;
 	char	texName[32];
@@ -644,7 +644,7 @@ void GAME_EXPORT VGUI_CreateTexture( int id, int width, int height )
 	g_iBoundTexture = id;
 }
 
-void GAME_EXPORT VGUI_UploadTextureBlock( int id, int drawX, int drawY, const byte *rgba, int blockWidth, int blockHeight )
+void VGUI_UploadTextureBlock( int id, int drawX, int drawY, const byte *rgba, int blockWidth, int blockHeight )
 {
 	if( id <= 0 || id >= VGUI_MAX_TEXTURES || g_textures[id] == 0 || g_textures[id] == cls.fillImage )
 	{
@@ -656,7 +656,7 @@ void GAME_EXPORT VGUI_UploadTextureBlock( int id, int drawX, int drawY, const by
 	g_iBoundTexture = id;
 }
 
-void GAME_EXPORT VGUI_SetupDrawingRect( int *pColor )
+void VGUI_SetupDrawingRect( int *pColor )
 {
 	pglEnable( GL_BLEND );
 	pglDisable( GL_ALPHA_TEST );
@@ -664,7 +664,7 @@ void GAME_EXPORT VGUI_SetupDrawingRect( int *pColor )
 	pglColor4ub( pColor[0], pColor[1], pColor[2], 255 - pColor[3] );
 }
 
-void GAME_EXPORT VGUI_SetupDrawingText( int *pColor )
+void VGUI_SetupDrawingText( int *pColor )
 {
 	pglEnable( GL_BLEND );
 	pglEnable( GL_ALPHA_TEST );
@@ -674,7 +674,7 @@ void GAME_EXPORT VGUI_SetupDrawingText( int *pColor )
 	pglColor4ub( pColor[0], pColor[1], pColor[2], 255 - pColor[3] );
 }
 
-void GAME_EXPORT VGUI_SetupDrawingImage( int *pColor )
+void VGUI_SetupDrawingImage( int *pColor )
 {
 	pglEnable( GL_BLEND );
 	pglEnable( GL_ALPHA_TEST );
@@ -684,7 +684,7 @@ void GAME_EXPORT VGUI_SetupDrawingImage( int *pColor )
 	pglColor4ub( pColor[0], pColor[1], pColor[2], 255 - pColor[3] );
 }
 
-void GAME_EXPORT VGUI_BindTexture( int id )
+void VGUI_BindTexture( int id )
 {
 	if( id > 0 && id < VGUI_MAX_TEXTURES && g_textures[id] )
 	{
@@ -706,7 +706,7 @@ VGUI_GetTextureSizes
 returns wide and tall for currently binded texture
 ================
 */
-void GAME_EXPORT VGUI_GetTextureSizes( int *width, int *height )
+void VGUI_GetTextureSizes( int *width, int *height )
 {
 	gltexture_t	*glt;
 	int		texnum;
@@ -727,7 +727,7 @@ VGUI_EnableTexture
 disable texturemode for fill rectangle
 ================
 */
-void GAME_EXPORT VGUI_EnableTexture( qboolean enable )
+void VGUI_EnableTexture( qboolean enable )
 {
 	if( enable ) pglEnable( GL_TEXTURE_2D );
 	else pglDisable( GL_TEXTURE_2D );
@@ -740,7 +740,7 @@ VGUI_DrawQuad
 generic method to fill rectangle
 ================
 */
-void GAME_EXPORT VGUI_DrawQuad( const vpoint_t *ul, const vpoint_t *lr )
+void VGUI_DrawQuad( const vpoint_t *ul, const vpoint_t *lr )
 {
 	float xscale = scr_width->value / (float)clgame.scrInfo.iWidth;
 	float yscale = scr_height->value / (float)clgame.scrInfo.iHeight;
@@ -774,7 +774,7 @@ void VGui_RunFrame()
 }
 
 
-void *GAME_EXPORT pfnVGui_GetPanel()
+void* pfnVGui_GetPanel()
 {
 	if( vgui.initialized )
 		return vgui.GetPanel();

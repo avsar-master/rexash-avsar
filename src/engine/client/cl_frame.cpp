@@ -691,7 +691,7 @@ CL_WeaponAnim
 Set new weapon animation
 ==================
 */
-void GAME_EXPORT CL_WeaponAnim( int iAnim, int body )
+void CL_WeaponAnim( int iAnim, int body )
 {
 	cl_entity_t	*view = &clgame.viewent;
 	cl.weaponstarttime = 0;

@@ -601,7 +601,7 @@ ID_SetCustomClientID
 
 ===============
 */
-void GAME_EXPORT ID_SetCustomClientID( const char *id )
+void ID_SetCustomClientID( const char *id )
 {
 	if( !id )
 		return;

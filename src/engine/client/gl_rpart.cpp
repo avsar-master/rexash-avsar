@@ -108,7 +108,7 @@ CL_LookupColor
 find nearest color in particle palette
 ================
 */
-short GAME_EXPORT CL_LookupColor( byte r, byte g, byte b )
+short CL_LookupColor( byte r, byte g, byte b )
 {
 	int	i, fi, best_color = 0;
 	int	f_min = 1000000;
@@ -142,7 +142,7 @@ CL_GetPackedColor
 in hardware mode does nothing
 ================
 */
-void GAME_EXPORT CL_GetPackedColor( short *packed, short color )
+void CL_GetPackedColor( short *packed, short color )
 {
 	if( packed ) *packed = 0;
 }
@@ -237,7 +237,7 @@ CL_AllocParticle
 can return NULL if particles is out
 ================
 */
-particle_t *GAME_EXPORT CL_AllocParticle( void (*callback)( particle_t*, float ))
+particle_t* CL_AllocParticle( void (*callback)( particle_t*, float ))
 {
 	particle_t	*p;
 
@@ -608,7 +608,7 @@ CL_EntityParticles
 set EF_BRIGHTFIELD effect
 ===============
 */
-void GAME_EXPORT CL_EntityParticles( cl_entity_t *ent )
+void CL_EntityParticles( cl_entity_t *ent )
 {
 	float		angle;
 	float		sr, sp, sy, cr, cp, cy;
@@ -655,7 +655,7 @@ CL_ParticleExplosion
 
 ===============
 */
-void GAME_EXPORT CL_ParticleExplosion( const vec3_t org )
+void CL_ParticleExplosion( const vec3_t org )
 {
 	particle_t	*p;
 	int		i, j;
@@ -702,7 +702,7 @@ CL_ParticleExplosion2
 
 ===============
 */
-void GAME_EXPORT CL_ParticleExplosion2( const vec3_t org, int colorStart, int colorLength )
+void CL_ParticleExplosion2( const vec3_t org, int colorStart, int colorLength )
 {
 	int		i, j;
 	int		colorMod = 0;
@@ -739,7 +739,7 @@ CL_BlobExplosion
 
 ===============
 */
-void GAME_EXPORT CL_BlobExplosion( const vec3_t org )
+void CL_BlobExplosion( const vec3_t org )
 {
 	particle_t	*p;
 	int		i, j;
@@ -789,7 +789,7 @@ ParticleEffect
 PARTICLE_EFFECT on server
 ===============
 */
-void GAME_EXPORT CL_RunParticleEffect( const vec3_t org, const vec3_t dir, int color, int count )
+void CL_RunParticleEffect( const vec3_t org, const vec3_t dir, int color, int count )
 {
 	particle_t	*p;
 	int		i, j;
@@ -825,7 +825,7 @@ CL_Blood
 particle spray
 ===============
 */
-void GAME_EXPORT CL_Blood( const vec3_t org, const vec3_t dir, int pcolor, int speed )
+void CL_Blood( const vec3_t org, const vec3_t dir, int pcolor, int speed )
 {
 	particle_t	*p;
 	int		i, j;
@@ -854,7 +854,7 @@ CL_BloodStream
 particle spray 2
 ===============
 */
-void GAME_EXPORT CL_BloodStream( const vec3_t org, const vec3_t dir, int pcolor, int speed )
+void CL_BloodStream( const vec3_t org, const vec3_t dir, int pcolor, int speed )
 {
 	particle_t *p;
 	vec3_t dirCopy;
@@ -931,7 +931,7 @@ CL_LavaSplash
 
 ===============
 */
-void GAME_EXPORT CL_LavaSplash( const vec3_t org )
+void CL_LavaSplash( const vec3_t org )
 {
 	particle_t	*p;
 	float		vel;
@@ -973,7 +973,7 @@ CL_ParticleBurst
 
 ===============
 */
-void GAME_EXPORT CL_ParticleBurst( const vec3_t org, int size, int color, float life )
+void CL_ParticleBurst( const vec3_t org, int size, int color, float life )
 {
 	particle_t	*p;
 	float		vel;
@@ -1015,7 +1015,7 @@ CL_TeleportSplash
 
 ===============
 */
-void GAME_EXPORT CL_TeleportSplash( const vec3_t org )
+void CL_TeleportSplash( const vec3_t org )
 {
 	particle_t	*p;
 	vec3_t		dir;
@@ -1055,7 +1055,7 @@ CL_RocketTrail
 
 ===============
 */
-void GAME_EXPORT CL_RocketTrail(const vec3_t vStart, const vec3_t end, int type )
+void CL_RocketTrail(const vec3_t vStart, const vec3_t end, int type )
 {
 	vec3_t		vec, start;
 	float		len;
@@ -1196,7 +1196,7 @@ void CL_DrawRectangle( const vec3_t tl, const vec3_t bl, const vec3_t tr, const 
 	CL_DrawLine( tr, tl, pcolor, life, 2.0f );
 }
 
-void GAME_EXPORT CL_ParticleLine( const vec3_t start, const vec3_t end, byte r, byte g, byte b, float life )
+void CL_ParticleLine( const vec3_t start, const vec3_t end, byte r, byte g, byte b, float life )
 {
 	int	pcolor;
 
@@ -1210,7 +1210,7 @@ CL_ParticleBox
 
 ================
 */
-void GAME_EXPORT CL_ParticleBox( const vec3_t mins, const vec3_t maxs, byte r, byte g, byte b, float life )
+void CL_ParticleBox( const vec3_t mins, const vec3_t maxs, byte r, byte g, byte b, float life )
 {
 	vec3_t	tmp, p[8];
 	int	i, col;
@@ -1238,7 +1238,7 @@ CL_ShowLine
 
 ================
 */
-void GAME_EXPORT CL_ShowLine( const vec3_t start, const vec3_t end )
+void CL_ShowLine( const vec3_t start, const vec3_t end )
 {
 	int	pcolor;
 
@@ -1252,7 +1252,7 @@ CL_BulletImpactParticles
 
 ===============
 */
-void GAME_EXPORT CL_BulletImpactParticles( const vec3_t org )
+void CL_BulletImpactParticles( const vec3_t org )
 {
 	particle_t	*p;
 	vec3_t		pos, dir;
@@ -1323,7 +1323,7 @@ CL_FlickerParticles
 
 ===============
 */
-void GAME_EXPORT CL_FlickerParticles( const vec3_t org )
+void CL_FlickerParticles( const vec3_t org )
 {
 	particle_t	*p;
 	int		i, j;
@@ -1548,7 +1548,7 @@ CL_TracerEffect
 
 ===============
 */
-void GAME_EXPORT CL_TracerEffect( const vec3_t start, const vec3_t end )
+void CL_TracerEffect( const vec3_t start, const vec3_t end )
 {
 	particle_t	*p;
 	byte		*color;
@@ -1584,7 +1584,7 @@ CL_UserTracerParticle
 
 ===============
 */
-void GAME_EXPORT CL_UserTracerParticle(const float* org, const float* vel, float life, int colorIndex, float length, byte deathcontext, void (*deathfunc)(particle_t* p))
+void CL_UserTracerParticle(const float* org, const float* vel, float life, int colorIndex, float length, byte deathcontext, void (*deathfunc)(particle_t* p))
 {
 	particle_t* p;
 	byte* color;
@@ -1618,7 +1618,7 @@ CL_TracerParticles
 allow more customization
 ===============
 */
-particle_t *GAME_EXPORT CL_TracerParticles( const float *org, const float *vel, float life )
+particle_t* CL_TracerParticles( const float *org, const float *vel, float life )
 {
 	particle_t	*p;
 	byte		*color;
@@ -1645,7 +1645,7 @@ CL_SparkShower
 Creates 8 random tracers
 ===============
 */
-void GAME_EXPORT CL_SparkShower( const vec3_t org )
+void CL_SparkShower( const vec3_t org )
 {
 	vec3_t	pos, dir;
 	model_t	*pmodel;
@@ -1678,7 +1678,7 @@ CL_Implosion
 
 ===============
 */
-void GAME_EXPORT CL_Implosion( const vec3_t end, float radius, int count, float life )
+void CL_Implosion( const vec3_t end, float radius, int count, float life )
 {
 	particle_t	*p;
 	float		vel, radius2;

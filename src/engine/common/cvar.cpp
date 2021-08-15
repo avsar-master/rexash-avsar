@@ -29,7 +29,7 @@ convar_t	*userinfo, *physinfo, *serverinfo, *renderinfo;
 Cvar_GetList
 ============
 */
-cvar_t *GAME_EXPORT Cvar_GetList( void )
+cvar_t* Cvar_GetList( void )
 {
 	return (cvar_t *)cvar_vars;
 }
@@ -264,7 +264,7 @@ Cvar_RegisterVariable
 Adds a freestanding variable to the variable list.
 ============
 */
-void GAME_EXPORT Cvar_RegisterVariable( cvar_t *var )
+void Cvar_RegisterVariable( cvar_t *var )
 {
 	convar_t	*current, *next, *cvar;
 
@@ -530,7 +530,7 @@ convar_t *Cvar_Set2( const char *var_name, const char *value, qboolean force )
 Cvar_Set
 ============
 */
-void GAME_EXPORT Cvar_Set( const char *var_name, const char *value )
+void Cvar_Set( const char *var_name, const char *value )
 {
 	Cvar_Set2( var_name, value, true );
 }
@@ -610,7 +610,7 @@ void Cvar_FullSet( const char *var_name, const char *value, int flags )
 Cvar_DirectSet
 ============
 */
-void GAME_EXPORT Cvar_DirectSet( cvar_t *var, const char *value )
+void Cvar_DirectSet( cvar_t *var, const char *value )
 {
 	cvar_t		*test;
 	const char	*pszValue;

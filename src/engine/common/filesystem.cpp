@@ -4005,7 +4005,7 @@ void *FSAPI_MemAlloc( size_t size, const char *filename, int fileline )
 	return _Mem_Alloc( fs_mempool, size, filename, fileline );
 }
 
-int GAME_EXPORT FS_GetAPI( fs_api_t *g_api )
+int FS_GetAPI( fs_api_t *g_api )
 {
 	if( !g_api )
 		return 1;

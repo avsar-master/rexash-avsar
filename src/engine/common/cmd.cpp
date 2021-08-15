@@ -290,7 +290,7 @@ void Cbuf_InsertText( const char *text )
 Cbuf_Execute
 ============
 */
-void GAME_EXPORT Cbuf_Execute( void )
+void Cbuf_Execute( void )
 {
 	int		i;
 	char	*text;
@@ -625,7 +625,7 @@ cmd_source_t		cmd_source;
 Cmd_Argc
 ============
 */
-int GAME_EXPORT Cmd_Argc( void )
+int Cmd_Argc( void )
 {
 	return cmd_argc;
 }
@@ -635,7 +635,7 @@ int GAME_EXPORT Cmd_Argc( void )
 Cmd_Argv
 ============
 */
-const char *GAME_EXPORT Cmd_Argv( int arg )
+const char* Cmd_Argv( int arg )
 {
 	if( arg >= cmd_argc )
 		return "";
@@ -647,7 +647,7 @@ const char *GAME_EXPORT Cmd_Argv( int arg )
 Cmd_Args
 ============
 */
-const char *GAME_EXPORT Cmd_Args( void )
+const char* Cmd_Args( void )
 {
 	return cmd_args;
 }
@@ -657,7 +657,7 @@ const char *GAME_EXPORT Cmd_Args( void )
 Cmd_AliasGetList
 ============
 */
-cmdalias_t *GAME_EXPORT Cmd_AliasGetList( void )
+cmdalias_t* Cmd_AliasGetList( void )
 {
 	return cmd_alias;
 }
@@ -667,7 +667,7 @@ cmdalias_t *GAME_EXPORT Cmd_AliasGetList( void )
 Cmd_GetList
 ============
 */
-cmd_t *GAME_EXPORT Cmd_GetFirstFunctionHandle( void )
+cmd_t* Cmd_GetFirstFunctionHandle( void )
 {
 	return cmd_functions;
 }
@@ -677,7 +677,7 @@ cmd_t *GAME_EXPORT Cmd_GetFirstFunctionHandle( void )
 Cmd_GetNext
 ============
 */
-cmd_t *GAME_EXPORT Cmd_GetNextFunctionHandle( cmd_t *cmd )
+cmd_t* Cmd_GetNextFunctionHandle( cmd_t *cmd )
 {
 	return (cmd) ? cmd->next : NULL;
 }
@@ -687,7 +687,7 @@ cmd_t *GAME_EXPORT Cmd_GetNextFunctionHandle( cmd_t *cmd )
 Cmd_GetName
 ============
 */
-const char *GAME_EXPORT Cmd_GetName( cmd_t *cmd )
+const char* Cmd_GetName( cmd_t *cmd )
 {
 	return cmd->name;
 }
@@ -830,7 +830,7 @@ void Cmd_AddRestrictedCommand( const char *cmd_name, xcommand_t function, const 
 Cmd_AddGameCommand
 ============
 */
-void GAME_EXPORT Cmd_AddGameCommand( const char *cmd_name, xcommand_t function )
+void Cmd_AddGameCommand( const char *cmd_name, xcommand_t function )
 {
 	Cmd_AddCommandEx( "Cmd_AddGameCommand", cmd_name, function, "game command", CMD_EXTDLL );
 }
@@ -840,7 +840,7 @@ void GAME_EXPORT Cmd_AddGameCommand( const char *cmd_name, xcommand_t function )
 Cmd_AddClientCommand
 ============
 */
-void GAME_EXPORT Cmd_AddClientCommand( const char *cmd_name, xcommand_t function )
+void Cmd_AddClientCommand( const char *cmd_name, xcommand_t function )
 {
 	Cmd_AddCommandEx( "Cmd_AddClientCommand", cmd_name, function, "client command", CMD_CLIENTDLL );
 }
