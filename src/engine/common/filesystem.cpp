@@ -37,10 +37,6 @@ GNU General Public License for more details.
 #include <unistd.h>
 #endif
 
-#ifdef XASH_WINRT
-#include "platform/winrt/winrt_interop.h"
-#endif
-
 #define FILE_BUFF_SIZE		2048
 #define PAK_LOAD_OK			0
 #define PAK_LOAD_COULDNT_OPEN		1
@@ -1774,9 +1770,6 @@ void FS_LoadGameInfo( const char *rootfolder )
 
 	if( i == SI.numgames )
 	{
-#ifdef XASH_WINRT
-		WinRT_OpenGameFolderWithExplorer();
-#endif
 		Sys_Error("Couldn't find game directory '%s' at \n %s", gs_basedir, host.rootdir);
 	}
 
@@ -2177,15 +2170,7 @@ Look for a existing folder
 */
 qboolean FS_SysFolderExists( const char *path )
 {
-#ifdef XASH_WINRT
-	struct _finddata_t n_file;
-	// ask for the directory listing handle
-	const intptr_t hFile = _findfirst(path, &n_file);
-	if (hFile == -1)
-		return 0;
-	_findclose(hFile);
-	return 1;
-#elif defined( _WIN32 )
+#if defined( _WIN32 )
 	DWORD	dwFlags = GetFileAttributes( path );
 
 	return ( dwFlags != -1 ) && ( dwFlags & FILE_ATTRIBUTE_DIRECTORY );

@@ -29,10 +29,6 @@ GNU General Public License for more details.
 #include "platform/macos/vid_macos.h"
 #endif
 
-#if defined(XASH_WINRT)
-#include "platform/winrt/winrt_interop.h"
-#endif
-
 typedef enum
 {
 	rserr_ok,
@@ -196,7 +192,7 @@ void VID_RestoreScreenResolution( void )
 }
 #endif
 
-#if defined(_WIN32) && !defined(XASH_64BIT) && !defined( XASH_WINRT ) // ICO support only for Win32
+#if defined(_WIN32) && !defined(XASH_64BIT) // ICO support only for Win32
 static void WIN_SetWindowIcon( HICON ico )
 {
 	SDL_SysWMinfo wminfo;
@@ -265,7 +261,7 @@ qboolean VID_CreateWindow( int width, int height, qboolean fullscreen )
 		VID_RestoreScreenResolution();
 	}
 #if 0
-#if defined(_WIN32) && !defined(XASH_64BIT) && !defined( XASH_WINRT ) // ICO support only for Win32
+#if defined(_WIN32) && !defined(XASH_64BIT)/ ICO support only for Win32
 	if( FS_FileExists( GI->iconpath, true ) )
 	{
 		HICON ico = NULL;
@@ -308,7 +304,7 @@ qboolean VID_CreateWindow( int width, int height, qboolean fullscreen )
 		}
 #endif
 
-#if defined(_WIN32) && !defined(XASH_64BIT) && !defined( XASH_WINRT ) // ICO support only for Win32
+#if defined(_WIN32) && !defined(XASH_64BIT)// ICO support only for Win32
 		else
 		{
 			WIN_SetWindowIcon( LoadIcon( host.hInst, MAKEINTRESOURCE( 101 ) ) );
@@ -338,18 +334,6 @@ qboolean VID_CreateWindow( int width, int height, qboolean fullscreen )
 
 #if defined(SDL_VIDEO_DRIVER_COCOA)
 	TouchBar_Install();
-#endif
-
-#if defined(XASH_WINRT)
-	{
-		SDL_SysWMinfo wminfo;
-		SDL_VERSION(&wminfo.version);
-		if (SDL_GetWindowWMInfo(host.hWnd, &wminfo))
-		{
-			WinRT_FullscreenMode_Install(fullscreen);
-		}
-		WinRT_BackButton_Install();
-	}
 #endif
 
 	IME_CreateContext();
@@ -560,10 +544,7 @@ qboolean VID_GetDPI(float* out)
 {
 	float dpi;
 	qboolean success;
-#if defined(XASH_WINRT)
-	dpi = WinRT_GetDisplayDPI();
-	success = dpi > 0.0f;
-#elif defined(_WIN32)
+#if defined(_WIN32)
 	{
 		SDL_SysWMinfo wmInfo;
 		SDL_VERSION(&wmInfo.version);

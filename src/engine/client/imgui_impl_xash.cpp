@@ -38,10 +38,6 @@ GNU General Public License for more details.
 #include <SDL_syswm.h>
 #endif
 
-#ifdef XASH_WINRT
-#include "platform/winrt/winrt_interop.h"
-#endif
-
 // Data
 double g_Time = 0.0;
 bool g_MouseJustPressed[5] = { false, false, false, false, false };
@@ -306,7 +302,7 @@ qboolean ImGui_ImplGL_CreateDeviceObjects(void)
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
 	SDL_GetWindowWMInfo(host.hWnd, &wmInfo);
-#if defined _WIN32 && !defined XASH_WINRT
+#if defined _WIN32
 	io.ImeWindowHandle = wmInfo.info.win.window;
 	io.ImeSetInputScreenPosFn; // use default
 #endif

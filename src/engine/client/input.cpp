@@ -683,7 +683,7 @@ void IN_MouseEvent( int mstate )
 	}
 	else
 	{
-#if defined(XASH_SDL) && !defined(XASH_WINRT)
+#if defined(XASH_SDL)
 		SDL_SetRelativeMouseMode( SDL_FALSE );
 		SDL_ShowCursor( SDL_TRUE );
 #endif

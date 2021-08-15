@@ -128,12 +128,6 @@ GNU General Public License for more details.
 	#include <io.h>
 	#include <shlwapi.h>
 	#pragma comment(lib,"shlwapi.lib")
-
-#ifdef WINAPI_FAMILY
-#if (!WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP))
-#define XASH_WINRT
-#endif
-#endif
 	
 #if defined(_MSC_VER) && (_MSC_VER < 1700) 
 #include <math.h>

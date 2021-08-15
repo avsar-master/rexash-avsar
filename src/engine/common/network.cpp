@@ -17,12 +17,7 @@ GNU General Public License for more details.
 
 #ifdef _WIN32
 // Winsock
-#ifdef XASH_WINRT
-#include <winsock2.h>
-#include <Ws2tcpip.h>
-#else
 #include <winsock.h>
-#endif
 #include <wsipx.h>
 #define socklen_t int //#include <ws2tcpip.h>
 #else
@@ -46,7 +41,7 @@ GNU General Public License for more details.
 #define MAX_LOOPBACK	4
 #define MASK_LOOPBACK	(MAX_LOOPBACK - 1)
 
-#if !defined(_WIN32) || defined(XASH_WINRT) // it seems we need to use WS2 to support it
+#if !defined(_WIN32)
 #define HAVE_GETADDRINFO
 #endif
 
@@ -111,11 +106,7 @@ static dllfunc_t winsock_funcs[] =
 { NULL, NULL }
 };
 
-#ifdef XASH_WINRT
-dll_info_t winsock_dll = { "ws2_32.dll", winsock_funcs, false };
-#else
 dll_info_t winsock_dll = { "wsock32.dll", winsock_funcs, false };
-#endif
 
 static dllfunc_t kernel32_funcs[] =
 {
@@ -131,43 +122,6 @@ dll_info_t kernel32_dll = { "kernel32.dll", kernel32_funcs, false };
 
 static void NET_InitializeCriticalSections( void );
 
-#ifdef XASH_WINRT
-qboolean NET_OpenWinSock(void)
-{
-	pInitializeCriticalSection = InitializeCriticalSection;
-	pEnterCriticalSection = EnterCriticalSection;
-	pLeaveCriticalSection = LeaveCriticalSection;
-	pDeleteCriticalSection = DeleteCriticalSection;
-	
-	pBind = bind;
-	pSend = send;
-	pRecv = recv;
-	pNtohs = ntohs;
-	pHtons = htons;
-	pNtohl = ntohl;
-	pSocket = socket;
-	pSelect = select;
-	pSendTo = sendto;
-	pConnect = connect;
-	pRecvFrom = recvfrom;
-	pInet_Addr = inet_addr;
-	pInet_Ntoa = inet_ntoa;
-	pWSAStartup = WSAStartup;
-	pWSACleanup = WSACleanup;
-	pSetSockopt = setsockopt;
-	pIoctlSocket = ioctlsocket;
-	pCloseSocket = closesocket;
-	pGetHostName = gethostname;
-	pGetSockName = getsockname;
-	pGetHostByName = gethostbyname;
-#ifdef HAVE_GETADDRINFO
-	pGetAddrInfo = getaddrinfo;
-#endif
-	pWSAGetLastError = WSAGetLastError;
-
-	return true;
-}
-#else
 qboolean NET_OpenWinSock( void )
 {
 	if( Sys_LoadLibrary( &kernel32_dll ) )
@@ -177,7 +131,6 @@ qboolean NET_OpenWinSock( void )
 	// so we can run on Win 3.1, where there isn't necessarily Winsock)
 	return Sys_LoadLibrary( &winsock_dll );
 }
-#endif
 
 void NET_FreeWinSock( void )
 {

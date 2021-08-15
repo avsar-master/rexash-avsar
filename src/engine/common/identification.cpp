@@ -360,7 +360,7 @@ int ID_CheckFiles( bloomfilter_t value, const char *prefix, const char *postfix 
 	closedir( dir );
 	return count;
 }
-#elif !defined(XASH_WINRT)
+#else
 int ID_GetKeyData( HKEY hRootKey, char *subKey, char *value, LPBYTE data, DWORD cbData )
 {
 	HKEY hKey;
@@ -493,7 +493,7 @@ bloomfilter_t ID_GenerateRawId( void )
 	count += ID_ProcessNetDevices( &value );
 #endif
 
-#if defined(_WIN32) && !defined(XASH_WINRT)
+#if defined(_WIN32)
 	count += ID_ProcessWMIC( &value, "wmic path win32_physicalmedia get SerialNumber " );
 	count += ID_ProcessWMIC( &value, "wmic bios get serialnumber " );
 #endif
@@ -512,7 +512,7 @@ uint ID_CheckRawId( bloomfilter_t filter )
 		count += (filter & value) == value;
 #endif
 	
-#if defined(_WIN32) && !defined(XASH_WINRT)
+#if defined(_WIN32)
 	count += ID_CheckWMIC( filter, "wmic path win32_physicalmedia get SerialNumber" );
 	count += ID_CheckWMIC( filter, "wmic bios get serialnumber" );
 #endif
@@ -583,7 +583,7 @@ void ID_Init( void )
 	Cmd_AddCommand( "testcpuinfo", ID_TestCPUInfo_f, "try read cpu serial" );
 #endif
 
-#if defined(_WIN32) && !defined(XASH_WINRT)
+#if defined(_WIN32)
 	{
 		CHAR szBuf[MAX_PATH];
 		ID_GetKeyData( HKEY_CURRENT_USER, "Software\\Xash3D\\", "xash_id", (LPBYTE)szBuf, MAX_PATH );
@@ -635,7 +635,7 @@ void ID_Init( void )
 	for( i = 0; i < 16; i++ )
 		Q_sprintf( &id_md5[i*2], "%02hhx", md5[i] );
 
-#if defined(_WIN32) && !defined(XASH_WINRT)
+#if defined(_WIN32)
 	{
 		CHAR Buf[MAX_PATH];
 		sprintf( Buf, "%016llX", id^SYSTEM_XOR_MASK );

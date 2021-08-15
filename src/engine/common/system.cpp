@@ -36,9 +36,7 @@ extern char **environ;
 #include <time.h>
 #endif
 #include "menu_int.h" // _UPDATE_PAGE macro
-#ifdef XASH_WINRT
-#include "platform/winrt/winrt_interop.h"
-#endif
+
 
 
 qboolean	error_on_exit = false;	// arg for exit();
@@ -233,9 +231,7 @@ char *Sys_GetClipboardData( void )
 
 	data[0] = '\0';
 
-#ifdef XASH_WINRT
-	WinRT_GetClipboardData(data, 1024);
-#elif defined XASH_SDL
+#if defined XASH_SDL
 	buffer = SDL_GetClipboardText();
 	if( buffer )
 	{
@@ -255,9 +251,7 @@ write screenshot into clipboard
 */
 void Sys_SetClipboardData( const byte *buffer, size_t size )
 {
-#ifdef XASH_WINRT
-	WinRT_SetClipboardData((const char *)buffer, size);
-#elif defined XASH_SDL
+#if defined XASH_SDL
 	SDL_SetClipboardText((char *)buffer);
 #endif
 }
@@ -293,16 +287,13 @@ returns username for current profile
 */
 char *Sys_GetCurrentUser( void )
 {
-#if defined( XASH_WINRT)
-	return WinRT_GetUserName();
-#elif defined(_WIN32)
+#if defined(_WIN32)
 
 	static string	s_userName;
 	unsigned long size = sizeof( s_userName );
 
 	if( GetUserName( s_userName, &size ))
 		return s_userName;
-
 #else
 
 	uid_t uid = geteuid();
@@ -374,11 +365,7 @@ void Sys_ShellExecute( const char *path, const char *parms, qboolean shouldExit 
 	if( !Q_strcmp( path, GENERIC_UPDATE_PAGE ) || !Q_strcmp( path, PLATFORM_UPDATE_PAGE ))
 		path = XASH_UPDATE_PAGE;
 
-#ifdef XASH_WINRT
-	WinRT_ShellExecute(path);
-#else
 	ShellExecute(NULL, "open", path, parms, NULL, SW_SHOW);
-#endif
 #elif __EMSCRIPTEN__
 	EM_ASM_INT({
 				if( confirm( "Open game page?\n"+Pointer_stringify($0) ) )
@@ -548,14 +535,7 @@ qboolean Sys_LoadLibrary( dll_info_t *dll )
 
 	if (!dll->link)
 	{
-#ifdef XASH_WINRT
-		wchar_t buffer[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, dll->name, -1, buffer, MAX_PATH);
-
-		dll->link = LoadPackagedLibrary(buffer, 0); // environment pathes
-#else
 		dll->link = LoadLibrary(dll->name); // environment pathes
-#endif
 	}
 
 	// no DLL found
