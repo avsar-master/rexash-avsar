@@ -9,9 +9,7 @@
 #if !defined( ENGINE_LAUNCHER_APIH )
 #define ENGINE_LAUNCHER_APIH
 #ifdef _WIN32
-#ifndef __MINGW32__
 #pragma once
-#endif /* not __MINGW32__ */
 #endif
 
 //typedef void ( *xcommand_t ) ( void );

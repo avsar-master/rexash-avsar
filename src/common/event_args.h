@@ -15,9 +15,7 @@
 #if !defined( EVENT_ARGS_H )
 #define EVENT_ARGS_H
 #ifdef _WIN32
-#ifndef __MINGW32__
 #pragma once
-#endif /* not __MINGW32__ */
 #endif
 
 // Event was invoked with stated origin

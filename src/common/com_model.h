@@ -8,10 +8,8 @@
 // com_model.h
 #if !defined( COM_MODEL_H )
 #define COM_MODEL_H
-#if defined( _WIN32 )
-#ifndef __MINGW32__
+#ifdef _WIN32
 #pragma once
-#endif /* not __MINGW32__ */
 #endif
 
 #include "bspfile.h"	// we need some declarations from it

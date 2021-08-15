@@ -8,9 +8,7 @@
 #ifndef IVOICETWEAK_H
 #define IVOICETWEAK_H
 #ifdef _WIN32
-#ifndef __MINGW32__
 #pragma once
-#endif /* not __MINGW32__ */
 #endif
 
 // These provide access to the voice controls.

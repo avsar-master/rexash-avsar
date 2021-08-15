@@ -16,8 +16,8 @@
 #undef GetCurrentTime
 #undef ShellExecute
 
-#include "FileSystem.h"
-#include "FileSystem_Helpers.h"
+#include "public/FileSystem.h"
+#include "filesystem_helper/FileSystem_Helpers.h"
 
 #include <vgui/IInputInternal.h>
 #include <vgui_controls/Controls.h>
