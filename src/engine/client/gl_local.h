@@ -361,7 +361,6 @@ void R_DrawCubemapView( const vec3_t origin, const vec3_t angles, int size );
 void R_TranslateForEntity( cl_entity_t *e );
 void R_RotateForEntity( cl_entity_t *e );
 int R_ComputeFxBlend( cl_entity_t *e );
-qboolean R_InitRenderAPI( void );
 void R_SetupFrustum( void );
 void R_FindViewLeaf( void );
 void R_DrawFog( void );

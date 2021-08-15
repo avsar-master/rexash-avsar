@@ -22,7 +22,6 @@ GNU General Public License for more details.
 #include "gl_local.h"
 #include "vgui_draw.h"
 
-#include "touch.h" // IN_TouchDraw( )
 #include "joyinput.h" // Joy_DrawOnScreenKeyboard( )
 #ifdef XASH_IMGUI
 #include "imgui_impl_xash.h"
@@ -423,7 +422,6 @@ void V_PostRender( void )
 
 	if( draw_2d )
 	{
-		Touch_Draw();
 		SCR_RSpeeds();
 		SCR_NetSpeeds();
 		SCR_DrawFPS();

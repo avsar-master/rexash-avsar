@@ -1211,11 +1211,6 @@ int R_CreateDecalList( decallist_t *pList, qboolean changelevel )
 			// check to see if the decal should be added
 			total = DecalListAdd( pList, total );
 		}
-
-		if( clgame.drawFuncs.R_CreateStudioDecalList )
-		{
-			total += clgame.drawFuncs.R_CreateStudioDecalList( pList, total, changelevel );
-		}
 	}
 
 	// sort the decals lowest depth first, so they can be re-applied in order
@@ -1299,10 +1294,6 @@ void R_ClearAllDecals( void )
 		R_DecalUnlink( pdecal );
 	}
 
-	if( clgame.drawFuncs.R_ClearStudioDecals )
-	{
-		clgame.drawFuncs.R_ClearStudioDecals();
-	}
 }
 
 #endif // XASH_DEDICATED

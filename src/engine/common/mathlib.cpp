@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-#if defined (__linux__) && !defined (__ANDROID__)
+#if defined (__linux__)
 //sincosf
 #define _GNU_SOURCE
 #include <math.h>
@@ -175,7 +175,7 @@ void SinCos( float radians, float *sine, float *cosine )
 	}
 #else
 	// I think, better use math.h function, instead of ^
-#if defined (__linux__) && !defined (__ANDROID__)
+#if defined (__linux__)
 	sincosf(radians, sine, cosine);
 #else
 	*sine = sinf(radians);

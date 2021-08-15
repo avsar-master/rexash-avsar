@@ -1030,17 +1030,6 @@ static void R_CheckVBO( void )
 	if( glConfig.max_texture_units < 3 )
 		disable = true;
 
-#ifdef XASH_MOBILE_PLATFORM
-	// VideoCore4 drivers have a problem with mixing VBO and client arrays
-	// Disable it, as there is no suitable workaround here
-	if( Q_stristr( glConfig.renderer_string, "VideoCore IV" ) || Q_stristr( glConfig.renderer_string, "vc4" ) )
-		disable = true;
-
-	// dlightmode 1 is not too much tested on android
-	// so better to left it off
-	dlightmode = "0";
-#endif
-
 	if( disable )
 	{
 		// do not keep in config unless dev > 3 and enabled
@@ -1087,7 +1076,6 @@ static void SetWidthAndHeightFromCommandLine()
 
 static void SetFullscreenModeFromCommandLine()
 {
-#ifndef XASH_MOBILE_PLATFORM
 	if ( Sys_CheckParm("-fullscreen") )
 	{
 		Cvar_Set2("fullscreen", "1", true);
@@ -1096,7 +1084,6 @@ static void SetFullscreenModeFromCommandLine()
 	{
 		Cvar_Set2("fullscreen", "0", true);
 	}
-#endif
 }
 
 /*

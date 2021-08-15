@@ -491,13 +491,6 @@ static void Mod_FreeUserData( model_t *mod )
 	// already freed?
 	if( !mod || !mod->name[0] )
 		return;
-#ifndef XASH_DEDICATED
-	if( clgame.drawFuncs.Mod_ProcessUserData != NULL )
-	{
-		// let the client.dll free custom data
-		clgame.drawFuncs.Mod_ProcessUserData( mod, false, NULL );
-	}
-#endif
 }
 
 /*
@@ -3077,13 +3070,7 @@ model_t *Mod_LoadModel( model_t *mod, qboolean crash )
 
 		return NULL;
 	}
-#ifndef XASH_DEDICATED
-	else if( clgame.drawFuncs.Mod_ProcessUserData != NULL )
-	{
-		// let the client.dll load custom data
-		clgame.drawFuncs.Mod_ProcessUserData( mod, true, buf );
-	}
-#endif
+
 	Mem_Free( buf );
 
 	return mod;

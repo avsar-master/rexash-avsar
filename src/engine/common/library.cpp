@@ -87,11 +87,6 @@ const char* Com_NameForFunction(void* hInstance, void* function)
 
 #elif !defined(_WIN32)
 
-#ifdef __ANDROID__
-#include "platform/android/dlsym-weak.h"
-#endif
-
-
 #ifdef NO_LIBDL
 
 #ifndef DLL_LOADER
@@ -122,162 +117,15 @@ int dladdr( const void *addr, Dl_info *info )
 	return 0;
 }
 
-
-
 #endif
 #ifdef XASH_SDL
 #include <SDL_filesystem.h>
-#endif
-
-#if TARGET_OS_IPHONE
-
-static void *IOS_LoadLibraryInternal( const char *dllname )
-{
-	void *pHandle;
-	string errorstring = "";
-	char path[MAX_SYSPATH];
-	
-	// load frameworks from Documents directory
-	// frameworks should be signed with same key with application
-	// Useful for debug to prevent rebuilding app on every library update
-	// NOTE: Apple polices forbids loading code from shared places
-#ifdef ENABLE_FRAMEWORK_SIDELOAD
-	Q_snprintf( path, MAX_SYSPATH, "%s.framework/lib", dllname );
-	if( pHandle = dlopen( path, RTLD_NOW ) )
-		return pHandle;
-	Q_snprintf( errorstring, MAX_STRING, dlerror() );
-#endif
-	
-#ifdef DLOPEN_FRAMEWORKS
-	// load frameworks as it should be located in Xcode builds
-	Q_snprintf( path, MAX_SYSPATH, "%s%s.framework/lib", SDL_GetBasePath(), dllname );
-#else
-	// load libraries from app root to allow re-signing ipa with custom utilities
-	Q_snprintf( path, MAX_SYSPATH, "%s%s", SDL_GetBasePath(), dllname );
-#endif
-	pHandle = dlopen( path, RTLD_NOW );
-	if( !pHandle )
-	{
-		Com_PushLibraryError(errorstring);
-		Com_PushLibraryError(dlerror());
-	}
-	return pHandle;
-}
-extern char *g_szLibrarySuffix;
-static void *IOS_LoadLibrary( const char *dllname )
-{
-
-	string name;
-	char *postfix = g_szLibrarySuffix;
-	char *pHandle;
-
-	if( !postfix ) postfix = GI->gamefolder;
-
-	Q_snprintf( name, MAX_STRING, "%s_%s", dllname, postfix );
-	pHandle = IOS_LoadLibraryInternal( name );
-	if( pHandle )
-		return pHandle;
-	return IOS_LoadLibraryInternal( dllname );
-}
-
 #endif
 
 void *Com_LoadLibrary( const char *dllname, int build_ordinals_table )
 {
 	dll_user_t *hInst = NULL;
 	void *pHandle = NULL;
-
-	// platforms where gameinfo mechanism is impossible
-	// or not implemented
-#if TARGET_OS_IPHONE
-	{
-		return IOS_LoadLibrary( dllname );
-	}
-#elif defined( __EMSCRIPTEN__ )
-	{
-#ifdef EMSCRIPTEN_LIB_FS
-		char path[MAX_SYSPATH];
-		string prefix;
-		Q_strcpy(prefix, getenv( "LIBRARY_PREFIX" ) );
-		Q_snprintf( path, MAX_SYSPATH, "%s%s%s",  prefix, dllname, getenv( "LIBRARY_SUFFIX" ) );
-		pHandle = dlopen( path, RTLD_NOW );
-		if( !pHandle )
-		{
-			Com_PushLibraryError( va("Loading %s:\n", path ) );
-			Com_PushLibraryError( dlerror() );
-		}
-		return pHandle;
-#else
-		// get handle of preloaded library outside fs
-		return EM_ASM_INT( return DLFCN.loadedLibNames[Pointer_stringify($0)], (int)dllname );
-#endif
-	}
-#elif defined( __ANDROID__ )
-	{
-		char path[MAX_SYSPATH];
-		const char *libdir[2];
-		int i;
-
-		libdir[0] = getenv("XASH3D_GAMELIBDIR");
-		libdir[1] = getenv("XASH3D_ENGLIBDIR");
-
-		for( i = 0; i < 2; i++ )
-		{
-			Q_snprintf( path, MAX_SYSPATH, "%s/lib%s"POSTFIX"."OS_LIB_EXT, libdir[i], dllname );
-			pHandle = dlopen( path, RTLD_NOW );
-			if( pHandle )
-				return pHandle;
-
-			Com_PushLibraryError( dlerror() );
-		}
-
-		// HACKHACK: keep old behaviour for compatibility
-		pHandle = dlopen( dllname, RTLD_NOW );
-		if( pHandle )
-			return pHandle;
-
-		Com_PushLibraryError( dlerror() );
-	}
-#elif defined __SAILFISH__
-	{
-		char path[MAX_SYSPATH];
-		const char *libdir[2];
-		int i;
-
-		// try from game library directory at first
-		libdir[0] = va( LIBPATH"/gamelibs/%s", GI ? GI->gamefolder : "" );
-
-		// try from engine path
-		libdir[1] = LIBPATH;
-
-		for( i = 0; i < 2; i++ )
-		{
-			Q_snprintf( path, MAX_SYSPATH, "%s/lib%s."OS_LIB_EXT, libdir[i], dllname );
-			pHandle = dlopen( path, RTLD_NOW );
-			if( pHandle )
-				return pHandle;
-
-			Com_PushLibraryError( dlerror() );
-		}
-	}
-#elif defined __HAIKU__
-	// First look for libraries in the mirror directory
- 	const char *libdir = getenv( "XASH3D_MIRRORDIR" );
- 	if( libdir ) {
- 		char path[MAX_SYSPATH];
- 		char game[MAX_SYSPATH] = { 0 };
- 		if( GI && !Q_strstr( dllname, "menu" ) )
- 			Q_snprintf( game, MAX_SYSPATH, "/%s", GI->gamefolder );
- 		Q_snprintf( path, MAX_SYSPATH, "%s%s/%s", libdir, game, dllname );
- 		// fprintf( stderr, "===> %s: %s\n", dllname, path );
- 		pHandle = dlopen( path, RTLD_NOW );
- 		if( pHandle )
- 			return pHandle;
-
-  		Com_PushLibraryError( dlerror() );
- 	}
- 	// Then through FS_FindLibrary() function in the gamebase directory
-#endif
 
 	// platforms where gameinfo mechanism is working goes here
 	// and use FS_FindLibrary

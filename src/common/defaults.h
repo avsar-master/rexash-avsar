@@ -48,25 +48,6 @@ SETUP BACKENDS DEFINITIONS
 
 	#endif //XASH_SDL
 
-	#if defined __ANDROID__ && !defined XASH_SDL
-
-		#ifndef XASH_VIDEO
-			#define XASH_VIDEO VIDEO_ANDROID
-		#endif
-
-		#ifndef XASH_TIMER
-			#define XASH_TIMER TIMER_LINUX
-		#endif
-
-		#ifndef XASH_INPUT
-			#define XASH_INPUT INPUT_ANDROID
-		#endif
-
-		#ifndef XASH_SOUND
-			#define XASH_SOUND SOUND_OPENSLES
-		#endif
-	#endif // android case
-
 #endif // XASH_DEDICATED
 
 // select crashhandler based on defines
@@ -114,20 +95,6 @@ Default build-depended cvar and constant values
 =========================================================================
 */
 
-#if defined __ANDROID__ || TARGET_OS_IPHONE || defined __SAILFISH__
-	#define DEFAULT_TOUCH_ENABLE "1"
-	#define DEFAULT_M_IGNORE "1"
-#else
-	#define DEFAULT_TOUCH_ENABLE "0"
-	#define DEFAULT_M_IGNORE "0"
-#endif
-
-#if defined __ANDROID__ || TARGET_OS_IPHONE || defined __SAILFISH__ || defined __EMSCRIPTEN__ || defined XASH_STATIC_GAMELIB
-// this means that libraries are provided with engine, but not in game data
-// You need add library loading code to library.c when adding new platform
-#define XASH_INTERNAL_GAMELIBS
-#endif
-
 #if defined XASH_NANOGL || defined XASH_WES || defined XASH_REGAL
 #ifndef XASH_GLES
 #define XASH_GLES
@@ -156,10 +123,7 @@ Default build-depended cvar and constant values
 #define DEFAULT_FULLSCREEN 1
 #endif
 
-#if TARGET_OS_IPHONE
-	#define DEFAULT_CON_MAXFRAC "0.5"
-#else
-	#define DEFAULT_CON_MAXFRAC "1"
-#endif
+
+#define DEFAULT_CON_MAXFRAC "1"
 
 #endif // DEFAULTS_H

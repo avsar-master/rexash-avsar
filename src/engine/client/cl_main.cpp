@@ -21,7 +21,6 @@ GNU General Public License for more details.
 #include "cl_tent.h"
 #include "gl_local.h"
 #include "input.h"
-#include "touch.h"
 #include "kbutton.h"
 #include "vgui_draw.h"
 #include "library.h"
@@ -468,14 +467,6 @@ void CL_CreateCmd( void )
 
 	active = ( cls.state == ca_active && !cl.refdef.paused && !cls.demoplayback );
 
-#ifdef XASH_SDL
-	if( m_ignore->integer )
-	{
-		int x, y;
-		SDL_GetRelativeMouseState( &x, &y );
-	}
-#endif
-
 	clgame.dllFuncs.CL_CreateMove( cl.time - cl.oldtime, &pcmd->cmd, active );
 	CL_PopPMStates();
 
@@ -829,18 +820,12 @@ void CL_SendConnectPacket( void )
 				extensions |= NET_EXT_SPLITHUFF;
 		}
 
-		if( !m_ignore->integer )
-			input_devices |= INPUT_DEVICE_MOUSE;
-
-		if( touch_enable->integer )
-			input_devices |= INPUT_DEVICE_TOUCH;
+		input_devices |= INPUT_DEVICE_TOUCH; // send fake input info
 
 		if(  Cvar_VariableInteger( "joy_enable" ) && Cvar_VariableInteger( "joy_found" ) )
 			input_devices |= INPUT_DEVICE_JOYSTICK;
 
 		// lock input devices change
-		Cvar_FullSet( "touch_enable", va( "%s", touch_enable->string ), touch_enable->flags | CVAR_READ_ONLY );
-		Cvar_FullSet( "m_ignore", va( "%s", m_ignore->string ), m_ignore->flags | CVAR_READ_ONLY );
 		Cvar_FullSet( "joy_enable", va( "%s", Cvar_VariableString( "joy_enable" ) ), CVAR_ARCHIVE | CVAR_READ_ONLY );
 
 
@@ -853,9 +838,6 @@ void CL_SendConnectPacket( void )
 	}
 	else
 	{
-		// reset to writable state
-		Cvar_FullSet( "touch_enable", va( "%s", touch_enable->string ), touch_enable->flags & ~CVAR_READ_ONLY );
-		Cvar_FullSet( "m_ignore", va( "%s", m_ignore->string ), m_ignore->flags & ~CVAR_READ_ONLY );
 		Cvar_FullSet( "joy_enable", va( "%s", Cvar_VariableString( "joy_enable" ) ), CVAR_ARCHIVE );
 	}
 
@@ -1180,8 +1162,6 @@ void CL_Disconnect( void )
 	CL_ChangeGame( GI->gamefolder, true );
 
 	// reset to writable state
-	Cvar_FullSet( "touch_enable", va( "%s", touch_enable->string ), touch_enable->flags & ~CVAR_READ_ONLY );
-	Cvar_FullSet( "m_ignore", va( "%s", m_ignore->string ), m_ignore->flags & ~CVAR_READ_ONLY );
 	Cvar_FullSet( "joy_enable", va( "%s", Cvar_VariableString( "joy_enable" ) ), CVAR_ARCHIVE );
 	Cbuf_InsertText( "menu_connectionprogress disconnect\n" );
 
@@ -2390,8 +2370,6 @@ void CL_Init( void )
 	// unreliable buffer. unsed for unreliable commands and voice stream
 	BF_Init( &cls.datagram, "cls.datagram", cls.datagram_buf, sizeof( cls.datagram_buf ));
 
-	Touch_Init();
-
 	{
 		char clientlib[256];
 		Com_ResetLibraryError();
@@ -2441,10 +2419,8 @@ void CL_Shutdown( void )
 #ifdef XASH_IMGUI
 	ImGui_ImplGL_Shutdown();
 #endif
-	Touch_Shutdown();
 	CL_CloseDemoHeader();
 	IN_Shutdown ();
-	Mobile_Shutdown();
 
 	SCR_Shutdown ();
 	if( cls.initialized )

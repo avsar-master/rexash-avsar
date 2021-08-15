@@ -56,11 +56,6 @@ byte *Mod_GetCurrentVis( void )
 
 void Mod_SetOrthoBounds( float *mins, float *maxs )
 {
-	if( clgame.drawFuncs.GL_OrthoBounds )
-	{
-		clgame.drawFuncs.GL_OrthoBounds( mins, maxs );
-	}
-
 	Vector2Average( maxs, mins, world_orthocenter );
 	Vector2Subtract( maxs, world_orthocenter, world_orthohalf );
 }
@@ -3901,12 +3896,6 @@ void GL_RebuildLightmaps( void )
 			GL_CreateSurfaceLightmap( m->surfaces + j );
 	}
 	LM_UploadBlock( false );
-
-	if( clgame.drawFuncs.GL_BuildLightmaps )
-	{
-		// build lightmaps on the client-side
-		clgame.drawFuncs.GL_BuildLightmaps( );
-	}
 }
 
 /*
@@ -3998,12 +3987,6 @@ void GL_BuildLightmaps( void )
 	}
 
 	LM_UploadBlock( false );
-
-	if( clgame.drawFuncs.GL_BuildLightmaps )
-	{
-		// build lightmaps on the client-side
-		clgame.drawFuncs.GL_BuildLightmaps( );
-	}
 
 	if( !gl_keeptjunctions->integer )
 		MsgDev( D_INFO, "Eliminated %i vertices\n", nColinElim );

@@ -40,7 +40,6 @@ GNU General Public License for more details.
 #include "mod_local.h"
 #include "mathlib.h"
 #include "input.h"
-#include "touch.h"
 #include "engine_features.h"
 #include "render_api.h"	// decallist_t
 #include "library.h"
@@ -78,11 +77,9 @@ void Sys_PrintUsage( void )
 
 	const char *usage_str = "Usage:\n"
 	"\t    "
-	#ifndef __ANDROID__
-		"<xash_binary>"
-		#ifdef _WIN32
-			".exe"
-		#endif
+	"<xash_binary>"
+	#ifdef _WIN32
+		".exe"
 	#endif
 	" [options] [+command1] [+command2 arg]\n"
 	"Available options:\n"
@@ -91,29 +88,18 @@ void Sys_PrintUsage( void )
 	O("-toconsole       ","start witn console open")
 	O("-nowriteconfig   ","disable config save")
 	O("-casesensitive   ","disable case-insensitive FS emulation")
-	#ifndef XASH_MOBILE_PLATFORM
-		O("-daemonize       ", "run engine in background(only for dedicated)")
-	#endif
 
 	#ifndef XASH_DEDICATED
 		O("-width <n>       ","specifies width of engine window")
 		O("-height <n>      ","specifies height of engine window")
 
-	#ifndef __ANDROID__
 		O("-fullscreen      ","runs engine in fullscreen mode")
 		O("-windowed        ","runs engine in windowed mode")
-	#endif
 
 		O("-nojoy           ","disable joystick support")
 		O("-nosound         ","disable sound")
 		O("-noenginemouse   ","disable mouse completely")
-	#ifndef XASH_MOBILE_PLATFORM
 			O("-dedicated       ","run in dedicated server mode")
-	#endif
-	#endif
-
-	#ifdef __ANDROID__
-		O("-nonativeegl  ","use java egl implementation. Use if screen does not update")
 	#endif
 
 	#ifdef _WIN32
@@ -268,8 +254,6 @@ void Host_RunFrame()
 
 #if XASH_INPUT == INPUT_SDL
 	SDLash_RunEvents();
-#elif XASH_INPUT == INPUT_ANDROID
-	Android_RunEvents();
 #endif
 
 	newtime = Sys_DoubleTime ();
@@ -985,54 +969,7 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 	Sys_ParseCommandLine( argc, argv );
 
 	// to be accessed later
-	if( ( host.daemonized = Sys_CheckParm( "-daemonize" ) ) )
-	{
-#if defined(_POSIX_VERSION) && !defined(XASH_MOBILE_PLATFORM)
-		pid_t daemon;
 
-		daemon = fork();
-
-		if( daemon < 0 )
-		{
-			Host_Error( "fork() failed: %s\n", strerror( errno ) );
-		}
-
-		if( daemon > 0 )
-		{
-			// parent
-			MsgDev( D_INFO, "Child pid: %i\n", daemon );
-			exit( 0 );
-		}
-		else
-		{
-			// don't be closed by parent
-			if( setsid() < 0 )
-			{
-				Host_Error( "setsid() failed: %s\n", strerror( errno ) );
-			}
-
-			// set permissions
-			umask( 0 );
-
-			// engine will still use stdin/stdout,
-			// so just redirect them to /dev/null
-			close( STDIN_FILENO );
-			close( STDOUT_FILENO );
-			close( STDERR_FILENO );
-			open("/dev/null", O_RDONLY); // becomes stdin
-			open("/dev/null", O_RDWR); // stdout
-			open("/dev/null", O_RDWR); // stderr
-
-			// fallthrough
-		}
-#elif defined(XASH_MOBILE_PLATFORM)
-		Sys_Error( "Can't run in background on mobile platforms!" );
-#else
-		Sys_Error( "Daemonize not supported on this platform!" );
-#endif
-	}
-
-	
 	host.enabledll = !Sys_CheckParm( "-nodll" );
 
 	host.shutdown_issued = false;
@@ -1048,12 +985,7 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 	}
 	else
 	{
-#if TARGET_OS_IOS
-		const char *IOS_GetDocsDir();
-		Q_strncpy( host.rootdir, IOS_GetDocsDir(), sizeof( host.rootdir ));
-#elif defined(__SAILFISH__)
-		Q_strncpy( host.rootdir, GAMEPATH, sizeof( host.rootdir ));
-#elif defined(XASH_SDL)
+#if defined(XASH_SDL)
 # ifdef XASH_WINRT
 		if (!(baseDir = SDL_WinRTGetFSPathUTF8(SDL_WINRT_PATH_LOCAL_FOLDER)))
 			Sys_Error("couldn't determine current directory: %s", SDL_GetError());
@@ -1085,20 +1017,6 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 		{
 			Q_strncpy( host.rodir, roDir, sizeof( host.rodir ) );
 		}
-#if TARGET_OS_IOS
-		else
-		{
-			const char *IOS_GetBundleDir();
-			Q_strncpy( host.rodir, IOS_GetBundleDir(), sizeof( host.rodir ));
-		}
-#elif defined XASH_WINRT
-		else
-		{
-			size_t len = Q_strncpy(host.rodir, SDL_WinRTGetFSPathUTF8(SDL_WINRT_PATH_INSTALLED_LOCATION), sizeof(host.rodir));
-			host.rodir[len] = '\\';
-			host.rodir[len + 1] = '\0';
-		}
-#endif
 	}
 
 	if( !Sys_CheckParm( "-disablehelp" ) )
@@ -1164,7 +1082,7 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 		host.type = HOST_DEDICATED;
 	}
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
-#if defined XASH_GLES && !defined __EMSCRIPTEN__ && !TARGET_OS_IOS && defined SDL_HINT_OPENGL_ES_DRIVER
+#if defined XASH_GLES && !defined __EMSCRIPTEN__ && defined SDL_HINT_OPENGL_ES_DRIVER
 	SDL_SetHint( SDL_HINT_OPENGL_ES_DRIVER, "1" );
 #endif
 #endif
@@ -1337,10 +1255,6 @@ int EXPORT Host_Main( int argc, const char **argv, const char *progname, int bCh
 	SV_Init();
 	CL_Init();
 
-#if defined(__ANDROID__) && !defined( XASH_SDL ) && !defined( XASH_DEDICATED )
-	Android_Init();
-#endif
-
 	HTTP_Init();
 
 	ID_Init();
@@ -1417,7 +1331,6 @@ int EXPORT Host_Main( int argc, const char **argv, const char *progname, int bCh
 	if( !host.stuffcmdsrun )
 		Cbuf_AddText( "stuffcmds\n" );
 
-	Touch_InitConfig();
 	SCR_CheckStartupVids();	// must be last
 #ifdef XASH_SDL
 	SDL_StopTextInput(); // disable text input event. Enable this in chat/console?
@@ -1460,7 +1373,6 @@ void EXPORT Host_Shutdown( void )
 			// restore all latched cheat cvars
 			Cvar_SetCheatState( true );
 			Host_WriteConfig();
-			Touch_WriteConfig();
 			host.skip_configs = false;
 		}
 #endif

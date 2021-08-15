@@ -143,16 +143,8 @@ void CL_ClipPMoveToEntity( physent_t *pe, const vec3_t start, vec3_t mins, vec3_
 {
 	ASSERT( tr != NULL );
 
-	if( clgame.dllFuncs.pfnClipMoveToEntity != NULL )
-	{
-		// do custom sweep test
-		clgame.dllFuncs.pfnClipMoveToEntity( pe, start, mins, maxs, end, tr );
-	}
-	else
-	{
-		// function is missing, so we didn't hit anything
-		tr->allsolid = false;
-	}
+	// function is missing, so we didn't hit anything
+	tr->allsolid = false;
 }
 
 qboolean CL_CopyEntityToPhysEnt( physent_t *pe, cl_entity_t *ent )

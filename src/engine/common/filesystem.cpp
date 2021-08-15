@@ -322,7 +322,7 @@ emulate WIN32 FS behaviour when opening local file
 */
 const char *FS_FixFileCase( const char *path )
 {
-#if !defined _WIN32 && !TARGET_OS_IPHONE // assume case insensitive
+#if !defined _WIN32 // assume case insensitive
 	DIR *dir; struct dirent *entry;
 	char path2[PATH_MAX], *fname;
 
@@ -1154,31 +1154,6 @@ void FS_Rescan( void )
 	MsgDev( D_NOTE, "FS_Rescan( %s )\n", GI->title );
 	FS_ClearSearchPath();
 
-#ifdef __ANDROID__
-	char *str;
-	if( str = getenv("XASH3D_EXTRAS_PAK1") )
-		FS_AddPack_Fullpath( str, NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-	if( str = getenv("XASH3D_EXTRAS_PAK2") )
-		FS_AddPack_Fullpath( str, NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-	//FS_AddPack_Fullpath( "/data/data/in.celest.xash3d.hl.test/files/pak.pak", NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-#elif TARGET_OS_IPHONE
-	{
-		FS_AddPack_Fullpath( va( "%sextras.pak", SDL_GetBasePath() ), NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-		FS_AddPack_Fullpath( va( "%sextras_%s.pak", SDL_GetBasePath(), GI->gamefolder ), NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-	}
-#elif defined(__SAILFISH__)
-	{
-		FS_AddPack_Fullpath( va( SHAREPATH"/extras.pak" ), NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-		FS_AddPack_Fullpath( va( SHAREPATH"/%s/extras.pak", GI->gamefolder ), NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-	}
-#elif defined(__HAIKU__)
-	char *dir;
- 	if( dir = getenv( "XASH3D_MIRRORDIR" ) )
- 		FS_AddPack_Fullpath( va( "%s/extras.pak", dir ), NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
- 	if( dir = getenv( "XASH3D_BASEDIR" ) )
- 		FS_AddPack_Fullpath( va( "%s/%s/extras.pak", dir , GI->gamefolder ), NULL, false, FS_NOWRITE_PATH | FS_CUSTOM_PATH );
-#endif
-
 	if( Q_stricmp( GI->basedir, GI->gamefolder ))
 		FS_AddGameHierarchy( GI->basedir, 0 );
 	if( Q_stricmp( GI->basedir, GI->falldir ) && Q_stricmp( GI->gamefolder, GI->falldir ))
@@ -1814,8 +1789,6 @@ void FS_LoadGameInfo( const char *rootfolder )
 		Q_strncpy( SI.gamedll, GI->game_dll, sizeof( SI.gamedll ) );
 #elif defined(__APPLE__)
 		Q_strncpy( SI.gamedll, GI->game_dll_osx, sizeof( SI.gamedll ) );
-#elif defined(__HAIKU__)
-		Q_strncpy( SI.gamedll, "dlls/"SERVERDLL, sizeof( SI.gamedll ) );
 #else
 		Q_strncpy( SI.gamedll, GI->game_dll_linux, sizeof( SI.gamedll ) );
 #endif

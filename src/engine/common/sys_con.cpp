@@ -14,9 +14,6 @@ GNU General Public License for more details.
 */
 
 #include "common.h"
-#ifdef __ANDROID__
-#include <android/log.h>
-#endif
 
 #ifdef USE_SELECT
 // non-blocking console input
@@ -167,15 +164,6 @@ void Sys_PrintLog( const char *pMsg )
 
 	time( &crt_time );
 	crt_tm = localtime( &crt_time );
-#ifdef __ANDROID__
-	__android_log_print( ANDROID_LOG_DEBUG, "Xash", "%s", pMsg );
-#endif
-
-#if TARGET_OS_IOS
-	void IOS_Log(const char*);
-	IOS_Log(pMsg);
-#endif
-
 
 	if( !lastchar || lastchar == '\n')
 		strftime( logtime, sizeof( logtime ), "[%H:%M:%S] ", crt_tm ); //short time
@@ -223,7 +211,7 @@ void Sys_PrintLog( const char *pMsg )
 		printf( "\033[34m%s\033[0m%s\033[0m", logtime, colored );
 	}
 #else
-#if !defined __ANDROID__ || defined XASH_DEDICATED
+#if defined XASH_DEDICATED
 	printf( "%s %s", logtime, pMsg );
 	fflush( stdout );
 #endif

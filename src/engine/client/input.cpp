@@ -16,7 +16,6 @@ GNU General Public License for more details.
 
 #include "common.h"
 #include "input.h"
-#include "touch.h"
 #include "client.h"
 #include "vgui_draw.h"
 #include "wrect.h"
@@ -66,7 +65,6 @@ convar_t *m_pitch;
 convar_t *m_yaw;
 
 convar_t *m_enginesens;
-convar_t *m_ignore;
 convar_t *cl_forwardspeed;
 convar_t *cl_sidespeed;
 convar_t *cl_backspeed;
@@ -149,19 +147,14 @@ int KeycodeFromEvdev(int keycode, int value);
 
 static void Evdev_CheckPermissions()
 {
-#ifdef __ANDROID__
-	system( "su 0 chmod 664 /dev/input/event*" );
-#endif
+
 }
 
 void Evdev_Setup( void )
 {
 	if( evdev.initialized )
 		return;
-#ifdef __ANDROID__
-	system( "su 0 supolicy --live \"allow appdomain input_device dir { ioctl read getattr search open }\" \"allow appdomain input_device chr_file { ioctl read write getattr lock append open }\"" );
-	system( "su 0 setenforce permissive" );
-#endif
+
 	evdev.initialized = true;
 }
 
@@ -394,9 +387,6 @@ void IN_EvdevFrame ()
 			ioctl( evdev.fds[i], EVIOCGRAB, (void*) 1 );
 			Key_ClearStates();
 		}
-
-		if( m_ignore->integer )
-			continue;
 		
 		evdev.x += -dx * m_yaw->value;
 		evdev.y += dy * m_pitch->value;
@@ -434,8 +424,6 @@ void IN_EvdevMove( float *yaw, float *pitch )
 void IN_StartupMouse( void )
 {
 	if( Host_IsDedicated() ) return;
-
-	m_ignore = Cvar_Get( "m_ignore", DEFAULT_M_IGNORE, CVAR_ARCHIVE , "ignore mouse events" );
 
 	m_enginemouse = Cvar_Get( "m_enginemouse", "0", CVAR_ARCHIVE, "read mouse events in engine instead of client" );
 	m_enginesens = Cvar_Get( "m_enginesens", "0.3", CVAR_ARCHIVE, "mouse sensitivity, when m_enginemouse enabled" );
@@ -488,18 +476,8 @@ void IN_ToggleClientMouse( int newstate, int oldstate )
 	{
 		// reset mouse pos, so cancel effect in game
 #ifdef XASH_SDL
-		if(touch_enable->integer)
-		{
-			SDL_SetRelativeMouseMode( SDL_FALSE );
-			SDL_SetWindowGrab( host.hWnd,  SDL_FALSE );
-		}
-		else
-		{
 			SDL_WarpMouseInWindow( host.hWnd, host.window_center_x, host.window_center_y );
 			SDL_SetWindowGrab( host.hWnd, SDL_TRUE );
-			if( clgame.dllFuncs.pfnLookEvent )
-				SDL_SetRelativeMouseMode( SDL_TRUE );
-		}
 #endif
 		if( cls.initialized )
 			clgame.dllFuncs.IN_ActivateMouse();
@@ -509,11 +487,6 @@ void IN_ToggleClientMouse( int newstate, int oldstate )
 	{
 #ifdef XASH_SDL
 		SDL_SetWindowGrab(host.hWnd, SDL_FALSE);
-		if( clgame.dllFuncs.pfnLookEvent )
-			SDL_SetRelativeMouseMode( SDL_FALSE );
-#endif
-#ifdef __ANDROID__
-		Android_ShowMouse( true );
 #endif
 #ifdef USE_EVDEV
 		Evdev_SetGrab( false );
@@ -521,9 +494,6 @@ void IN_ToggleClientMouse( int newstate, int oldstate )
 	}
 	else
 	{
-#ifdef __ANDROID__
-		Android_ShowMouse( false );
-#endif
 #ifdef USE_EVDEV
 		Evdev_SetGrab( true );
 #endif
@@ -620,7 +590,7 @@ void IN_MouseMove( void )
 {
 	POINT	current_pos = {0, 0};
 	
-	if( !in_mouseinitialized || !in_mouseactive || m_ignore->integer )
+	if( !in_mouseinitialized || !in_mouseactive )
 		return;
 
 	// find mouse movement
@@ -674,9 +644,6 @@ void IN_MouseEvent( int mstate )
 	int	i;
 
 	if( !in_mouseinitialized || !in_mouseactive )
-		return;
-
-	if( m_ignore->integer )
 		return;
 
 	if( cls.key_dest == key_game )
@@ -874,9 +841,6 @@ void IN_EngineAppendMove( float frametime, usercmd_t *cmd, qboolean active )
 {
 	float forward, side, dpitch, dyaw;
 
-	if( clgame.dllFuncs.pfnLookEvent )
-		return;
-
 	if( cls.key_dest != key_game || cl.refdef.paused || cl.refdef.intermission )
 		return;
 
@@ -886,7 +850,7 @@ void IN_EngineAppendMove( float frametime, usercmd_t *cmd, qboolean active )
 	{
 		float sensitivity = ( (float)cl.refdef.fov_x / (float)90.0f );
 #if XASH_INPUT == INPUT_SDL
-		if( m_enginemouse->integer && !m_ignore->integer )
+		if( m_enginemouse->integer)
 		{
 			int mouse_x, mouse_y;
 			SDL_GetRelativeMouseState( &mouse_x, &mouse_y );
@@ -894,17 +858,7 @@ void IN_EngineAppendMove( float frametime, usercmd_t *cmd, qboolean active )
 			cl.refdef.cl_viewangles[YAW] -= mouse_x * m_yaw->value * sensitivity;
 		}
 #endif
-#ifdef __ANDROID__
-		if( !m_ignore->integer )
-		{
-			float mouse_x, mouse_y;
-			Android_MouseMove( &mouse_x, &mouse_y );
-			cl.refdef.cl_viewangles[PITCH] += mouse_y * m_pitch->value * sensitivity;
-			cl.refdef.cl_viewangles[YAW] -= mouse_x * m_yaw->value * sensitivity;
-		}
-#endif
 		Joy_FinalizeMove( &forward, &side, &dyaw, &dpitch );
-		Touch_GetMove( &forward, &side, &dyaw, &dpitch );
 		IN_JoyAppendMove( cmd, forward, side );
 #ifdef USE_EVDEV
 		IN_EvdevMove( &dyaw, &dpitch );
@@ -937,46 +891,7 @@ void Host_InputFrame( void )
 #ifdef USE_EVDEV
 	IN_EvdevFrame();
 #endif
-	if( clgame.dllFuncs.pfnLookEvent )
-	{
-		int dx, dy;
 
-#if XASH_INPUT == INPUT_SDL
-		if( in_mouseinitialized && !m_ignore->integer )
-		{
-			SDL_GetRelativeMouseState( &dx, &dy );
-			pitch += dy * m_pitch->value, yaw -= dx * m_yaw->value; //mouse speed
-		}
-#endif
-
-#ifdef __ANDROID__
-		if( !m_ignore->integer )
-		{
-			float  mouse_x, mouse_y;
-			Android_MouseMove( &mouse_x, &mouse_y );
-			pitch += mouse_y * m_pitch->value, yaw -= mouse_x * m_yaw->value; //mouse speed
-		}
-#endif
-
-		Joy_FinalizeMove( &forward, &side, &yaw, &pitch );
-		Touch_GetMove( &forward, &side, &yaw, &pitch );
-#ifdef USE_EVDEV
-		IN_EvdevMove( &yaw, &pitch );
-#endif
-		if( look_filter->integer )
-		{
-			pitch = ( inputstate.lastpitch + pitch ) / 2;
-			yaw = ( inputstate.lastyaw + yaw ) / 2;
-			inputstate.lastpitch = pitch;
-			inputstate.lastyaw = yaw;
-		}
-
-		if( cls.key_dest == key_game )
-		{
-			clgame.dllFuncs.pfnLookEvent( yaw, pitch );
-			clgame.dllFuncs.pfnMoveEvent( forward, side );
-		}
-	}
 	Cbuf_Execute ();
 
 	if( host.state == HOST_RESTART )

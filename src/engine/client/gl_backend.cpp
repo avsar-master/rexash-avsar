@@ -31,13 +31,6 @@ R_SpeedsMessage
 */
 qboolean R_SpeedsMessage( char *out, size_t size )
 {
-	if( clgame.drawFuncs.R_SpeedsMessage != NULL )
-	{
-		if( clgame.drawFuncs.R_SpeedsMessage( out, size ))
-			return true;
-		// otherwise pass to default handler
-	}
-
 	if( r_speeds->integer <= 0 ) return false;
 	if( !out || !size ) return false;
 

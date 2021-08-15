@@ -482,40 +482,20 @@ int ID_CheckWMIC( bloomfilter_t value, const char *cmdline )
 }
 #endif
 
-
-#if TARGET_OS_IOS
-char *IOS_GetUDID( void );
-#endif
-
 bloomfilter_t ID_GenerateRawId( void )
 {
 	bloomfilter_t value = 0;
 	int count = 0;
 
 #ifdef __linux__
-#if defined(__ANDROID__) && !defined(XASH_DEDICATED)
-	{
-		const char *androidid = Android_GetAndroidID();
-		if( androidid && ID_VerifyHEX( androidid ) )
-		{
-			value |= BloomFilter_ProcessStr( androidid );
-			count ++;
-		}
-	}
-#endif
 	count += ID_ProcessCPUInfo( &value );
 	count += ID_ProcessFiles( &value, "/sys/block", "device/cid" );
 	count += ID_ProcessNetDevices( &value );
 #endif
+
 #if defined(_WIN32) && !defined(XASH_WINRT)
 	count += ID_ProcessWMIC( &value, "wmic path win32_physicalmedia get SerialNumber " );
 	count += ID_ProcessWMIC( &value, "wmic bios get serialnumber " );
-#endif
-#if TARGET_OS_IOS
-	{
-		value |= BloomFilter_ProcessStr(IOS_GetUDID());
-		count ++;
-	}
 #endif
 	return value;
 }
@@ -526,17 +506,6 @@ uint ID_CheckRawId( bloomfilter_t filter )
 	int count = 0;
 
 #ifdef __linux__
-#if defined(__ANDROID__) && !defined(XASH_DEDICATED)
-	{
-		const char *androidid = Android_GetAndroidID();
-		if( androidid && ID_VerifyHEX( androidid ) )
-		{
-			value = BloomFilter_ProcessStr( androidid );
-			count += (filter & value) == value;
-			value = 0;
-		}
-	}
-#endif
 	count += ID_CheckNetDevices( filter );
 	count += ID_CheckFiles( filter, "/sys/block", "device/cid" );
 	if( ID_ProcessCPUInfo( &value ) )
@@ -548,13 +517,6 @@ uint ID_CheckRawId( bloomfilter_t filter )
 	count += ID_CheckWMIC( filter, "wmic bios get serialnumber" );
 #endif
 
-#if TARGET_OS_IOS
-	{
-		value = BloomFilter_ProcessStr(IOS_GetUDID());
-		count += (filter & value) == value;
-		value = 0;
-	}
-#endif
 #if 0
 	Msg( "ID_CheckRawId: %d\n", count );
 #endif
@@ -621,15 +583,7 @@ void ID_Init( void )
 	Cmd_AddCommand( "testcpuinfo", ID_TestCPUInfo_f, "try read cpu serial" );
 #endif
 
-#if defined(__ANDROID__) && !defined(XASH_DEDICATED)
-	sscanf( Android_LoadID(), "%016llX", &id );
-	if( id )
-	{
-		id ^= SYSTEM_XOR_MASK;
-		ID_Check();
-	}
-	
-#elif defined(_WIN32) && !defined(XASH_WINRT)
+#if defined(_WIN32) && !defined(XASH_WINRT)
 	{
 		CHAR szBuf[MAX_PATH];
 		ID_GetKeyData( HKEY_CURRENT_USER, "Software\\Xash3D\\", "xash_id", (LPBYTE)szBuf, MAX_PATH );
@@ -640,12 +594,8 @@ void ID_Init( void )
 	}
 #else
 	{
-#ifndef __HAIKU__
 		const char *home = getenv( "HOME" );
-#else
-		char home[MAX_SYSPATH];
- 		find_directory( B_USER_SETTINGS_DIRECTORY, -1, false, home, MAX_SYSPATH );
-#endif
+
 		if( home )
 		{
 			FILE *cfg = fopen( va( "%s/.config/.xash_id", home ), "r" );
@@ -685,9 +635,7 @@ void ID_Init( void )
 	for( i = 0; i < 16; i++ )
 		Q_sprintf( &id_md5[i*2], "%02hhx", md5[i] );
 
-#if defined(__ANDROID__) && !defined(XASH_DEDICATED)
-	Android_SaveID( va("%016llX", id^SYSTEM_XOR_MASK ) );
-#elif defined(_WIN32) && !defined(XASH_WINRT)
+#if defined(_WIN32) && !defined(XASH_WINRT)
 	{
 		CHAR Buf[MAX_PATH];
 		sprintf( Buf, "%016llX", id^SYSTEM_XOR_MASK );
@@ -695,12 +643,8 @@ void ID_Init( void )
 	}
 #else
 	{
-#ifndef __HAIKU__
 		const char *home = getenv( "HOME" );
-#else
-		char home[MAX_SYSPATH];
- 		find_directory( B_USER_SETTINGS_DIRECTORY, -1, false, home, MAX_SYSPATH );
-#endif
+
 		if( home )
 		{
 			FILE *cfg = fopen( va( "%s/.config/.xash_id", home ), "w" );

@@ -1282,17 +1282,6 @@ void R_RenderFrame( const ref_params_t *fd, qboolean drawWorld )
 	if( RI.drawOrtho != gl_overview->integer )
 		tr.fResetVis = true;
 
-	// completely override rendering
-	if( clgame.drawFuncs.GL_RenderFrame != NULL )
-	{
-		if( clgame.drawFuncs.GL_RenderFrame( fd, drawWorld ))
-		{
-			RI.drawWorld = drawWorld;
-			tr.fResetVis = true;
-			return;
-		}
-	}
-
 	if( drawWorld ) r_lastRefdef = *fd;
 
 	RI.params = RP_NONE;
@@ -1342,8 +1331,6 @@ void R_EndFrame( void )
 		R_Set2DMode( false );
 #if defined(XASH_SDL)
 	SDL_GL_SwapWindow( host.hWnd );
-#elif defined __ANDROID__ // For direct android backend
-	Android_SwapBuffers();
 #endif
 }
 
@@ -1355,12 +1342,6 @@ R_DrawCubemapView
 void R_DrawCubemapView( const vec3_t origin, const vec3_t angles, int size )
 {
 	ref_params_t *fd;
-
-	if( clgame.drawFuncs.R_DrawCubemapView != NULL )
-	{
-		if( clgame.drawFuncs.R_DrawCubemapView( origin, angles, size ))
-			return;
-	}
 
 	fd = &RI.refdef;
 	*fd = r_lastRefdef;
@@ -1652,93 +1633,5 @@ template<class Ret, class...Args> struct AVIFunctionPointerWrapper
 	constexpr AVIFunctionPointerWrapper(Ret(*pfn)(Args...)) {}
 	template<Ret(*pfn)(Args...), class RetType = Ret> static constexpr auto lambda = [](auto...args) { return static_cast<RetType>(pfn(static_cast<typename TransformAVIPtrType<decltype(args)>::type>(args)...)); };
 };
-	
-static render_api_t gRenderAPI =
-{
-	GL_RenderGetParm,
-	R_GetDetailScaleForTexture,
-	R_GetExtraParmsForTexture,
-	CL_GetLightStyle,
-	CL_GetDynamicLight,
-	CL_GetEntityLight,
-	TextureToTexGamma,
-	CL_GetBeamChains,
-	R_SetCurrentEntity,
-	R_SetCurrentModel,
-	GL_SetWorldviewProjectionMatrix,
-	R_StoreEfrags,
-	GL_FindTexture,
-	GL_TextureName,
-	GL_TextureData,
-	GL_LoadTextureNoFilter,
-	GL_CreateTexture,
-	GL_SetTextureType,
-	GL_TextureUpdateCache,
-	GL_FreeTexture,
-	DrawSingleDecal,
-	R_DecalSetupVerts,
-	R_EntityRemoveDecals,
-	AVIFunctionPointerWrapper(AVI_LoadVideoNoSound).lambda<AVI_LoadVideoNoSound, void *>,
-	AVIFunctionPointerWrapper(AVI_GetVideoInfo).lambda<AVI_GetVideoInfo>,
-	AVIFunctionPointerWrapper(AVI_GetVideoFrameNumber).lambda<AVI_GetVideoFrameNumber>,
-	AVIFunctionPointerWrapper(AVI_GetVideoFrame).lambda<AVI_GetVideoFrame>,
-	R_UploadStretchRaw,
-	AVIFunctionPointerWrapper(AVI_FreeVideo).lambda<AVI_FreeVideo>,
-	AVIFunctionPointerWrapper(AVI_IsActive).lambda<AVI_IsActive>,
-	GL_Bind,
-	GL_SelectTexture,
-	GL_LoadTexMatrixExt,
-	GL_LoadIdentityTexMatrix,
-	GL_CleanUpTextureUnits,
-	GL_TexGen,
-	GL_TextureTarget,
-	GL_SetTexCoordArrayMode,
-	NULL,
-	NULL,
-	NULL,
-	GL_Scissor,
-	CL_DrawParticlesExternal,
-	R_EnvShot,
-	COM_CompareFileTime,
-	Host_Error,
-	pfnSPR_LoadExt,
-	Mod_TesselatePolygon,
-	R_StudioGetTexture,
-	GL_GetOverviewParms,
-	S_FadeMusicVolume,
-	COM_SetRandomSeed,
-	R_Mem_Alloc,
-	R_Mem_Free,
-	pfnGetFilesList,
-};
 
-/*
-===============
-R_InitRenderAPI
-
-Initialize client external rendering
-===============
-*/
-qboolean R_InitRenderAPI( void )
-{
-	// make sure what render functions is cleared
-	Q_memset( &clgame.drawFuncs, 0, sizeof( clgame.drawFuncs ));
-
-	if( clgame.dllFuncs.pfnGetRenderInterface )
-	{
-		if( clgame.dllFuncs.pfnGetRenderInterface( CL_RENDER_INTERFACE_VERSION, &gRenderAPI, &clgame.drawFuncs ))
-		{
-			MsgDev( D_AICONSOLE, "CL_LoadProgs: ^2initailized extended RenderAPI ^7ver. %i\n", CL_RENDER_INTERFACE_VERSION );
-			return true;
-		}
-
-		// make sure what render functions is cleared
-		Q_memset( &clgame.drawFuncs, 0, sizeof( clgame.drawFuncs ));
-
-		return false; // just tell user about problems
-	}
-
-	// render interface is missed
-	return true;
-}
 #endif // XASH_DEDICATED

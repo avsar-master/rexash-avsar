@@ -19,13 +19,11 @@ GNU General Public License for more details.
 #include "mathlib.h"
 #include "cdll_int.h"
 #include "menu_int.h"
-#include "mobility_int.h"
 #include "cl_entity.h"
 #include "com_model.h"
 #include "mod_local.h"
 #include "pm_defs.h"
 #include "pm_movevars.h"
-#include "render_api.h"
 #include "cdll_exp.h"
 #include "screenfade.h"
 #include "protocol.h"
@@ -364,7 +362,6 @@ typedef struct
 {
 	void                 *hInstance;                 // pointer to client.dll
 	cldll_func_t         dllFuncs;                   // dll exported funcs
-	render_interface_t   drawFuncs;                  // custom renderer support
 	byte                 *mempool;                   // client edicts pool
 	string               mapname;                    // map name
 	string               maptitle;                   // display map title
@@ -582,7 +579,6 @@ extern convar_t	*scr_loading;
 extern convar_t	*scr_dark;	// start from dark
 extern convar_t	*userinfo;
 extern convar_t	*hltv;
-extern convar_t *m_ignore;
 extern convar_t *hud_utf8;
 extern convar_t *vgui_utf8;
 extern convar_t *ui_renderworld;
@@ -909,12 +905,6 @@ void pfnPIC_Draw( int x, int y, int width, int height, const wrect_t *prc );
 void pfnPIC_DrawTrans( int x, int y, int width, int height, const wrect_t *prc );
 void pfnPIC_DrawHoles( int x, int y, int width, int height, const wrect_t *prc );
 void pfnPIC_DrawAdditive( int x, int y, int width, int height, const wrect_t *prc );
-
-//
-// cl_mobile.c
-//
-void Mobile_Init( void );
-void Mobile_Shutdown( void );
 
 //
 // cl_video.c

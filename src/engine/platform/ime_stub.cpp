@@ -100,7 +100,5 @@ void IME_SetIMEEnabled(int enable, int force)
 {
 #if XASH_INPUT == INPUT_SDL
 	SDLash_EnableTextInput(enable, force);
-#elif XASH_INPUT == INPUT_ANDROID
-	Android_EnableTextInput(enable, force);
 #endif
 }

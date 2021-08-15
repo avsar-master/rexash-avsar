@@ -94,12 +94,7 @@ int main( int argc, char** argv )
 
 	g_iArgc = argc;
 	g_pszArgv = argv;
-#if TARGET_OS_IPHONE
-	{
-		void IOS_LaunchDialog( void );
-		IOS_LaunchDialog();
-	}
-#endif
+
 	return Host_Main( g_iArgc, (const char**)g_pszArgv, gamedir, 0, &Launcher_ChangeGame );
 }
 

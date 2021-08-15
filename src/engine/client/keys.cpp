@@ -19,7 +19,6 @@ GNU General Public License for more details.
 #include "input_ime.h"
 #include "client.h"
 #include "joyinput.h"
-#include "touch.h"
 #include "vgui_draw.h"
 
 #ifdef XASH_IMGUI
@@ -605,7 +604,6 @@ void Key_Event( int key, qboolean down )
 	}
 
 	VGui_KeyEvent( key, down );
-	Touch_KeyEvent( key, down );
 
 	// console key is hardcoded, so the user can never unbind it
 	if( key == '`' || key == '~' )

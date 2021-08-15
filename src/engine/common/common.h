@@ -436,7 +436,6 @@ typedef struct host_parm_s
 	int		numsounds;
 	qboolean enabledll;
 	qboolean textmode;
-	qboolean daemonized;
 } host_parm_t;
 
 extern host_parm_t	host;
@@ -1091,13 +1090,5 @@ void S_StopAllSounds( void );
 void BuildGammaTable( float gamma, float texGamma );
 byte TextureToTexGamma( byte b );
 byte TextureToGamma( byte b );
-
-#ifdef __ANDROID__
-#include "platform/android/android-main.h"
-#endif
-
-#ifdef __HAIKU__
-#include <FindDirectory.h>
-#endif
 
 #endif//COMMON_H

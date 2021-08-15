@@ -156,26 +156,12 @@ set(XASH_ENGINE_SDL_SOURCES
 	./platform/sdl/vid_sdl.cpp
 )
 
-set(XASH_ENGINE_ANDROID_SOURCES
-   platform/android/vid_android.cpp
-   platform/android/android_nosdl.cpp
-   platform/android/snd_opensles.cpp
-   platform/ime_stub.cpp
-)
 
-if(IOS)
-set(XASH_ENGINE_APPLE_SOURCES
-	common/launcher.cpp
-	platform/iOS/TapicEngine.mm
-	platform/ime_stub.cpp
-)
-else()
 set(XASH_ENGINE_APPLE_SOURCES
 	platform/macos/TouchBar.mm
 	platform/macos/vid_macos.mm
 	platform/ime_stub.cpp
 )
-endif()
 
 set(XASH_ENGINE_CLIENT_SOURCES
    client/cl_cmds.cpp
@@ -192,7 +178,6 @@ set(XASH_ENGINE_CLIENT_SOURCES
    client/cl_game.cpp
    client/cl_main.cpp
    client/cl_menu.cpp
-   client/cl_mobile.cpp
    client/cl_parse.cpp
    client/cl_pmove.cpp
    client/cl_remap.cpp
@@ -225,7 +210,6 @@ set(XASH_ENGINE_CLIENT_SOURCES
    client/keys.cpp
    client/input_evdevkey.cpp
    client/console.cpp
-   client/touch.cpp
    client/gamma.cpp
    client/s_dsp.cpp
    client/s_load.cpp
@@ -259,9 +243,6 @@ set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_WIN32_SOURCES})
 endif()
 if(XASH_SDL)
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_SDL_SOURCES})
-endif()
-if(ANDROID)
-set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_ANDROID_SOURCES})
 endif()
 if(APPLE)
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_APPLE_SOURCES})
@@ -324,9 +305,7 @@ if(XASH_SKIPCRTLIB)
 	add_definitions(-DXASH_SKIPCRTLIB)
 endif()
 
-if(ANDROID)
-	add_library(${XASH_ENGINE} SHARED ${XASH_ENGINE_SOURCES})
-elseif(XASH_STATIC_GAMELIB)
+if(XASH_STATIC_GAMELIB)
 	add_definitions(-DSINGLE_BINARY)
 	if(XASH_SDL)
 		add_definitions(-DXASH_SDLMAIN)
@@ -456,9 +435,7 @@ if(XASH_USE_STB_SPRINTF)
 	add_definitions(-DXASH_USE_STB_SPRINTF)
 endif()
 
-if(ANDROID)
-	target_link_libraries(${XASH_ENGINE} -ldl -llog)
-elseif(NOT WIN32)
+if(NOT WIN32)
 	if(NOT HAIKU)
 		target_link_libraries(${XASH_ENGINE} -lm -lpthread)
 	else()

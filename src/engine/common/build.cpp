@@ -69,40 +69,16 @@ const char *Q_buildos( void )
 {
 	const char *osname;
 
-#if defined(_WIN32) && defined(XASH_WINRT)
-	osname = "WinRT";
-#elif defined(_WIN32) && defined(_MSC_VER)
+#if defined(_WIN32) && defined(_MSC_VER)
 	osname = "Win32";
-#elif defined(_WIN32) && defined(__MINGW32__)
-	osname = "Win32-MinGW";
-#elif defined(__ANDROID__)
-	osname = "Android";
-#elif defined(__SAILFISH__)
-	osname = "SailfishOS";
-#elif defined(__HAIKU__)
-	osname = "HaikuOS";
 #elif defined(__linux__)
 	osname = "Linux";
-#elif defined(__APPLE__) && ( TARGET_IPHONE_SIMULATOR )
-	osname = "iOS-Simulator";
-#elif defined(__APPLE__) && ( TARGET_OS_IOS || TARGET_OS_IPHONE )
-	osname = "iOS";
 #elif defined(__APPLE__) && ( TARGET_OS_OSX || TARGET_OS_MAC )
 	osname = "macOS";
-#elif defined(__APPLE__)
-	osname = "Apple";
-#elif defined(__FreeBSD__)
-	osname = "FreeBSD";
-#elif defined(__NetBSD__)
-	osname = "NetBSD";
-#elif defined(__OpenBSD__)
-	osname = "OpenBSD";
-#elif defined __EMSCRIPTEN__
-	osname = "emscripten";
 #else
 #error "Place your operating system name here! If this is a mistake, try to fix conditions above and report a bug"
 #endif
-	
+
 	return osname;
 }
 
@@ -117,22 +93,12 @@ const char *Q_buildarch( void )
 {
 	const char *archname;
 
-#if defined( __x86_64__) || defined(_M_X64)
-	archname = "amd64";
-#elif defined(__i386__) || defined(_X86_) || defined(_M_IX86)
+#if defined(__i386__) || defined(_X86_) || defined(_M_IX86)
 	archname = "i386";
-#elif defined(__aarch64__) || defined(_M_ARM64)
-	archname = "arm64";
-#elif defined __arm__ || defined _M_ARM
-	archname = "arm";
-#elif defined __mips__
-	archname = "mips";
-#elif defined __EMSCRIPTEN__
-	archname = "javascript";
 #else
-#error "Place your architecture name here! If this is a mistake, try to fix conditions above and report a bug"
+#error "111!11!1!1!!1111!!!1!"
 #endif
-	
+
 	return archname;
 }
 
@@ -149,13 +115,7 @@ Q_buildcommit will identify this build as release or "notset"
 */
 const char *Q_buildcommit( void )
 {
-#ifdef XASH_BUILD_COMMIT
-	return XASH_BUILD_COMMIT;
-#elif defined(XASH_RELEASE) // don't check it elsewhere to avoid random bugs
-	return "release";
-#else
-	return "notset";
-#endif
+	return "custom";
 }
 
 /*

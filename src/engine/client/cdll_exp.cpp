@@ -699,14 +699,6 @@ GetWindowCenterX
 int pfnGetWindowCenterX( void )
 {
 	int x = 0;
-#if defined( _WIN32 ) && !defined( XASH_WINRT )
-	if( m_ignore->integer )
-	{
-		POINT pos;
-		GetCursorPos( &pos );
-		return pos.x;
-	}
-#endif
 
 #ifdef XASH_SDL
 	SDL_GetWindowPosition( host.hWnd, &x, NULL );
@@ -724,14 +716,6 @@ GetWindowCenterY
 int pfnGetWindowCenterY( void )
 {
 	int y = 0;
-#if defined( _WIN32 ) && !defined( XASH_WINRT )
-	if( m_ignore->integer )
-	{
-		POINT pos;
-		GetCursorPos( &pos );
-		return pos.y;
-	}
-#endif
 
 #ifdef XASH_SDL
 	SDL_GetWindowPosition( host.hWnd, NULL, &y );

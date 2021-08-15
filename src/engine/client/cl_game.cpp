@@ -89,12 +89,7 @@ static dllfunc_t cdll_new_exports[] = 	// allowed only in SDK 2.3 and higher
 { "HUD_DirectorMessage", (void **)&clgame.dllFuncs.pfnDirectorMessage },
 { "HUD_VoiceStatus", (void **)&clgame.dllFuncs.pfnVoiceStatus },
 { "HUD_ChatInputPosition", (void **)&clgame.dllFuncs.pfnChatInputPosition },
-{ "HUD_GetRenderInterface", (void **)&clgame.dllFuncs.pfnGetRenderInterface },	// Xash3D ext
 { "HUD_GetPlayerTeam", (void **)&clgame.dllFuncs.pfnGetPlayerTeam },
-{ "HUD_ClipMoveToEntity", (void **)&clgame.dllFuncs.pfnClipMoveToEntity },	// Xash3D ext
-{ "IN_ClientTouchEvent", (void **)&clgame.dllFuncs.pfnTouchEvent}, // Xash3D ext
-{ "IN_ClientMoveEvent", (void **)&clgame.dllFuncs.pfnMoveEvent}, // Xash3D ext
-{ "IN_ClientLookEvent", (void **)&clgame.dllFuncs.pfnLookEvent}, // Xash3D ext
 { NULL, NULL }
 };
 
@@ -1344,12 +1339,6 @@ qboolean CL_LoadProgs( const char *name )
 	CL_InitTempEnts ();
 	CL_InitEdicts ();	// initailize local player and world
 	CL_InitClientMove(); // initialize pm_shared
-
-	if( !R_InitRenderAPI())	// Xash3D extension
-	{
-		MsgDev( D_WARN, "CL_LoadProgs: couldn't get render API\n" );
-	}
-	Mobile_Init(); // Xash3D extension: mobile interface
 
 	Sequence_Init();
 

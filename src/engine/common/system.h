@@ -36,10 +36,6 @@ GNU General Public License for more details.
 #define MSGBOX( x )		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Fatal Error", x, NULL )
 #define MSGBOX2( x )	SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Host Error", x, NULL )
 #define MSGBOX3( x )	SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Host Recursive Error", x, NULL )
-#elif defined(__ANDROID__) && !defined(XASH_DEDICATED)
-#define MSGBOX( x ) 	Android_MessageBox("Fatal Error", x )
-#define MSGBOX2( x )	Android_MessageBox("Host Error", x )
-#define MSGBOX3( x )	Android_MessageBox("Host Recursive Error", x )
 #elif defined _WIN32
 #define MSGBOX( x ) 	MessageBox( NULL, x, "Fatal Error", MB_OK|MB_SETFOREGROUND|MB_ICONSTOP )
 #define MSGBOX2( x )	MessageBox( host.hWnd, x, "Host Error", MB_OK|MB_SETFOREGROUND|MB_ICONSTOP )

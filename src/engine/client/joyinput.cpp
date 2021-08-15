@@ -446,8 +446,6 @@ void Joy_Init( void )
 #if defined(XASH_SDL)
 	// SDL can tell us about connected joysticks
 	Cvar_SetFloat( "joy_found", SDLash_JoyInit( joy_index->integer ) );
-#elif defined(ANDROID)
-	// Initalized after first Joy_AddEvent
 #else
 #warning "Any platform must implement platform-dependent JoyInit, start event system. Otherwise no joystick support"
 #endif

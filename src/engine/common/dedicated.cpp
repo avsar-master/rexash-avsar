@@ -218,11 +218,6 @@ int CL_GetMaxClients()
 	return 0;
 }
 
-void Touch_InitConfig()
-{
-
-}
-
 void CL_Disconnect()
 {
 

@@ -22,7 +22,6 @@ GNU General Public License for more details.
 #include "client.h"
 #include "vgui_draw.h"
 #include "events.h"
-#include "touch.h"
 #include "joyinput.h"
 #include "sound.h"
 #include "gl_vidnt.h"
@@ -172,7 +171,7 @@ SDLash_MouseEvent
 static void SDLash_MouseEvent( SDL_MouseButtonEvent button )
 {
 	int down = button.type == SDL_MOUSEBUTTONDOWN ? 1 : 0;
-	if( in_mouseinitialized && !m_ignore->integer && button.which != SDL_TOUCH_MOUSEID )
+	if( in_mouseinitialized && button.which != SDL_TOUCH_MOUSEID )
 	{
 		Key_Event( K_MOUSE1 - 1 + button.button, down );
 	}
@@ -244,29 +243,12 @@ static void SDLash_EventFilter( SDL_Event *event )
 	case SDL_MOUSEMOTION:
 		if( !host.mouse_visible && event->motion.which != SDL_TOUCH_MOUSEID )
 			IN_MouseEvent(0);
-#ifdef TOUCHEMU
-		if( mdown )
-			IN_TouchEvent( event_motion, 0,
-						   event->motion.x/scr_width->value,
-						   event->motion.y/scr_height->value,
-						   event->motion.xrel/scr_width->value,
-						   event->motion.yrel/scr_height->value );
-
-#endif
 		break;
 
 	case SDL_MOUSEBUTTONUP:
-#ifdef TOUCHEMU
-		mdown = 0;
-		IN_TouchEvent( event_up, 0,
-					   event->button.x/scr_width->value,
-					   event->button.y/scr_height->value, 0, 0);
-		SDL_SetRelativeMouseMode( SDL_FALSE );
-		SDL_ShowCursor( true );
-		IN_DeactivateMouse();
-#else
+
 		SDLash_MouseEvent( event->button );
-#endif
+
 #ifdef XASH_IMGUI
 		{
 			if (event->button.button == SDL_BUTTON_LEFT && ImGui_ImplGL_MouseButtonCallback(0, false)) break;
@@ -278,17 +260,7 @@ static void SDLash_EventFilter( SDL_Event *event )
 #endif
 		break;
 	case SDL_MOUSEBUTTONDOWN:
-#ifdef TOUCHEMU
-		mdown = 1;
-		IN_TouchEvent( event_down, 0,
-					   event->button.x/scr_width->value,
-					   event->button.y/scr_height->value, 0, 0);
-		SDL_SetRelativeMouseMode( SDL_FALSE );
-		SDL_ShowCursor( true );
-		IN_DeactivateMouse();
-#else
-		SDLash_MouseEvent( event->button );
-#endif
+			SDLash_MouseEvent( event->button );
 #ifdef XASH_IMGUI
 			{
 				if (event->button.button == SDL_BUTTON_LEFT && ImGui_ImplGL_MouseButtonCallback(0, true)) break;
@@ -316,65 +288,6 @@ static void SDLash_EventFilter( SDL_Event *event )
 	case SDL_KEYUP:
 		SDLash_KeyEvent( event->key, 0 );
 		break;
-
-
-	/* Touch events */
-	case SDL_FINGERDOWN:
-	case SDL_FINGERUP:
-	case SDL_FINGERMOTION:
-	{
-		touchEventType type;
-		static int scale = 0;
-		float x, y, dx, dy;
-		float pressure;
-
-		if( event->type == SDL_FINGERDOWN )
-			type = event_down;
-		else if( event->type == SDL_FINGERUP )
-			type = event_up ;
-		else if(event->type == SDL_FINGERMOTION )
-			type = event_motion;
-		else break;
-
-		/*
-		SDL sends coordinates in [0..width],[0..height] values
-		on some devices
-		*/
-		if( !scale )
-		{
-			if( ( event->tfinger.x > 0 ) && ( event->tfinger.y > 0 ) )
-			{
-				if( ( event->tfinger.x > 2 ) && ( event->tfinger.y > 2 ) )
-				{
-					scale = 2;
-					MsgDev( D_INFO, "SDL reports screen coordinates, workaround enabled!\n");
-				}
-				else
-				{
-					scale = 1;
-				}
-			}
-		}
-		if( scale == 2 )
-		{
-			x = event->tfinger.x / scr_width->value;
-			y = event->tfinger.y / scr_height->value;
-			dx = event->tfinger.dx / scr_width->value;
-			dy = event->tfinger.dy / scr_height->value;
-		}
-		else
-		{
-			x = event->tfinger.x;
-			y = event->tfinger.y;
-			dx = event->tfinger.dx;
-			dy = event->tfinger.dy;
-		}
-		pressure = event->tfinger.pressure;
-
-		IN_TouchEvent( type, event->tfinger.fingerId, x, y, dx, dy, pressure );
-		break;
-	}
-
 
 	/* IME */
 	case SDL_TEXTINPUT:
@@ -493,14 +406,6 @@ static void SDLash_EventFilter( SDL_Event *event )
 			VID_RestoreScreenResolution();
 			break;
 		case SDL_WINDOWEVENT_FOCUS_LOST:
-
-#if TARGET_OS_IPHONE
-			{
-				// Keep running if ftp server enabled
-				void IOS_StartBackgroundTask( void );
-				IOS_StartBackgroundTask();
-			}
-#endif
 			host.state = HOST_NOFOCUS;
 			IN_DeactivateMouse();
 			if( snd_mute_losefocus->integer )

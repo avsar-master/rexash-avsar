@@ -25,7 +25,6 @@
 #endif
 
 cl_enginefunc_t gEngfuncs;
-render_api_t gRenderAPI;
 cldll_func_t gClDllFuncs;
 extern BaseUISurface* staticSurface;
 
@@ -46,11 +45,8 @@ namespace Engfunc_Hooks {
 
 } // namespace Engfunc_Hooks
 
-using mobile_engfuncs_t = struct mobile_engfuncs_s;
 
 namespace ClientDLL_Hooks {
-
-	int(*g_pfnMobilityInterface)(mobile_engfuncs_t *mobileapi) = nullptr;
 
 int Initialize(cl_enginefunc_t *pEnginefuncs, int iVersion) {
 	if (iVersion != CLDLL_INTERFACE_VERSION) {
@@ -72,7 +68,6 @@ int Initialize(cl_enginefunc_t *pEnginefuncs, int iVersion) {
 	if (!gClDllFuncs_F) {
 		return 0;
 	}
-	g_pfnMobilityInterface = reinterpret_cast<int(*)(mobile_engfuncs_t *)>(GetProcAddress((HMODULE)pClDllModule, "HUD_MobilityInterface"));
 	modfuncs_t modfuncs;
 	gClDllFuncs.pfnInitialize = (INITIALIZE_FUNC)&modfuncs;
 	gClDllFuncs_F(&gClDllFuncs);
@@ -118,45 +113,6 @@ void *GetClientFactory() {
 	return 0;
 }
 
-int HUD_GetRenderInterface(int version, struct render_api_s *renderfuncs, struct render_interface_s *callback) 
-{
-	if (version != CL_RENDER_INTERFACE_VERSION)
-	{
-		return false;
-	}
-
-	gRenderAPI = *renderfuncs;
-	
-	if(gClDllFuncs.pfnGetRenderInterface)
-		return gClDllFuncs.pfnGetRenderInterface(version, renderfuncs, callback); 
-	return 0;
-}
-
-void HUD_ClipMoveToEntity(struct physent_s *pe, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, struct pmtrace_s *tr) 
-{ 
-	if(gClDllFuncs.pfnClipMoveToEntity)
-		gClDllFuncs.pfnClipMoveToEntity(pe, start, mins, maxs, end, tr); 
-}
-
-int IN_ClientTouchEvent(int type, int fingerID, float x, float y, float dx, float dy)
-{ 
-	if(gClDllFuncs.pfnTouchEvent)
-		return gClDllFuncs.pfnTouchEvent(type, fingerID, x, y, dx, dy); 
-	return 0;
-}
-/*
-void IN_ClientMoveEvent(float forwardmove, float sidemove)
-{ 
-	if(gClDllFuncs.pfnMoveEvent)
-		gClDllFuncs.pfnMoveEvent(forwardmove, sidemove); 
-}
-
-void IN_ClientLookEvent(float relyaw, float relpitch)
-{ 
-	if(gClDllFuncs.pfnLookEvent)
-		gClDllFuncs.pfnLookEvent(relyaw, relpitch); 
-}
-*/
 } // namespace ClientDLL_Hooks
 
 extern "C" void EXPORT F(void *pv) {
@@ -206,18 +162,5 @@ extern "C" void EXPORT F(void *pv) {
 		ClientDLL_Hooks::HUD_ChatInputPosition,
 		ClientDLL_Hooks::HUD_GetPlayerTeam,
 		ClientDLL_Hooks::GetClientFactory,
-		ClientDLL_Hooks::HUD_GetRenderInterface,
-		ClientDLL_Hooks::HUD_ClipMoveToEntity,
-		ClientDLL_Hooks::IN_ClientTouchEvent,
-		nullptr, // ClientDLL_Hooks::IN_ClientMoveEvent,
-		nullptr // ClientDLL_Hooks::IN_ClientLookEvent
 	};
-}
-
-int EXPORT HUD_MobilityInterface(mobile_engfuncs_t *mobileapi)
-{
-	using ClientDLL_Hooks::g_pfnMobilityInterface;
-	if (g_pfnMobilityInterface)
-		return g_pfnMobilityInterface(mobileapi);
-	return 0;
 }

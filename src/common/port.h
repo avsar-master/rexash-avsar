@@ -25,10 +25,6 @@ GNU General Public License for more details.
 #define ARCH_SUFFIX
 #endif
 
-#if defined(__ANDROID__) || TARGET_OS_IOS || defined(__SAILFISH__)
-#define XASH_MOBILE_PLATFORM
-#endif
-
 #ifdef _WIN32
 #define PATH_SPLITTER "\\"
 #else
@@ -52,48 +48,13 @@ GNU General Public License for more details.
 	#endif
 
 
-	#ifdef __EMSCRIPTEN__
-	#include <emscripten.h>
-	#endif
-
-	#if defined(__ANDROID__)
-		#if defined(LOAD_HARDFP)
-			#define POSTFIX "_hardfp"
-		#else
-			#define POSTFIX
-		#endif
-
-		// don't change these names
-		#define MENUDLL   "libmenu"   POSTFIX "." OS_LIB_EXT
-		#define CLIENTDLL "libclient" POSTFIX "." OS_LIB_EXT
-		#define SERVERDLL "libserver" POSTFIX "." OS_LIB_EXT
-		#define GAMEPATH "/sdcard/xash"
-	#elif defined(__SAILFISH__)
-		#define POSTFIX
-		// don't change these names
-		#define MENUDLL   "libmenu"   POSTFIX "." OS_LIB_EXT
-		#define CLIENTDLL "libclient" POSTFIX "." OS_LIB_EXT
-		#define SERVERDLL "libserver" POSTFIX "." OS_LIB_EXT
-		#define GAMEPATH "/home/nemo/xash"
-		#define LIBPATH "/usr/lib/xash3d/"
-		#define SHAREPATH "/usr/share/xash3d/"
-	#elif defined(__HAIKU__)
-		#define POSTFIX   "-haiku"
- 		#define MENUDLL   "libmenu"                       "." OS_LIB_EXT
- 		#define CLIENTDLL "libclient" POSTFIX ARCH_SUFFIX "." OS_LIB_EXT
- 		#define SERVERDLL "libserver" POSTFIX ARCH_SUFFIX "." OS_LIB_EXT
- 		#define PACKAGE   "/Xash3D"
-	#else
-		#define MENUDLL   "libxashmenu" ARCH_SUFFIX "." OS_LIB_EXT
-		#define CLIENTDLL "client"      ARCH_SUFFIX "." OS_LIB_EXT
-	#endif
+	#define MENUDLL   "libxashmenu" ARCH_SUFFIX "." OS_LIB_EXT
+	#define CLIENTDLL "client"      ARCH_SUFFIX "." OS_LIB_EXT
 
 	#define VGUI_SUPPORT_DLL "libvgui_support." OS_LIB_EXT
 
 	// Windows-specific
-#ifndef __HAIKU__
 	#define __cdecl
-#endif
 	#define _inline	static inline
 	#define O_BINARY 0 // O_BINARY is Windows extension
 	#define O_TEXT 0 // O_TEXT is Windows extension

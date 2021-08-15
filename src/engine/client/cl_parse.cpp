@@ -1241,17 +1241,6 @@ void CL_ParseStudioDecal( sizebuf_t *msg )
 	modelIndex = BF_ReadWord( msg );
 	state.body = BF_ReadByte( msg );
 	state.skin = BF_ReadByte( msg );
-
-	if( clgame.drawFuncs.R_StudioDecalShoot != NULL )
-	{
-		int decalTexture = CL_DecalIndex( decalIndex );
-		cl_entity_t *ent = CL_GetEntityByIndex( entityIndex );
-
-		if( ent && !ent->model && modelIndex != 0 )
-			ent->model = Mod_Handle( modelIndex );
-
-		clgame.drawFuncs.R_StudioDecalShoot( decalTexture, ent, start, pos, flags, &state );
-	}
 }
 
 /*

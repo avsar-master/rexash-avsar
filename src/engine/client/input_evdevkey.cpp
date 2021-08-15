@@ -336,9 +336,6 @@ int KeycodeFromEvdev(int keycode, int value)
 	case SDLK_END:
 		keynum = K_END;
 		break;
-//	case ANDROID_K_BACK:
-//		keynum = K_ESCAPE;
-//		break;
 	case SDLK_VOLUMEDOWN:
 		keynum = 'e';
 		break;
