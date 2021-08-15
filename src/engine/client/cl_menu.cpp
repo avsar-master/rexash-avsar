@@ -1118,7 +1118,7 @@ qboolean UI_LoadProgs( void )
 	if(!( GetMenuAPI = (MENUAPI)Com_GetProcAddress( menu.hInstance, "GetMenuAPI" )))
 	{
 		Com_FreeLibrary( menu.hInstance );
-		MsgDev( D_NOTE, "UI_LoadProgs: can't init menu API\n" );
+		MsgDev( D_NOTE, "vgui2_support.dll: can't init GetMenuAPI\n" );
 		menu.hInstance = NULL;
 		return false;
 	}
@@ -1131,7 +1131,7 @@ qboolean UI_LoadProgs( void )
 	if( !GetMenuAPI( &menu.dllFuncs, &gpEngfuncs, menu.globals ))
 	{
 		Com_FreeLibrary( menu.hInstance );
-		MsgDev( D_NOTE, "UI_LoadProgs: can't init menu API\n" );
+		MsgDev( D_NOTE, "vgui2_support.dll: can't init GetMenuAPI\n" );
 		Mem_FreePool( &menu.mempool );
 		menu.hInstance = NULL;
 		return false;

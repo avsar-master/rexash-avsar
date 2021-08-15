@@ -128,7 +128,7 @@ void Sys_InitLog( void )
 	if( host.change_game )
 		mode = "a";
 	else mode = "w";
-	Q_strncpy( s_ld.title, "Xash3D FWGS", sizeof ( s_ld.title ) );
+	Q_strncpy( s_ld.title, "rexash", sizeof ( s_ld.title ) );
 
 	// print log to stdout
 	printf( "================================================================================\n" );

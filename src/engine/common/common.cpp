@@ -163,9 +163,6 @@ int COM_ExpandFilename( const char *fileName, char *nameOutBuffer, int nameOutBu
 	if( !fileName || !*fileName || !nameOutBuffer || nameOutBufferSize <= 0 )
 		return 0;
 
-	// filename examples:
-	// media\sierra.avi - D:\Xash3D\valve\media\sierra.avi
-	// models\barney.mdl - D:\Xash3D\bshift\models\barney.mdl
 	if(( path = FS_GetDiskPath( fileName, false )) != NULL )
 	{
 		Q_sprintf( result, "%s/%s", host.rootdir, path );		

@@ -706,8 +706,7 @@ void SCR_Init( void )
 
 	if( host.state != HOST_RESTART && !UI_LoadProgs( ))
 	{
-		Sys_Warn( "can't initialize menu library:\n%s", Com_GetLibraryError() ); // this is not fatal for us
-		// console still can't be toggled in-game without extra cmd-line switch
+		Sys_Error( "vgui2_support.dll: not found"); 
 		if( !host.developer ) host.developer = 1; // we need console, because menu is missing
 	}
 

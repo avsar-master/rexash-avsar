@@ -586,7 +586,7 @@ void ID_Init( void )
 #if defined(_WIN32)
 	{
 		CHAR szBuf[MAX_PATH];
-		ID_GetKeyData( HKEY_CURRENT_USER, "Software\\Xash3D\\", "xash_id", (LPBYTE)szBuf, MAX_PATH );
+		ID_GetKeyData( HKEY_CURRENT_USER, "Software\\rexash\\", "xash_id", (LPBYTE)szBuf, MAX_PATH );
 		
 		sscanf(szBuf, "%016llX", &id);
 		id ^= SYSTEM_XOR_MASK;
@@ -639,7 +639,7 @@ void ID_Init( void )
 	{
 		CHAR Buf[MAX_PATH];
 		sprintf( Buf, "%016llX", id^SYSTEM_XOR_MASK );
-		ID_SetKeyData( HKEY_CURRENT_USER, "Software\\Xash3D\\", REG_SZ, "xash_id", (LPBYTE)Buf, Q_strlen(Buf) );
+		ID_SetKeyData( HKEY_CURRENT_USER, "Software\\rexash\\", REG_SZ, "xash_id", (LPBYTE)Buf, Q_strlen(Buf) );
 	}
 #else
 	{
