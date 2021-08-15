@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include "client.h"
 #include "gl_local.h"
 #include "studio.h"
+#include "cdll_exp_api.h"
 
 #define TEXTURES_HASH_SIZE	64
 

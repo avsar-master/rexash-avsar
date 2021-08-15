@@ -21,7 +21,7 @@ GNU General Public License for more details.
 #include "gl_export.h"
 
 typedef int (*PHYSICAPI)( int, server_physics_api_t*, physics_interface_t* );
-extern triangleapi_t gTriApi;
+triangleapi_t gTriApi;
 
 /*
 

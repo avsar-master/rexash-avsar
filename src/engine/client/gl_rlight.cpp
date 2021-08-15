@@ -21,6 +21,8 @@ GNU General Public License for more details.
 #include "gl_local.h"
 #include "pm_local.h"
 #include "studio.h"
+#include "eventapi.h"
+#include "cdll_exp_api.h"
 
 /*
 =============================================================================

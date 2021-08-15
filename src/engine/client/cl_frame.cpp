@@ -26,6 +26,8 @@ GNU General Public License for more details.
 #include "sound.h"
 #include "dlight.h"
 #include "input.h"
+#include "cdll_exp_api.h"
+#include "eventapi.h"
 
 #define MAX_FORWARD		6
 

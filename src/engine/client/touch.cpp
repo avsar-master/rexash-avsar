@@ -25,6 +25,7 @@ GNU General Public License for more details.
 #include <SDL_hints.h>
 #include <SDL_keyboard.h>
 #endif
+#include "cdll_exp_api.h"
 
 #ifdef XASH_IMGUI
 #include "imgui_impl_xash.h"

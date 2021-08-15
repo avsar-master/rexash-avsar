@@ -22,7 +22,7 @@ GNU General Public License for more details.
 #include "mod_local.h"
 #include "input.h"
 #include "gl_vidnt.h"
-
+#include "cdll_exp_api.h"
 #if defined(XASH_WINRT)
 #include "platform/winrt/winrt_interop.h"
 #endif

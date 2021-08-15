@@ -24,6 +24,7 @@ GNU General Public License for more details.
 #include "triangleapi.h"
 #include "cl_tent.h"
 #include "studio.h"
+#include "r_triangle.h"
 
 /*
 ==============================================================

@@ -675,7 +675,6 @@ void CL_ParseUserMessage( sizebuf_t *msg, int svc_num );
 void CL_LinkUserMessage( char *pszName, const int svc_num, int iSize );
 void CL_ParseTextMessage( sizebuf_t *msg );
 void CL_DrawHUD( int state );
-void CL_GetMousePosition ( int *x, int *y );
 void CL_InitEdicts( void );
 void CL_FreeEdicts( void );
 void CL_ClearWorld( void );
@@ -683,12 +682,8 @@ void CL_DrawCenterPrint( void );
 void CL_FreeEntity( cl_entity_t *pEdict );
 void CL_CenterPrint( const char *text, float y );
 void CL_TextMessageParse( byte *pMemFile, int fileSize );
-client_textmessage_t *CL_TextMessageGet( const char *pName );
 int pfnDecalIndexFromName( const char *szDecalName );
-int pfnIndexFromTrace( struct pmtrace_s *pTrace );
 int CL_FindModelIndex( const char *m );
-HSPRITE pfnSPR_Load( const char *szPicName );
-HSPRITE pfnSPR_LoadExt( const char *szPicName, uint texFlags );
 void SPR_AdjustSize( float *x, float *y, float *w, float *h );
 void TextAdjustSize( int *x, int *y, int *w, int *h );
 void TextAdjustSizeReverse( int *x, int *y, int *w, int *h );
@@ -696,8 +691,6 @@ void PicAdjustSize( float *x, float *y, float *w, float *h );
 void CL_PlayerTrace( float *start, float *end, int traceFlags, int ignore_pe, pmtrace_t *tr );
 void CL_PlayerTraceExt( float *start, float *end, int traceFlags, int (*pfnIgnore)( physent_t *pe ), pmtrace_t *tr );
 void CL_SetTraceHull( int hull );
-void CL_FillRGBA( int x, int y, int width, int height, int r, int g, int b, int a );
-void CL_FillRGBABlend( int x, int y, int width, int height, int r, int g, int b, int a );
 
 
 _inline cl_entity_t *CL_EDICT_NUM( int n )
@@ -811,7 +804,6 @@ void CL_ClearAllRemaps( void );
 //
 // cl_tent.c
 //
-int CL_AddEntity( int entityType, cl_entity_t *pEnt );
 void CL_WeaponAnim( int iAnim, int body );
 void CL_ClearEffects( void );
 void CL_ClearEfrags( void );

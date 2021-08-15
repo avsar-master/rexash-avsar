@@ -22,6 +22,8 @@ GNU General Public License for more details.
 #include "joyinput.h"
 #include "client.h"
 #include "gl_local.h"
+#include "cdll_exp_api.h"
+#include "r_triangle.h"
 
 #if defined(XASH_SDL)
 #include "platform/sdl/events.h"

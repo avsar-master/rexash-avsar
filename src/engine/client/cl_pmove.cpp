@@ -23,6 +23,7 @@ GNU General Public License for more details.
 #include "particledef.h"
 #include "studio.h"
 #include "library.h" // Loader_GetDllHandle( )
+#include "cdll_exp_api.h"
 
 void CL_ClearPhysEnts( void )
 {
@@ -682,7 +683,7 @@ static const char *GAME_EXPORT pfnTraceTexture( int ground, float *vstart, float
 	return PM_TraceTexture( pe, vstart, vend );
 }
 
-static void GAME_EXPORT pfnPlaySound( int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch )
+void GAME_EXPORT pfnPlaySound( int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch )
 {
 	sound_t	snd;
 

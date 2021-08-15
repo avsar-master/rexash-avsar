@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include "client.h"
 #include "gl_local.h"
 #include "mathlib.h"
+#include "cdll_exp_api.h"
 
 char		r_speeds_msg[MAX_SYSPATH];
 ref_speeds_t	r_stats;	// r_speeds counters

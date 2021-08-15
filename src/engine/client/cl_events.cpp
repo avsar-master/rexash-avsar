@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include "client.h"
 #include "event_flags.h"
 #include "net_encode.h"
+#include "cdll_exp_api.h"
 
 /*
 ===============

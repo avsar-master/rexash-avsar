@@ -18,6 +18,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "client.h"
 #include "net_encode.h"
+#include "cdll_exp_api.h"
 
 #define dem_unknown		0	// unknown command
 #define dem_norewind	1	// startup message

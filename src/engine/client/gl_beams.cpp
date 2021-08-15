@@ -24,6 +24,8 @@ GNU General Public License for more details.
 #include "pm_local.h"
 #include "gl_local.h"
 #include "studio.h"
+#include "cdll_exp_api.h"
+#include "r_triangle.h"
 
 #define NOISE_DIVISIONS	64	// don't touch - many tripmines cause the crash when it equal 128
 

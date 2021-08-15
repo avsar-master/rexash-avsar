@@ -84,20 +84,6 @@ convar_t *Cvar_FindVar( const char *var_name )
 
 /*
 ============
-Cvar_VariableValue
-============
-*/
-float GAME_EXPORT Cvar_VariableValue( const char *var_name )
-{
-	convar_t	*var;
-
-	var = Cvar_FindVar( var_name );
-	if( !var ) return 0;
-	return var->value;
-}
-
-/*
-============
 Cvar_VariableInteger
 ============
 */
@@ -109,21 +95,6 @@ int Cvar_VariableInteger( const char *var_name )
 	if( !var ) return 0;
 
 	return var->integer;
-}
-
-/*
-============
-Cvar_VariableString
-============
-*/
-const char *GAME_EXPORT Cvar_VariableString( const char *var_name )
-{
-	convar_t	*var;
-
-	var = Cvar_FindVar( var_name );
-	if( !var ) return "";
-
-	return var->string;
 }
 
 /*
@@ -731,22 +702,6 @@ void GAME_EXPORT Cvar_DirectSet( cvar_t *var, const char *value )
 	var->string = copystring( pszValue );
 	var->value = Q_atof( var->string );
 }
-
-/*
-============
-Cvar_SetFloat
-============
-*/
-void GAME_EXPORT Cvar_SetFloat( const char *var_name, float value )
-{
-	char	val[32];
-
-	if( value == (int)value )
-		Q_sprintf( val, "%i", (int)value );
-	else Q_sprintf( val, "%f", value );
-	Cvar_Set( var_name, val );
-}
-
 /*
 ============
 Cvar_Reset
@@ -839,6 +794,61 @@ qboolean Cvar_Command( convar_t *v )
 	// set the value if forcing isn't required
 	Cvar_Set2( v->name, Cmd_Argv( 1 ), false );
 	return true;
+}
+
+/*
+=============
+pfnCvar_RegisterVariable
+
+=============
+*/
+cvar_t* pfnCvar_RegisterVariable( const char *szName, const char *szValue, int flags )
+{
+	return (cvar_t *)Cvar_Get( szName, szValue, flags|CVAR_CLIENTDLL, "client cvar" );
+}
+
+/*
+============
+Cvar_VariableString
+============
+*/
+const char* Cvar_VariableString( const char *var_name )
+{
+	convar_t	*var;
+
+	var = Cvar_FindVar( var_name );
+	if( !var ) return "";
+
+	return var->string;
+}
+
+/*
+============
+Cvar_VariableValue
+============
+*/
+float Cvar_VariableValue( const char *var_name )
+{
+	convar_t	*var;
+
+	var = Cvar_FindVar( var_name );
+	if( !var ) return 0;
+	return var->value;
+}
+
+/*
+============
+Cvar_SetFloat
+============
+*/
+void Cvar_SetFloat( const char *var_name, float value )
+{
+	char	val[32];
+
+	if( value == (int)value )
+		Q_sprintf( val, "%i", (int)value );
+	else Q_sprintf( val, "%f", value );
+	Cvar_Set( var_name, val );
 }
 
 /*

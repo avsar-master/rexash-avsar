@@ -23,6 +23,7 @@ GNU General Public License for more details.
 #include "library.h"
 #include <string.h>
 #include "../keydefs.h"
+#include "cdll_exp_api.h"
 
 int	g_textures[VGUI_MAX_TEXTURES];
 int	g_textureId = 0;

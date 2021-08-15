@@ -99,4 +99,6 @@ typedef struct net_api_s
 
 extern net_api_t netapi;
 
+extern net_api_t CL_gNetApi;
+
 #endif // NET_API_H

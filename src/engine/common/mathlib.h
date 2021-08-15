@@ -13,8 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-#ifndef MATHLIB_H
-#define MATHLIB_H
+#ifndef ENGINE_MATHLIB_H
+#define ENGINE_MATHLIB_H
 
 #include <math.h>
 
@@ -32,7 +32,6 @@ GNU General Public License for more details.
 #define XASH_VECTORIZE_SINCOS
 #endif
 #endif
-
 
 // euler angle order
 #define PITCH		0
@@ -119,11 +118,9 @@ GNU General Public License for more details.
 #define boundmax( num, high ) ( (num) < (high) ? (num) : (high) )
 #define boundmin( num, low )  ( (num) >= (low) ? (num) : (low)  )
 #define bound( low, num, high ) ( boundmin( boundmax(num, high), low ))
-//#define bound( min, num, max ) ((num) >= (min) ? ((num) < (max) ? (num) : (max)) : (min))
 
 float rsqrt( float number );
 float anglemod( const float a );
-word FloatToHalf( float v );
 float HalfToFloat( word h );
 int SignbitsForPlane( const vec3_t normal );
 int NearestPOW( int value, qboolean roundDown );
@@ -216,4 +213,4 @@ extern vec3_t		vec3_origin;
 extern const matrix3x4	matrix3x4_identity;
 extern const matrix4x4	matrix4x4_identity;
 
-#endif//MATHLIB_H
+#endif//ENGINE_MATHLIB_H

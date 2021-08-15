@@ -23,6 +23,7 @@ GNU General Public License for more details.
 #include "input.h"
 #include "server.h" // !!svgame.hInstance
 #include "gl_vidnt.h"
+#include "cdll_exp_api.h"
 
 static MENUAPI	GetMenuAPI;
 static ADDTOUCHBUTTONTOLIST pfnAddTouchButtonToList;

@@ -17,6 +17,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "client.h"
 #include "gl_local.h"
+#include "cdll_exp_api.h"
 
 /*
 ====================

@@ -18,6 +18,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "sound.h"
 #include "client.h"
+#include "cdll_exp_api.h"
 
 #define IPAINTBUFFER	0
 #define IROOMBUFFER		1

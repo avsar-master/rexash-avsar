@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include "sound.h"
 #include "client.h"
 #include "const.h"
+#include "cdll_exp_api.h"
 
 #define CAVGSAMPLES		10
 

@@ -25,6 +25,8 @@ GNU General Public License for more details.
 #include "imgui_console.h"
 #endif
 
+#include "cdll_exp_api.h"
+
 convar_t	*con_notifytime;
 convar_t	*scr_conspeed;
 convar_t	*con_fontsize;

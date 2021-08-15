@@ -16,6 +16,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "client.h"
 #include "gl_local.h"
+#include "cdll_exp_api.h"
 
 #define NET_TIMINGS          BIT( 10 )
 #define NET_TIMINGS_MASK     (NET_TIMINGS - 1)

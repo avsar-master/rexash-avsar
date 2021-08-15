@@ -25,6 +25,7 @@ GNU General Public License for more details.
 #include "kbutton.h"
 #include "vgui_draw.h"
 #include "library.h"
+#include "cdll_exp_api.h"
 
 #ifdef XASH_IMGUI
 #include "imgui_impl_xash.h"

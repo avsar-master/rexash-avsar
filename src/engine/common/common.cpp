@@ -386,17 +386,6 @@ void GAME_EXPORT pfnGetModelBounds( model_t *mod, float *mins, float *maxs )
 		if( maxs ) VectorClear( maxs );
 	}
 }
-	
-/*
-=============
-pfnCvar_RegisterVariable
-
-=============
-*/
-cvar_t *GAME_EXPORT pfnCvar_RegisterVariable( const char *szName, const char *szValue, int flags )
-{
-	return (cvar_t *)Cvar_Get( szName, szValue, flags|CVAR_CLIENTDLL, "client cvar" );
-}
 
 /*
 =============
@@ -414,22 +403,6 @@ cvar_t *GAME_EXPORT pfnCVarGetPointer( const char *szVarName )
 	return cvPtr;
 }
 
-/*
-=============
-pfnAddClientCommand
-
-=============
-*/
-int GAME_EXPORT pfnAddClientCommand( const char *cmd_name, xcommand_t func )
-{
-	if( !cmd_name || !*cmd_name )
-		return 0;
-
-	// NOTE: if( func == NULL ) cmd will be forwarded to a server
-	Cmd_AddClientCommand( cmd_name, func );
-
-	return 1;
-}
 
 /*
 =============

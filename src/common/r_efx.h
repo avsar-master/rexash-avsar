@@ -198,4 +198,6 @@ struct efx_api_s
 
 extern efx_api_t efx;
 
+extern efx_api_t CL_gEfxApi;
+
 #endif

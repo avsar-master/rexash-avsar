@@ -21,6 +21,7 @@ GNU General Public License for more details.
 #include "con_nprint.h"
 #include "ref_params.h"
 #include "pm_local.h"
+#include "cdll_exp_api.h"
 
 #define SND_CLIP_DISTANCE		(float)(GI->soundclip_dist)
 

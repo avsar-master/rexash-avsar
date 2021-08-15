@@ -23,6 +23,8 @@ GNU General Public License for more details.
 #include "studio.h"
 #include "entity_types.h"
 #include "cl_tent.h"
+#include "cdll_exp_api.h"
+#include "r_triangle.h"
 
 // it's a Valve default value for LoadMapSprite (probably must be power of two)
 #define MAPSPRITE_SIZE	128

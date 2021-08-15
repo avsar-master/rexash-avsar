@@ -21,6 +21,7 @@ GNU General Public License for more details.
 #include "vgui_draw.h"
 #include "qfont.h"
 #include "library.h"
+#include "cdll_exp_api.h"
 
 convar_t *scr_centertime;
 convar_t *scr_loading;

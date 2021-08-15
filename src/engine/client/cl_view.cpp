@@ -28,6 +28,8 @@ GNU General Public License for more details.
 #include "imgui_impl_xash.h"
 #endif
 
+#include "cdll_exp_api.h"
+
 /*
 ===============
 V_SetupRefDef

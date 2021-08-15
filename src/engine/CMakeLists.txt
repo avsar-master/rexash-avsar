@@ -179,6 +179,13 @@ endif()
 
 set(XASH_ENGINE_CLIENT_SOURCES
    client/cl_cmds.cpp
+   client/cdll_exp.cpp
+   client/cl_demoapi.cpp
+   client/eventapi.cpp
+   client/net_api.cpp
+   client/r_efx.cpp
+   client/r_triangle.cpp
+   client/voice.cpp
    client/cl_demo.cpp
    client/cl_events.cpp
    client/cl_frame.cpp

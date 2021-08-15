@@ -18,6 +18,7 @@ GNU General Public License for more details.
 #define _GNU_SOURCE
 #include <math.h>
 #endif
+
 #include "common.h"
 #include "mathlib.h"
 
@@ -44,22 +45,6 @@ anglemod
 float anglemod( const float a )
 {
 	return (360.0f/65536) * ((int)(a*(65536/360.0f)) & 65535);
-}
-
-word FloatToHalf( float v )
-{
-	unsigned int	i = *((unsigned int *)&v);
-	unsigned int	e = (i >> 23) & 0x00ff;
-	unsigned int	m = i & 0x007fffff;
-	unsigned short	h;
-
-	if( e <= 127 - 15 )
-		h = ((m | 0x00800000) >> (127 - 14 - e)) >> 13;
-	else h = (i >> 13) & 0x3fff;
-
-	h |= (i >> 16) & 0xc000;
-
-	return h;
 }
 
 float HalfToFloat( word h )

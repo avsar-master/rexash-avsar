@@ -18,6 +18,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "client.h"
 #include "sound.h"
+#include "cdll_exp_api.h"
 
 // a1batross: trying to defend disgusting sound on 44k
 #define XASH_DSP_FIXES
