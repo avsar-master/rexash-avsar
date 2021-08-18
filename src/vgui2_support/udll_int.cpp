@@ -246,25 +246,3 @@ extern "C" EXPORT int GiveTextAPI( ui_textfuncs_t* pTextfuncsFromEngine )
 }
 extern "C" EXPORT void AddTouchButtonToList( const char *name, const char *texture, const char *command, unsigned char *color, int flags ); // TouchButtons.cpp
 #endif
-
-#ifdef XASH_STATIC_GAMELIB
-typedef struct dllexport_s
-{
-const char *name;
-void *func;
-} dllexport_t;
-
-static dllexport_t switch_mainui_exports[] = {
-	{ "GetMenuAPI", (void*)GetMenuAPI },
-	{ "GiveTextAPI", (void*)GiveTextAPI },
-	{ "AddTouchButtonToList", (void*)AddTouchButtonToList },
-	{ NULL, NULL }
-};
-
-extern "C" int dll_register( const char *name, dllexport_t *exports );
-
-extern "C" int switch_installdll_mainui( void )
-{
-	return dll_register( "menu", switch_mainui_exports );
-}
-#endif

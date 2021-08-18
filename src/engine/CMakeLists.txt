@@ -127,11 +127,7 @@ set(XASH_ENGINE_SOURCES
 
 )
 
-if(XASH_STATIC_GAMELIB)
-	set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} common/library_static.cpp)
-else()
-	set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} common/library.cpp)
-endif()
+set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} common/library.cpp)
 
 if(NOT XASH_DEDICATED)
 	set(XASH_ENGINE_WIN32_SOURCES
@@ -263,19 +259,11 @@ if(XASH_SKIPCRTLIB)
 	add_definitions(-DXASH_SKIPCRTLIB)
 endif()
 
-if(XASH_STATIC_GAMELIB)
-	add_definitions(-DSINGLE_BINARY)
-	add_definitions(-DXASH_SDLMAIN)
-	add_library(${XASH_ENGINE} STATIC ${XASH_ENGINE_SOURCES})
-elseif(XASH_SINGLE_BINARY) # Set executable or library
+if(XASH_SINGLE_BINARY) # Set executable or library
 	add_definitions(-DSINGLE_BINARY)
 	add_executable(${XASH_ENGINE} ${XASH_ENGINE_SOURCES})
 else()
 	add_library(${XASH_ENGINE} SHARED ${XASH_ENGINE_SOURCES})
-endif()
-
-if(XASH_STATIC_GAMELIB)
-	target_link_libraries(${XASH_ENGINE} menu client server)
 endif()
 
 if(MSVC)
