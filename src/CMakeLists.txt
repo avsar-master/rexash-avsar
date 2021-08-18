@@ -1,4 +1,4 @@
-add_subdirectory(3rdparty)
+add_subdirectory(external)
 add_subdirectory(filesystem_helper)
 add_subdirectory(vgui2_support)
 add_subdirectory(engine)
