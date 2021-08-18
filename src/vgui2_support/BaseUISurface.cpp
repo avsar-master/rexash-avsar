@@ -385,8 +385,11 @@ int BaseUISurface::CreateNewTextureID(bool procedural) {
 }
 
 void BaseUISurface::GetScreenSize(int &wide, int &tall) {
-	wide = _screeninfo.iWidth;
-	tall = _screeninfo.iHeight;
+	SCREENINFO screenInfo;
+	screenInfo.iSize = sizeof( SCREENINFO );
+	gEngfuncs.pfnGetScreenInfo( &screenInfo );
+	wide = screenInfo.iWidth;
+	tall = screenInfo.iHeight;
 }
 
 void BaseUISurface::SetAsTopMost(vgui2::VPANEL, bool) {

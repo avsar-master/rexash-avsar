@@ -54,6 +54,8 @@ add_library(vgui2_support SHARED
     udll_int.cpp
 )
 
+add_definitions(-DVGUI2_SUPPORT)
+
 target_link_libraries(vgui2_support PUBLIC vgui2_interfaces)
 target_link_libraries(vgui2_support PRIVATE vgui_controls)
 target_link_libraries(vgui2_support PRIVATE vgui_surfacelib)
