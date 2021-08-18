@@ -29,7 +29,7 @@ GNU General Public License for more details.
 #define MAX_TOTAL_CMDS		16
 #define MIN_CMD_RATE		10.0
 #define MAX_CMD_BUFFER		4000
-#define CONNECTION_PROBLEM_TIME	15.0	// 15 seconds
+#define CONNECTION_PROBLEM_TIME	4.0
 
 void CL_InternetServers_f( void );
 
@@ -537,6 +537,8 @@ void CL_WritePacket( void )
 	int		newcmds;
 	int		cmdnumber;
 
+	CL_TimeoutSeconds();
+
 	// don't send anything if playing back a demo
 	if( cls.demoplayback || cls.state == ca_cinematic )
 		return;
@@ -578,7 +580,27 @@ void CL_WritePacket( void )
 	{
 		if(( host.realtime - cls.netchan.last_received ) > CONNECTION_PROBLEM_TIME )
 		{
-			Con_NPrintf( 1, "^3Warning:^1 Connection Problem^7\n" );
+			float flTimeOut = cls.netchan.m_Timeout;
+			Assert( flTimeOut != -1.0f );
+			float flRemainingTime = flTimeOut - host.realtime + cls.netchan.last_received;
+
+			con_nprint_t	np;
+			np.time_to_live = 1.0;
+			np.index = 2;
+			np.color[ 0 ] = 1.0;
+			np.color[ 1 ] = 0.2;
+			np.color[ 2 ] = 0.2;
+
+			Con_NXPrintf( &np, "WARNING:  Connection Problem" );
+			np.index = 3;
+			Con_NXPrintf( &np, "Auto-disconnect in %.1f seconds", flRemainingTime );
+
+			if(flRemainingTime <= 0)
+			{
+				cls.demonum = cls.movienum = -1;	// not in the demo loop now
+				cls.state = ca_connecting;
+			}
+
 			cl.validsequence = 0;
 		}
 	}
@@ -838,6 +860,25 @@ void CL_SendConnectPacket( void )
 	}
 
 	Netchan_OutOfBandPrint( NS_CLIENT, adr, "connect %i %i %i \"%s\" %d %s\n", PROTOCOL_VERSION, port, cls.challenge, Cvar_Userinfo( ), extensions, useragent );
+}
+
+/*
+=================
+CL_TimeoutSeconds
+=================
+*/
+void CL_TimeoutSeconds( void )
+{
+	cls.netchan.m_Timeout = cl_timeout->value;
+
+	if( cls.netchan.m_Timeout > 3600 )
+	{
+		cls.netchan.m_Timeout = 3600; // 1 hour maximum
+	}
+	else if ( cls.netchan.m_Timeout < CONNECTION_PROBLEM_TIME )
+	{
+		cls.netchan.m_Timeout = CONNECTION_PROBLEM_TIME; // allow at least this minimum
+	}
 }
 
 /*
@@ -1956,7 +1997,7 @@ void CL_ReadPackets( void )
 	// check timeout
 	if( cls.state >= ca_connected && !cls.demoplayback && cls.state != ca_cinematic )
 	{
-		if( host.realtime - cls.netchan.last_received > cl_timeout->value )
+		if( host.realtime - cls.netchan.last_received > cls.netchan.m_Timeout )
 		{
 			if( ++cl.timeoutcount > 5 ) // timeoutcount saves debugger
 			{

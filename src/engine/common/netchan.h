@@ -40,6 +40,8 @@ GNU General Public License for more details.
 // This is the packet payload without any header bytes (which are attached for actual sending)
 #define NET_MAX_PAYLOAD		80000
 
+#define SIGNON_TIME_OUT				300.0f  // signon disconnect timeout
+
 // This is the payload plus any header info (excluding UDP header)
 
 // Packet header is:
@@ -173,6 +175,7 @@ typedef struct netchan_s
 	
 	qboolean		compress;		// enable huffman compression
 			
+	float		m_Timeout; // for auto reconnect
 	double		last_received;	// for timeouts
 	double		last_sent;	// for retransmits		
 

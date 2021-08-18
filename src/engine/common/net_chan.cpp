@@ -303,6 +303,7 @@ void Netchan_Setup( netsrc_t sock, netchan_t *chan, netadr_t adr, int qport )
 	chan->incoming_sequence = 0;
 	chan->outgoing_sequence = 1;
 	chan->rate = DEFAULT_RATE;
+	chan->m_Timeout = SIGNON_TIME_OUT;
 	chan->compress = false;	// work but low efficiency
 	chan->qport = qport;
 

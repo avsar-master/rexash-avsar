@@ -624,6 +624,7 @@ void CL_ProcessFile( qboolean successfully_received, const char *filename );
 void CL_WriteUsercmd( sizebuf_t *msg, int from, int to );
 void CL_GetChallengePacket( void );
 void CL_PingServers_f( void );
+void CL_TimeoutSeconds( void );
 void CL_ClearState( void );
 
 //

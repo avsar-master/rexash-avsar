@@ -358,6 +358,10 @@ V_PreRender
 */
 qboolean V_PreRender( void )
 {
+
+	CL_TimeoutSeconds();
+
+	
 	// too early
 	if( !glw_state.initialized )
 		return false;
@@ -371,7 +375,7 @@ qboolean V_PreRender( void )
 	// if the screen is disabled (loading plaque is up)
 	if( cls.disable_screen )
 	{
-		if(( host.realtime - cls.disable_screen ) > cl_timeout->value )
+		if(( host.realtime - cls.disable_screen ) > cls.netchan.m_Timeout )
 		{
 			MsgDev( D_NOTE, "V_PreRender: loading plaque timed out.\n" );
 			cls.disable_screen = 0.0f;
