@@ -151,7 +151,7 @@ set(XASH_ENGINE_SDL_SOURCES
 set(XASH_ENGINE_APPLE_SOURCES
 	platform/macos/TouchBar.mm
 	platform/macos/vid_macos.mm
-	platform/ime_stub.cpp
+	platform/macos/ime_stub.cpp
 )
 
 set(XASH_ENGINE_CLIENT_SOURCES

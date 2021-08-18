@@ -167,15 +167,7 @@ void *Com_LoadLibrary( const char *dllname, int build_ordinals_table )
 
 void Com_FreeLibrary( void *hInstance )
 {
-#if !defined __EMSCRIPTEN__ || defined EMSCRIPTEN_LIB_FS
-#ifdef DLL_LOADER
-	void *wm;
-	if( host.enabledll && (wm = Loader_GetDllHandle( hInstance )) )
-		return Loader_FreeLibrary( hInstance );
-	else
-#endif
-		dlclose( hInstance );
-#endif
+	dlclose( hInstance );
 }
 
 void *Com_GetProcAddress( void *hInstance, const char *name )

@@ -21,10 +21,6 @@ GNU General Public License for more details.
 #include "SDL.h"
 #endif
 
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
 char szGameDir[128]; // safe place to keep gamedir
 int g_iArgc;
 
@@ -37,12 +33,14 @@ int Host_Main(int argc, const char** argv, const char* progname, int bChangeGame
 char **g_pszArgv;
 
 void Launcher_ChangeGame( const char *progname );
+
 void Launcher_ChangeGame( const char *progname )
 {
 	strncpy( szGameDir, progname, sizeof( szGameDir ) - 1 );
 	Host_Shutdown( );
 	exit( Host_Main( g_iArgc, (const char**)g_pszArgv, szGameDir, 1, &Launcher_ChangeGame ) );
 }
+
 #ifdef XASH_NOCONHOST
 #include <windows.h>
 int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR cmdLine, int nShow)
@@ -62,6 +60,8 @@ int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR cmdLine, int n
 	main( szArgc, szArgv );
 }
 #endif
+
+
 int main( int argc, char** argv )
 {
 	char gamedir_buf[32] = "";
@@ -74,23 +74,6 @@ int main( int argc, char** argv )
 		strncpy( gamedir_buf, gamedir, 32 );
 		gamedir = gamedir_buf;
 	}
-
-#ifdef __EMSCRIPTEN__
-#ifdef EMSCRIPTEN_LIB_FS
-	// For some unknown reason emscripten refusing to load libraries later
-	Com_LoadLibrary("menu", 0 );
-	Com_LoadLibrary("server", 0 );
-	Com_LoadLibrary("client", 0 );
-#endif
-#ifdef XASH_DEDICATED
-	// NodeJS support for debug
-	EM_ASM(try{
-		FS.mkdir('/xash');
-		FS.mount(NODEFS, { root: '.'}, '/xash' );
-		FS.chdir('/xash');
-	}catch(e){};);
-#endif
-#endif
 
 	g_iArgc = argc;
 	g_pszArgv = argv;
