@@ -26,10 +26,6 @@ GNU General Public License for more details.
 #include "library.h"
 #include "cdll_exp_api.h"
 
-#ifdef XASH_IMGUI
-#include "imgui_impl_xash.h"
-#endif
-
 #define MAX_TOTAL_CMDS		16
 #define MIN_CMD_RATE		10.0
 #define MAX_CMD_BUFFER		4000
@@ -1734,9 +1730,9 @@ void CL_ConnectionlessPacket( netadr_t from, sizebuf_t *msg )
 			Msg( "Command packet from remote host. Ignored.\n" );
 			return;
 		}
-#ifdef XASH_SDL
+
 		SDL_RestoreWindow( host.hWnd );
-#endif
+
 		args = BF_ReadString( msg );
 		Cbuf_AddText( args );
 		Cbuf_AddText( "\n" );
@@ -2360,10 +2356,6 @@ void CL_Init( void )
 	Con_Init();
 	CL_InitLocal();
 
-#ifdef XASH_IMGUI
-	ImGui_ImplGL_Init();
-#endif
-
 	R_Init();	// init renderer
 	S_Init();	// init sound
 
@@ -2416,9 +2408,7 @@ void CL_Shutdown( void )
 		Host_WriteOpenGLConfig ();
 		Host_WriteVideoConfig ();
 	}
-#ifdef XASH_IMGUI
-	ImGui_ImplGL_Shutdown();
-#endif
+
 	CL_CloseDemoHeader();
 	IN_Shutdown ();
 

@@ -148,7 +148,6 @@ OpenGL funcs
 
 ==============================================
 */
-#ifndef XASH_GL_STATIC
 // helper opengl functions
 GLenum ( APIENTRY *pglGetError )(void);
 const GLubyte * ( APIENTRY *pglGetString )(GLenum name);
@@ -586,7 +585,6 @@ void ( APIENTRY *pglDebugMessageControlARB)( GLenum source, GLenum type, GLenum 
 void ( APIENTRY *pglDebugMessageInsertARB)( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char* buf );
 void ( APIENTRY *pglDebugMessageCallbackARB)( pglDebugProcARB callback, void* userParam );
 GLuint ( APIENTRY *pglGetDebugMessageLogARB)( GLuint count, GLsizei bufsize, GLenum* sources, GLenum* types, GLuint* ids, GLuint* severities, GLsizei* lengths, char* messageLog );
-#endif
 
 /*
 =================

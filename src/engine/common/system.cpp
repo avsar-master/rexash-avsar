@@ -17,13 +17,10 @@ GNU General Public License for more details.
 #include "common.h"
 #include "mathlib.h"
 
-#ifdef XASH_SDL
 #include <SDL_timer.h>
 #include <SDL_clipboard.h>
 #include <SDL_video.h>
-#else
-#include <time.h>
-#endif
+
 #ifndef _WIN32
 #include <unistd.h>
 #include <stdlib.h>
@@ -37,39 +34,13 @@ extern char **environ;
 #endif
 #include "menu_int.h" // _UPDATE_PAGE macro
 
-
-
 qboolean	error_on_exit = false;	// arg for exit();
-#if defined _WIN32 && !defined XASH_SDL
-#include <winbase.h>
-#endif
 
 /*
 ================
 Sys_DoubleTime
 ================
 */
-#if XASH_TIMER == TIMER_WIN32
-#include <winbase.h>
-
-double Sys_DoubleTime( void )
-{
-	static LARGE_INTEGER g_PerformanceFrequency;
-	static LARGE_INTEGER g_ClockStart;
-	LARGE_INTEGER CurrentTime;
-
-	if( !g_PerformanceFrequency.QuadPart )
-	{
-		QueryPerformanceFrequency( &g_PerformanceFrequency );
-		QueryPerformanceCounter( &g_ClockStart );
-	}
-
-	QueryPerformanceCounter( &CurrentTime );
-	return (double)( CurrentTime.QuadPart - g_ClockStart.QuadPart ) / (double)( g_PerformanceFrequency.QuadPart );
-}
-
-#elif XASH_TIMER == TIMER_SDL
-
 double Sys_DoubleTime( void )
 {
 	static longtime_t g_PerformanceFrequency;
@@ -84,25 +55,6 @@ double Sys_DoubleTime( void )
 	CurrentTime = SDL_GetPerformanceCounter();
 	return (double)( CurrentTime - g_ClockStart ) / (double)( g_PerformanceFrequency );
 }
-#elif XASH_TIMER == TIMER_LINUX
-
-double Sys_DoubleTime( void )
-{
-	static longtime_t g_PerformanceFrequency;
-	static longtime_t g_ClockStart;
-	longtime_t CurrentTime;
-	struct timespec ts;
-
-	if( !g_PerformanceFrequency )
-	{
-		struct timespec res;
-		if( !clock_getres(CLOCK_MONOTONIC, &res) )
-			g_PerformanceFrequency = 1000000000LL/res.tv_nsec;
-	}
-	clock_gettime(CLOCK_MONOTONIC, &ts);
-	return (double) ts.tv_sec + (double) ts.tv_nsec/1000000000.0;
-}
-#endif
 
 #define DEBUG_BREAK
 
@@ -231,14 +183,12 @@ char *Sys_GetClipboardData( void )
 
 	data[0] = '\0';
 
-#if defined XASH_SDL
 	buffer = SDL_GetClipboardText();
 	if( buffer )
 	{
 		Q_strncpy( data, buffer, sizeof( data ) );
 		SDL_free( buffer );
 	}
-#endif
 	return data;
 }
 
@@ -251,9 +201,7 @@ write screenshot into clipboard
 */
 void Sys_SetClipboardData( const byte *buffer, size_t size )
 {
-#if defined XASH_SDL
 	SDL_SetClipboardText((char *)buffer);
-#endif
 }
 
 /*
@@ -269,13 +217,7 @@ void Sys_Sleep( unsigned int msec )
 		return;
 
 	msec = min( msec, 1000 );
-#if XASH_TIMER == TIMER_SDL
 	SDL_Delay( msec );
-#elif XASH_TIMER == TIMER_WIN32
-	Sleep( msec );
-#elif XASH_TIMER == TIMER_LINUX
-	usleep( msec * 1000 );
-#endif
 }
 
 /*
@@ -676,9 +618,7 @@ void Sys_Error( const char *format, ... )
 
 	if( !Host_IsDedicated() )
 	{
-#ifdef XASH_SDL
 		if( host.hWnd ) SDL_HideWindow( host.hWnd );
-#endif
 	}
 
 	if( host.developer > 0 )
@@ -725,9 +665,7 @@ void Sys_Break( const char *format, ... )
 
 	if( !Host_IsDedicated() )
 	{
-#ifdef XASH_SDL
 		if( host.hWnd ) SDL_HideWindow( host.hWnd );
-#endif
 	}
 
 	if( Host_IsDedicated() || host.developer > 0 )

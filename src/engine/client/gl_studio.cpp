@@ -2368,15 +2368,11 @@ static void R_StudioDrawMesh( short *ptricmds, float s, float t, float a, float 
 		pglColorPointer( 4, GL_UNSIGNED_BYTE, 0, g_xarraycolor );
 	}
 
-#if !defined XASH_NANOGL || defined XASH_WES && defined __EMSCRIPTEN__ // WebGL need to know array sizes
-	if( pglDrawRangeElements )
-		pglDrawRangeElements( GL_TRIANGLES, startArrayVerts, g_nNumArrayVerts,
-			g_nNumArrayElems - startArrayElems, GL_UNSIGNED_SHORT, &g_xarrayelems[startArrayElems] );
-	else
-#endif
-		pglDrawElements( GL_TRIANGLES, g_nNumArrayElems - startArrayElems, GL_UNSIGNED_SHORT, &g_xarrayelems[startArrayElems] );
+	pglDrawElements( GL_TRIANGLES, g_nNumArrayElems - startArrayElems, GL_UNSIGNED_SHORT, &g_xarrayelems[startArrayElems] );
+	
 	pglDisableClientState( GL_VERTEX_ARRAY );
 	pglDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
 	if( !( g_nForceFaceFlags & STUDIO_NF_CHROME ) )
 		pglDisableClientState( GL_COLOR_ARRAY );
 }
@@ -3076,12 +3072,8 @@ static void R_StudioDrawPlanarShadow( void )
 	pglEnableClientState( GL_VERTEX_ARRAY );
 	pglVertexPointer( 3, GL_FLOAT, 12, g_xarrayverts );
 
-#if !defined XASH_NANOGL || defined XASH_WES && defined __EMSCRIPTEN__ // WebGL need to know array sizes
-	if( pglDrawRangeElements )
-		pglDrawRangeElements( GL_TRIANGLES, 0, g_nNumArrayVerts, g_nNumArrayElems, GL_UNSIGNED_SHORT, g_xarrayelems );
-	else
-#endif
-		pglDrawElements( GL_TRIANGLES, g_nNumArrayElems, GL_UNSIGNED_SHORT, g_xarrayelems );
+
+	pglDrawElements( GL_TRIANGLES, g_nNumArrayElems, GL_UNSIGNED_SHORT, g_xarrayelems );
 
 	if( glState.stencilEnabled )
 		pglDisable( GL_STENCIL_TEST );

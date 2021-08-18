@@ -30,11 +30,11 @@ int	g_textureId = 0;
 int	g_iBoundTexture;
 static enum VGUI_KeyCode s_pVirtualKeyTrans[256];
 static enum VGUI_DefaultCursor s_currentCursor;
-#ifdef XASH_SDL
+
 #include <SDL_events.h>
 #include "platform/sdl/events.h"
 static SDL_Cursor* s_pDefaultCursor[20];
-#endif
+
 static void *s_pVGuiSupport; // vgui_support library
 
 void VGUI_DrawInit( void );
@@ -88,7 +88,6 @@ void VGUI_GetMousePos( int *_x, int *_y )
 void VGUI_InitCursors( void )
 {
 	// load up all default cursors
-#ifdef XASH_SDL
 	s_pDefaultCursor[dc_none] = NULL;
 	s_pDefaultCursor[dc_arrow] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 	s_pDefaultCursor[dc_ibeam] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
@@ -104,7 +103,6 @@ void VGUI_InitCursors( void )
 	s_pDefaultCursor[dc_hand] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
 	//host.mouse_visible = true;
 	SDL_SetCursor( s_pDefaultCursor[dc_arrow] );
-#endif
 }
 
 void VGUI_CursorSelect(enum VGUI_DefaultCursor cursor )
@@ -124,7 +122,6 @@ void VGUI_CursorSelect(enum VGUI_DefaultCursor cursor )
 		break;
 	}
 
-#ifdef XASH_SDL
 	if( host.mouse_visible )
 	{
 		SDL_SetRelativeMouseMode( SDL_FALSE );
@@ -138,7 +135,7 @@ void VGUI_CursorSelect(enum VGUI_DefaultCursor cursor )
 			SDL_GetRelativeMouseState( NULL, NULL );
 	}
 	//SDL_SetRelativeMouseMode(false);
-#endif
+
 	if( s_currentCursor == cursor )
 		return;
 
@@ -156,13 +153,11 @@ byte VGUI_GetColor( int i, int j)
 void VGUI_SetVisible( qboolean state )
 {
 	host.mouse_visible=state;
-#ifdef XASH_SDL
 	SDL_ShowCursor( state );
 	if( !state )
 		SDL_GetRelativeMouseState( NULL, NULL );
 
 	SDLash_EnableTextInput( state, true );
-#endif
 }
 
 int VGUI_UtfProcessChar( int in )
@@ -493,10 +488,8 @@ void VGui_KeyEvent( int key, int down )
 	if( !vgui.initialized )
 		return;
 
-#ifdef XASH_SDL
 	if( host.mouse_visible )
 		SDLash_EnableTextInput( 1, false );
-#endif
 
 	switch( key )
 	{

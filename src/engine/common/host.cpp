@@ -15,9 +15,7 @@ GNU General Public License for more details.
 
 #include "common.h"
 
-#if defined(XASH_SDL)
 #include <SDL.h>
-#endif
 
 #include <stdarg.h>  // va_args
 #include <errno.h> // errno
@@ -43,9 +41,9 @@ GNU General Public License for more details.
 #include "engine_features.h"
 #include "render_api.h"	// decallist_t
 #include "library.h"
-#ifdef XASH_SDL
+
 #include "platform/sdl/events.h"
-#endif
+
 
 typedef void (*pfnChangeGame)( const char *progname );
 
@@ -120,9 +118,7 @@ void Sys_PrintUsage( void )
 	#endif
 	O("-rodir <path>    ","set read-only base directory, experimental")
 
-	#if !defined(XASH_GLES) || !defined(XASH_NANOGL) || !defined(XASH_DEDICATED)
-		O("-gldebug         ","enable OpenGL debug log through GL_EXT_debug_output, depends on platform")
-	#endif
+	O("-gldebug         ","enable OpenGL debug log through GL_EXT_debug_output, depends on platform")
 	;
 #undef O
 
@@ -252,9 +248,7 @@ void Host_RunFrame()
 	if( !oldtime )
 		oldtime = Sys_DoubleTime();
 
-#if XASH_INPUT == INPUT_SDL
 	SDLash_RunEvents();
-#endif
 
 	newtime = Sys_DoubleTime ();
 
@@ -459,10 +453,8 @@ void Host_MemStats_f( void )
 
 void Host_Minimize_f( void )
 {
-#ifdef XASH_SDL
 	if( host.hWnd )
 		SDL_MinimizeWindow( host.hWnd );
-#endif
 }
 
 qboolean Host_IsLocalGame( void )
@@ -816,9 +808,7 @@ void Host_Error( const char *error, ... )
 	if( host.mouse_visible && !CL_IsInMenu( ))
 	{
 		// hide VGUI mouse
-#ifdef XASH_SDL
 		SDL_ShowCursor( false );
-#endif
 		host.mouse_visible = false;
 	}
 
@@ -985,18 +975,10 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 	}
 	else
 	{
-#if defined(XASH_SDL)
 		if( !( baseDir = SDL_GetBasePath() ) )
 			Sys_Error( "couldn't determine current directory: %s", SDL_GetError() );
 		Q_strncpy( host.rootdir, baseDir, sizeof( host.rootdir ) );
 		SDL_free( baseDir );
-#else
-		if( !getcwd( host.rootdir, sizeof(host.rootdir) ) )
-		{
-			Sys_Error( "couldn't determine current directory: %s", strerror( errno ) );
-			host.rootdir[0] = 0;
-		}
-#endif
 	}
 
 	// get readonly root. The order is: check for arg, then env.
@@ -1065,7 +1047,6 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 	host.con_showalways = true;
 	host.mouse_visible = false;
 
-#ifdef XASH_SDL
 	// should work even if it failed
 	SDL_Init( SDL_INIT_TIMER );
 
@@ -1075,10 +1056,6 @@ void Host_InitCommon( int argc, const char** argv, const char *progname, qboolea
 		host.type = HOST_DEDICATED;
 	}
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
-#if defined XASH_GLES && !defined __EMSCRIPTEN__ && defined SDL_HINT_OPENGL_ES_DRIVER
-	SDL_SetHint( SDL_HINT_OPENGL_ES_DRIVER, "1" );
-#endif
-#endif
 
 	if ( !host.rootdir[0] || SetCurrentDirectory( host.rootdir ) != 0)
 		MsgDev( D_INFO, "%s is working directory now\n", host.rootdir );
@@ -1318,9 +1295,7 @@ int EXPORT Host_Main( int argc, const char **argv, const char *progname, int bCh
 		Cbuf_AddText( "stuffcmds\n" );
 
 	SCR_CheckStartupVids();	// must be last
-#ifdef XASH_SDL
 	SDL_StopTextInput(); // disable text input event. Enable this in chat/console?
-#endif
 
 	if( host.state == HOST_INIT )
 		host.state = HOST_FRAME; // initialization is finished

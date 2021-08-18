@@ -15,6 +15,24 @@ GNU General Public License for more details.
 
 #include "common.h"
 
+// crash handler (XASH_CRASHHANDLER)
+#define CRASHHANDLER_NULL 0
+#define CRASHHANDLER_UCONTEXT 1
+#define CRASHHANDLER_DBGHELP 2
+#define CRASHHANDLER_WIN32 3
+
+#ifndef XASH_CRASHHANDLER
+	#ifdef _WIN32
+		#ifdef DBGHELP
+			#define XASH_CRASHHANDLER CRASHHANDLER_DBGHELP
+		#endif
+	#elif defined CRASHHANDLER
+		#define XASH_CRASHHANDLER CRASHHANDLER_UCONTEXT
+	#else
+		#define XASH_CRASHHANDLER CRASHHANDLER_NULL
+	#endif
+#endif
+
 /*
 ================
 Sys_Crash
@@ -33,9 +51,6 @@ Crash handler, called from system
 #include <dbghelp.h>
 #include <psapi.h>
 
-#ifndef XASH_SDL
-typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
-#endif
 
 int ModuleName( HANDLE process, char *name, void *address, int len )
 {
@@ -173,10 +188,10 @@ static void stack_trace( PEXCEPTION_POINTERS pInfo )
 		len += ModuleName( process, message + len, (void*)stackframe.AddrPC.Offset, 1024 - len );
 		len += Q_snprintf( message + len, 1024 - len, ")\n");
 	}
-#ifdef XASH_SDL
+
 	if( host.type != HOST_DEDICATED ) // let system to restart server automaticly
 		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Sys_Crash", message, host.hWnd );
-#endif
+
 	Sys_PrintLog(message);
 
 	SymCleanup(process);
@@ -353,9 +368,9 @@ static void Sys_Crash( int signal, siginfo_t *si, void *context)
 		}
 	// Put MessageBox as Sys_Error
 	Msg( "%s\n", message );
-#ifdef XASH_SDL
+
 	SDL_SetWindowGrab( host.hWnd, SDL_FALSE );
-#endif
+
 	MSGBOX( message );
 
 	// Log saved, now we can try to save configs and close log correctly, it may crash

@@ -18,10 +18,8 @@ extern "C" {
 #include "input_ime.h"
 #include "gl_vidnt.h"
 
-#ifdef XASH_SDL
 #include <SDL_keyboard.h>
 #include <platform/sdl/events.h>
-#endif
 
 #if defined(SDL_VIDEO_DRIVER_COCOA)
 #include "platform/macos/vid_macos.h"
@@ -65,7 +63,6 @@ const char* IME_GetCandidate(size_t i)
 
 void IME_SetInputScreenPos(int x, int y)
 {
-#ifdef XASH_SDL
 	// dont know why macos should scale again
 #ifdef __APPLE__
 	y += 16;
@@ -78,7 +75,6 @@ void IME_SetInputScreenPos(int x, int y)
 
 	SDL_Rect rect = { x, y, 0, 0 };
 	SDL_SetTextInputRect(&rect);
-#endif
 }
 
 void IME_GetInputScreenPos(int* x, int* y)
@@ -98,7 +94,5 @@ void IME_CreateContext()
 
 void IME_SetIMEEnabled(int enable, int force)
 {
-#if XASH_INPUT == INPUT_SDL
 	SDLash_EnableTextInput(enable, force);
-#endif
 }

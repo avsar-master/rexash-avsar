@@ -13,16 +13,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 #include "common.h"
-#if XASH_VIDEO == VIDEO_SDL
 #include "client.h"
 #include "gl_local.h"
 #include "mod_local.h"
 #include "gl_vidnt.h"
 #include <SDL.h>
 #include <SDL_syswm.h>
-#ifdef XASH_NANOGL
-#include <GL/nanogl.h>
-#endif
 
 #ifdef WIN32
 // Enable NVIDIA High Performance Graphics while using Integrated Graphics.
@@ -32,13 +28,9 @@ __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 #endif
 
-#ifndef XASH_GL_STATIC
 #define GL_CALL( x ) #x, (void **)&p##x
 #define GL_CALL_EX( x, y ) #x, (void **)&p##y
-#else
-#define GL_CALL( x ) #x, NULL
-#define GL_CALL_EX( x, y ) #x, NULL
-#endif
+
 
 static dllfunc_t opengl_110funcs[] =
 {
@@ -399,11 +391,7 @@ GL_GetProcAddress
 */
 void EXPORT *GL_GetProcAddress( const char *name )
 {
-#if defined( XASH_NANOGL )
-	void *func = nanoGL_GetProcAddress(name);
-#else
 	void *func = SDL_GL_GetProcAddress(name);
-#endif
 
 	if( !func )
 	{
@@ -446,21 +434,18 @@ void GL_CheckExtension( const char *name, const dllfunc_t *funcs, const char *cv
 	}
 
 	// clear exports
-#ifndef XASH_GL_STATIC // we don't use function ptrs if static
 	for( func = funcs; func && func->name; func++ )
 		*func->func = NULL;
-#endif
 
 
 	GL_SetExtension( r_ext, true ); // predict extension state
-#ifndef XASH_GL_STATIC // we don't use function ptrs if static
+
 	for( func = funcs; func && func->name != NULL; func++ )
 	{
 		// functions are cleared before all the extensions are evaluated
 		if(!(*func->func = (void *)GL_GetProcAddress( func->name )))
 			GL_SetExtension( r_ext, false ); // one or more functions are invalid, extension will be disabled
 	}
-#endif
 
 	if( GL_Support( r_ext ))
 		MsgDev( D_NOTE, "- ^2enabled\n" );
@@ -509,29 +494,6 @@ void GL_SetupAttributes()
 #endif
 
 	SDL_GL_ResetAttributes();
-
-
-#ifdef XASH_GLES
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES );
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_EGL, 1 );
-
-#ifdef XASH_NANOGL
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 1 );
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
-#elif defined( XASH_WES ) || defined( XASH_REGAL )
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
-#endif
-
-#elif !defined XASH_GL_STATIC
-	if( Sys_CheckParm( "-gldebug" ) && host.developer >= 1 )
-	{
-		MsgDev( D_NOTE, "Creating an extended GL context for debug...\n" );
-		SDL_GL_SetAttribute( SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG );
-		glw_state.extended = true;
-	}
-
-#endif // XASH_GLES
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
@@ -603,58 +565,6 @@ void GL_SetupAttributes()
 	}
 }
 
-#ifdef XASH_GLES
-void GL_InitExtensionsGLES( void )
-{
-	// initalize until base opengl functions loaded
-	GL_SetExtension( GL_DRAW_RANGEELEMENTS_EXT, true );
-	GL_SetExtension( GL_ARB_MULTITEXTURE, true );
-	pglGetIntegerv( GL_MAX_TEXTURE_UNITS_ARB, &glConfig.max_texture_units );
-	glConfig.max_texture_coords = glConfig.max_texture_units = 4;
-
-	GL_SetExtension( GL_ENV_COMBINE_EXT, true );
-	GL_SetExtension( GL_DOT3_ARB_EXT, true );
-	GL_SetExtension( GL_TEXTURE_3D_EXT, false );
-	GL_SetExtension( GL_SGIS_MIPMAPS_EXT, true ); // gles specs
-	GL_SetExtension( GL_ARB_VERTEX_BUFFER_OBJECT_EXT, true ); // gles specs
-
-	// hardware cubemaps
-	GL_CheckExtension( "GL_OES_texture_cube_map", NULL, "gl_texture_cubemap", GL_TEXTURECUBEMAP_EXT );
-
-	if( GL_Support( GL_TEXTURECUBEMAP_EXT ))
-		pglGetIntegerv( GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, &glConfig.max_cubemap_size );
-
-	GL_SetExtension( GL_ARB_SEAMLESS_CUBEMAP, false );
-
-	GL_SetExtension( GL_EXT_POINTPARAMETERS, false );
-	GL_CheckExtension( "GL_OES_texture_npot", NULL, "gl_texture_npot", GL_ARB_TEXTURE_NPOT_EXT );
-
-	GL_SetExtension( GL_TEXTURE_COMPRESSION_EXT, false );
-	GL_SetExtension( GL_CUSTOM_VERTEX_ARRAY_EXT, false );
-	GL_SetExtension( GL_CLAMPTOEDGE_EXT, true ); // by gles1 specs
-	GL_SetExtension( GL_ANISOTROPY_EXT, false );
-	GL_SetExtension( GL_TEXTURE_LODBIAS, false );
-	GL_SetExtension( GL_CLAMP_TEXBORDER_EXT, false );
-	GL_SetExtension( GL_BLEND_MINMAX_EXT, false );
-	GL_SetExtension( GL_BLEND_SUBTRACT_EXT, false );
-	GL_SetExtension( GL_SEPARATESTENCIL_EXT, false );
-	GL_SetExtension( GL_STENCILTWOSIDE_EXT, false );
-	GL_SetExtension( GL_TEXTURE_ENV_ADD_EXT,false  );
-	GL_SetExtension( GL_SHADER_OBJECTS_EXT, false );
-	GL_SetExtension( GL_SHADER_GLSL100_EXT, false );
-	GL_SetExtension( GL_VERTEX_SHADER_EXT,false );
-	GL_SetExtension( GL_FRAGMENT_SHADER_EXT, false );
-	GL_SetExtension( GL_SHADOW_EXT, false );
-	GL_SetExtension( GL_ARB_DEPTH_FLOAT_EXT, false );
-	GL_SetExtension( GL_OCCLUSION_QUERIES_EXT,false );
-	GL_CheckExtension( "GL_OES_depth_texture", NULL, "gl_depthtexture", GL_DEPTH_TEXTURE );
-
-	glConfig.texRectangle = glConfig.max_2d_rectangle_size = 0; // no rectangle
-
-	Cvar_FullSet( "gl_allow_mirrors", "0", CVAR_READ_ONLY); // No support for GLES
-
-}
-#else
 void GL_InitExtensionsBigGL()
 {
 	// initalize until base opengl functions loaded
@@ -752,10 +662,9 @@ void GL_InitExtensionsBigGL()
 	GL_CheckExtension( "GL_EXT_stencil_two_side", stenciltwosidefuncs, "gl_stenciltwoside", GL_STENCILTWOSIDE_EXT );
 	GL_CheckExtension( "GL_ARB_vertex_buffer_object", vbofuncs, "gl_vertex_buffer_object", GL_ARB_VERTEX_BUFFER_OBJECT_EXT );
 
-#ifndef XASH_GL_STATIC
 	// we don't care if it's an extension or not, they are identical functions, so keep it simple in the rendering code
 	if( pglDrawRangeElementsEXT == NULL ) pglDrawRangeElementsEXT = pglDrawRangeElements;
-#endif
+
 	GL_CheckExtension( "GL_ARB_texture_env_add", NULL, "gl_texture_env_add", GL_TEXTURE_ENV_ADD_EXT );
 
 	// vp and fp shaders
@@ -801,7 +710,7 @@ void GL_InitExtensionsBigGL()
 	else glConfig.texRectangle = glConfig.max_2d_rectangle_size = 0; // no rectangle
 
 	Cvar_Set( "gl_anisotropy", va( "%f", bound( 0, gl_texture_anisotropy->value, glConfig.max_texture_anisotropy )));
-#ifndef XASH_GL_STATIC
+
 	// enable gldebug if allowed
 	if( GL_Support( GL_DEBUG_OUTPUT ))
 	{
@@ -819,9 +728,7 @@ void GL_InitExtensionsBigGL()
 		if( host.developer >= D_NOTE )
 			pglDebugMessageControlARB( GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW_ARB, 0, NULL, true );
 	}
-#endif
 }
-#endif
 
 void GL_InitExtensions( void )
 {
@@ -835,11 +742,7 @@ void GL_InitExtensions( void )
 	glConfig.extensions_string = (const char*)pglGetString( GL_EXTENSIONS );
 	MsgDev( D_INFO, "Video: %s\n", glConfig.renderer_string );
 
-#ifdef XASH_GLES
-	GL_InitExtensionsGLES();
-#else
 	GL_InitExtensionsBigGL();
-#endif
 
 	glConfig.max_2d_texture_size = 0;
 	pglGetIntegerv( GL_MAX_TEXTURE_SIZE, &glConfig.max_2d_texture_size );
@@ -881,9 +784,6 @@ GL_CreateContext
 qboolean GL_CreateContext( void )
 {
 	int colorBits[3];
-#ifdef XASH_NANOGL
-	nanoGL_Init();
-#endif
 
 	if( ( glw_state.context = SDL_GL_CreateContext( host.hWnd ) ) == NULL)
 	{
@@ -902,11 +802,6 @@ qboolean GL_CreateContext( void )
 	glState.stencilEnabled = glConfig.stencil_bits ? true : false;
 
 	SDL_GL_GetAttribute( SDL_GL_MULTISAMPLESAMPLES, &glConfig.msaasamples );
-	
-#ifdef XASH_WES
-	void wes_init();
-	wes_init();
-#endif
 
 	return true;
 }
@@ -1004,5 +899,3 @@ void R_Free_OpenGL( void )
 	Q_memset( glConfig.extension, 0, sizeof( glConfig.extension[0] ) * GL_EXTCOUNT );
 	glw_state.initialized = false;
 }
-
-#endif // XASH_VIDEO

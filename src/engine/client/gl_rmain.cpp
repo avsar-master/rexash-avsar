@@ -1329,9 +1329,8 @@ void R_EndFrame( void )
 		R_Strobe_Tick();
 	else
 		R_Set2DMode( false );
-#if defined(XASH_SDL)
+
 	SDL_GL_SwapWindow( host.hWnd );
-#endif
 }
 
 /*

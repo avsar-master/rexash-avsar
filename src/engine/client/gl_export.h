@@ -782,10 +782,6 @@ typedef float GLmatrix[16];
 #define GL_DEPTH_BITS                     0x0D56
 #define GL_STENCIL_BITS                   0x0D57
 
-#ifdef XASH_GL_STATIC
-#include "gl_static.h"
-#else
 #include "gl_dynamic.h"
-#endif
 
 #endif//GL_EXPORT_H

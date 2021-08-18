@@ -36,10 +36,6 @@ GNU General Public License for more details.
 char			cl_textbuffer[MAX_TEXTCHANNELS][512];
 client_textmessage_t	cl_textmessage[MAX_TEXTCHANNELS];
 
-#if XASH_IMGUI
-#include "imgui_console.h"
-#endif
-
 static dllfunc_t cdll_exports[] =
 {
 { "Initialize", (void **)&clgame.dllFuncs.pfnInitialize },
@@ -485,12 +481,6 @@ void CL_DrawCenterPrint( void )
 	y = clgame.centerPrint.y; // start y
 	colorDefault = g_color_table[7];
 	pText = clgame.centerPrint.message;
-#ifdef XASH_IMGUI
-	ImGui_Console_DrawStringLen(pText, &x, &y);
-	x = scr_width->integer / 2 - x / 2;
-	y = scr_height->integer / 4;
-	ImGui_Console_AddGenericString(x, y, pText, colorDefault);
-#else
 	Con_DrawCharacterLen( 0, NULL, &charHeight );
 	
 	for( i = 0; i < clgame.centerPrint.lines; i++ )
@@ -523,7 +513,6 @@ void CL_DrawCenterPrint( void )
 		}
 		y += charHeight;
 	}
-#endif
 }
 
 /*

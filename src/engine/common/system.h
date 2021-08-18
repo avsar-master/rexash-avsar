@@ -30,22 +30,12 @@ GNU General Public License for more details.
 #include <stdio.h>
 #include <time.h>
 
-#ifdef XASH_SDL
 #include <SDL_messagebox.h>
 
 #define MSGBOX( x )		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Fatal Error", x, NULL )
 #define MSGBOX2( x )	SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Host Error", x, NULL )
 #define MSGBOX3( x )	SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Host Recursive Error", x, NULL )
-#elif defined _WIN32
-#define MSGBOX( x ) 	MessageBox( NULL, x, "Fatal Error", MB_OK|MB_SETFOREGROUND|MB_ICONSTOP )
-#define MSGBOX2( x )	MessageBox( host.hWnd, x, "Host Error", MB_OK|MB_SETFOREGROUND|MB_ICONSTOP )
-#define MSGBOX3( x )	MessageBox( host.hWnd, x, "Host Recursive Error", MB_OK|MB_SETFOREGROUND|MB_ICONSTOP )
-#else
-#define BORDER1 "======================================\n"
-#define MSGBOX( x )		fprintf(stderr, BORDER1 "Fatal Error: %s\n" BORDER1,x)
-#define MSGBOX2( x )	fprintf(stderr, BORDER1 "Host Error: %s\n" BORDER1,x)
-#define MSGBOX3( x )	fprintf(stderr, BORDER1 "Host Recursive Error: %s\n" BORDER1,x)
-#endif
+
 
 #include "xash3d_types.h"
 #include "const.h"

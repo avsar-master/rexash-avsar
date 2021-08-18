@@ -1,7 +1,6 @@
 add_subdirectory(3rdparty)
 add_subdirectory(filesystem_helper)
 add_subdirectory(vgui2_support)
-add_subdirectory(imgui_support)
 add_subdirectory(engine)
 
 set(CMAKE_CXX_STANDARD 17)

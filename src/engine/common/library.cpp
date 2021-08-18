@@ -89,9 +89,8 @@ int dladdr( const void *addr, Dl_info *info )
 }
 
 #endif
-#ifdef XASH_SDL
+
 #include <SDL_filesystem.h>
-#endif
 
 void *Com_LoadLibrary( const char *dllname, int build_ordinals_table )
 {

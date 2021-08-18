@@ -25,12 +25,10 @@ INPUT
 */
 
 #include "keydefs.h"
-#ifdef XASH_SDL
+
 #include <SDL_mouse.h>
 typedef SDL_Cursor Xash_Cursor;
-#else
-typedef void Xash_Cursor;
-#endif
+
 
 typedef struct keyname_s
 {

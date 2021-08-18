@@ -14,7 +14,6 @@ GNU General Public License for more details.
 */
 
 #include "common.h"
-#if XASH_SOUND == SOUND_SDL
 
 #include "sound.h"
 
@@ -259,4 +258,3 @@ void S_Activate( qboolean active )
 {
 	SDL_PauseAudioDevice( sdl_dev, !active );
 }
-#endif // XASH_SOUND == SOUND_SDL

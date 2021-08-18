@@ -35,20 +35,11 @@ set(XASH_ENGINE xash) # Lib name
 option(XASH_DEDICATED "Enable dedicated build. Servers must choose this." OFF) # Servers must choose this
 option(XASH_SINGLE_BINARY "Don't build game launcher and build engine as executable" ON)
 
-if(NOT XASH_DEDICATED)
-	option(XASH_SDL "Enable SDL." ON)
-	option(XASH_IMGUI "Enable IMGUI support" OFF)
-endif()
-
 if(CMAKE_SIZEOF_VOID_P MATCHES "8")
 	option(XASH_64BIT "Enable experimental 64-bit build. Note that you must also provide 64-bit game binaries" ON)
 else()
 	option(XASH_64BIT "Enable experimental 64-bit build. Note that you must also provide 64-bit game binaries" OFF)
 endif()
-
-option(XASH_GLES   "Enable if Xash3D is running over GL to GLES translator." OFF)
-option(XASH_NANOGL "Use NanoGL(GLES1). Implicitly enables XASH_GLES." OFF)
-option(XASH_WES    "Use gl-wes-v2(GLES2). Implicitly enables XASH_GLES." OFF)
 
 option(XASH_NO_ASYNC_NS_RESOLVE "Disable asynchronous domain name resolving." OFF)
 
@@ -222,14 +213,6 @@ set(XASH_ENGINE_CLIENT_SOURCES
    client/vgui/vgui_draw.cpp
 )
 
-set(XASH_ENGINE_IMGUI_SOURCES
-	client/imgui_impl_xash.cpp
-	client/imgui_lcsm_warning.cpp
-	client/imgui_console.cpp
-	client/imgui_imewindow.cpp
-	client/imgui_sprview.cpp
-)
-
 set(XASH_ENGINE_DEDICATED_SOURCES
 	common/dedicated.cpp
 )
@@ -241,9 +224,9 @@ set(XASH_ENGINE_LAUNCHER_SOURCES
 if(WIN32)
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_WIN32_SOURCES})
 endif()
-if(XASH_SDL)
+
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_SDL_SOURCES})
-endif()
+
 if(APPLE)
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_APPLE_SOURCES})
 endif()
@@ -251,10 +234,6 @@ if(NOT XASH_DEDICATED)
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_CLIENT_SOURCES})
 else()
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_DEDICATED_SOURCES})
-endif()
-if(XASH_IMGUI)
-set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_IMGUI_SOURCES})
-add_definitions(-DXASH_IMGUI=1)
 endif()
 if(XASH_SINGLE_BINARY)
 set(XASH_ENGINE_SOURCES ${XASH_ENGINE_SOURCES} ${XASH_ENGINE_LAUNCHER_SOURCES})
@@ -273,27 +252,6 @@ include_directories(
 	../pm_shared
 )
 
-if(XASH_NANOGL)
-	set(XASH_NANOGL_SRC ${CMAKE_SOURCE_DIR}/nanogl CACHE PATH "NanoGL path")
-	file(GLOB_RECURSE XASH_ENGINE_GLESWRAP_SOURCES ${XASH_NANOGL_SRC}/*.cpp) # NanoGL version
-	if(NOT XASH_ENGINE_GLESWRAP_SOURCES)
-		message(FATAL_ERROR "Clone both nanogl sources to engine folder!")
-	endif()
-	list(APPEND XASH_ENGINE_SOURCES ${XASH_ENGINE_GLESWRAP_SOURCES})
-
-	include_directories(${XASH_NANOGL_SRC}/ ${XASH_NANOGL_SRC}/GL/)
-	add_definitions(-DXASH_NANOGL -D__MULTITEXTURE_SUPPORT__)
-elseif(XASH_WES)
-	file(GLOB XASH_ENGINE_GLESWRAP_SOURCES ${XASH_WES_SRC}/src/*.c) # wesgl version
-	if(NOT XASH_ENGINE_GLESWRAP_SOURCES)
-		message(FATAL_ERROR "Clone both gl-wes-v2 and nanogl sources to engine folder!")
-	endif()
-	list(APPEND XASH_ENGINE_SOURCES ${XASH_ENGINE_GLESWRAP_SOURCES})
-
-	include_directories(${XASH_NANOGL_SRC}/ ${XASH_NANOGL_SRC}/GL/ ${XASH_WES_SRC}/src/)
-	add_definitions(-DXASH_WES)
-endif()
-
 add_definitions(-DXASH_FORCEINLINE)
 
 # ----- Conditions -----
@@ -307,9 +265,7 @@ endif()
 
 if(XASH_STATIC_GAMELIB)
 	add_definitions(-DSINGLE_BINARY)
-	if(XASH_SDL)
-		add_definitions(-DXASH_SDLMAIN)
-	endif()
+	add_definitions(-DXASH_SDLMAIN)
 	add_library(${XASH_ENGINE} STATIC ${XASH_ENGINE_SOURCES})
 elseif(XASH_SINGLE_BINARY) # Set executable or library
 	add_definitions(-DSINGLE_BINARY)
@@ -362,20 +318,11 @@ if(XASH_DEDICATED)
 	endif()
 endif()
 
-if(XASH_IMGUI)
-	target_link_libraries(${XASH_ENGINE} imgui imgui_ext)
-endif()
+set(SDL2_BUILDING_EXECUTABLE ${XASH_SINGLE_BINARY}) # link sdl2main, if needed
+add_definitions(-DXASH_SDL)
 
-if(XASH_SDL)
-	set(SDL2_BUILDING_EXECUTABLE ${XASH_SINGLE_BINARY}) # link sdl2main, if needed
-	add_definitions(-DXASH_SDL)
+target_link_libraries(${XASH_ENGINE} sdl2)
 
-	target_link_libraries(${XASH_ENGINE} sdl2)
-endif()
-
-if(XASH_GLES)
-	add_definitions(-DXASH_GLES -DXASH_GL_STATIC)
-endif()
 
 if(XASH_SAILFISH)
 	add_definitions(-D__SAILFISH__)

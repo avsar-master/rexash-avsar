@@ -17,10 +17,7 @@ GNU General Public License for more details.
 #define STDLIB_H
 
 #include <stdarg.h>
-#ifndef XASH_SDL
-#include <string.h>
-#include <ctype.h>
-#endif
+
 
 // timestamp modes
 enum

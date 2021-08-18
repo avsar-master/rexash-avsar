@@ -573,14 +573,6 @@ int pfnDrawCharacter( int x, int y, int number, int r, int g, int b )
 	if( !cls.creditsFont.valid )
 		return 0;
 
-#ifdef XASH_IMGUI
-	clgame.ds.adjust_size = true;
-	int a = max(r, max(g, b));
-	rgba_t rgb = { r,g,b,a };
-	int w = ImGui_Console_DrawChar(x, y, number, rgb);
-	clgame.ds.adjust_size = false;
-	return w;
-#else
 	number &= 255;
 	
 	if( hud_utf8->integer )
@@ -596,7 +588,6 @@ int pfnDrawCharacter( int x, int y, int number, int r, int g, int b )
 	clgame.ds.adjust_size = false;
 
 	return clgame.scrInfo.charWidths[number];
-#endif
 }
 
 /*
@@ -613,11 +604,7 @@ int pfnDrawConsoleString( int x, int y, const char *string )
 	if( !string || !*string ) return 0; // silent ignore
 	clgame.ds.adjust_size = true;
 	Con_SetFont( con_fontsize->integer );
-#ifdef XASH_IMGUI
-	drawLen = ImGui_Console_AddGenericString(x, y, string, clgame.ds.textColor);
-#else
 	drawLen = Con_DrawString(x, y, string, clgame.ds.textColor);
-#endif
 	Vector4Copy( g_color_table[7], clgame.ds.textColor );
 	clgame.ds.adjust_size = false;
 	Con_RestoreFont();
@@ -652,11 +639,7 @@ void pfnDrawConsoleStringLen( const char *pText, int *length, int *height )
 {
 	Con_SetFont( con_fontsize->integer );
 	clgame.ds.adjust_size = true;
-#ifdef XASH_IMGUI
-	ImGui_Console_DrawStringLen( pText, length, height );
-#else
 	Con_DrawStringLen( pText, length, height );
-#endif
 	clgame.ds.adjust_size = false;
 	Con_RestoreFont();
 }
@@ -699,11 +682,7 @@ GetWindowCenterX
 int pfnGetWindowCenterX( void )
 {
 	int x = 0;
-
-#ifdef XASH_SDL
 	SDL_GetWindowPosition( host.hWnd, &x, NULL );
-#endif
-
 	return host.window_center_x + x;
 }
 
@@ -716,11 +695,7 @@ GetWindowCenterY
 int pfnGetWindowCenterY( void )
 {
 	int y = 0;
-
-#ifdef XASH_SDL
 	SDL_GetWindowPosition( host.hWnd, NULL, &y );
-#endif
-
 	return host.window_center_y + y;
 }
 
@@ -822,11 +797,7 @@ pfnGetMousePosition
 */
 void CL_GetMousePosition( int *mx, int *my )
 {
-#ifdef XASH_SDL
 	SDL_GetMouseState(mx, my);
-#else
-	*mx = *my = 0;
-#endif
 }
 
 /*
@@ -1393,11 +1364,7 @@ pfnGetMousePos
 */
 void pfnGetMousePos( POINT *ppt )
 {
-#ifdef XASH_SDL
 	SDL_GetMouseState((int*)&ppt->x, (int*)&ppt->y);
-#else
-	ppt->x = ppt->y = 0;
-#endif
 }
 
 /*
@@ -1408,9 +1375,7 @@ pfnSetMousePos
 */
 void pfnSetMousePos( int mx, int my )
 {
-#ifdef XASH_SDL
 	SDL_WarpMouseInWindow( host.hWnd, mx, my );
-#endif
 }
 
 /*
@@ -1547,12 +1512,6 @@ AVSARTODO: replace with vgui2
 */
 int pfnVGUI2DrawCharacter( int x, int y, int number, unsigned int font )
 {
-#ifdef XASH_IMGUI
-	clgame.ds.adjust_size = true;
-	int w = ImGui_Console_DrawChar(x, y, number, g_color_table[7]);
-	clgame.ds.adjust_size = false;
-	return w;
-#else
 	if( !cls.creditsFont.valid )
 		return 0;
 
@@ -1570,7 +1529,6 @@ int pfnVGUI2DrawCharacter( int x, int y, int number, unsigned int font )
 	clgame.ds.adjust_size = false;
 
 	return clgame.scrInfo.charWidths[number];
-#endif
 }
 
 /*

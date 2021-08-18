@@ -18,30 +18,13 @@ GNU General Public License for more details.
 
 #include "port.h"
 
-#include "backends.h"
 #include "defaults.h"
 #include "wrect.h"
 
 //
 // check if selected backend not allowed
 //
-#if XASH_TIMER == TIMER_NULL
-	#error "Please select timer backend"
-#endif
 
-#ifndef XASH_DEDICATED
-	#if XASH_VIDEO == VIDEO_NULL
-		#error "Please select video backend"
-	#endif
-#endif
-
-#ifndef XASH_SDL
-
-#if XASH_TIMER == TIMER_SDL || XASH_VIDEO == VIDEO_SDL || XASH_SOUND == SOUND_SDL || XASH_INPUT == INPUT_SDL
-#error "SDL backends without XASH_SDL not allowed"
-#endif
-
-#endif
 
 #ifndef _WIN32
 #include <stddef.h> // size_t
@@ -394,11 +377,8 @@ typedef struct host_parm_s
 
 	// list of unique decal indexes
 	signed char		draw_decals[MAX_DECALS][CS_SIZE];
-#ifdef XASH_SDL
     SDL_Window*		hWnd;		// main window
-#else
-	void *hWnd;
-#endif
+
 	int		developer;	// show all developer's message
 	int		old_developer;	// keep real dev state (we need enable dev-mode in multiplayer)
 	qboolean		key_overstrike;	// key overstrike mode

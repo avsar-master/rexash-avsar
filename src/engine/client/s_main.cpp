@@ -1812,7 +1812,6 @@ qboolean S_Init( void )
 	s_reverse_channels = Cvar_Get( "s_reverse_channels", "0", CVAR_ARCHIVE, "reverse left and right channels" );
 	s_samplecount = Cvar_Get( "s_samplecount", "0", CVAR_ARCHIVE, "sample count (0 for default value)" );
 
-#if XASH_SOUND != SOUND_NULL
 	if( Sys_CheckParm( "-nosound" ))
 	{
 		MsgDev( D_INFO, "Audio: Disabled\n" );
@@ -1851,10 +1850,6 @@ qboolean S_Init( void )
 	AllocDsps ();
 
 	return true;
-#else // XASH_SOUND != SOUND_NULL
-	MsgDev( D_INFO, "Audio: Not supported in this build\n" );
-	return false;
-#endif // XASH_SOUND != SOUND_NULL
 }
 
 // =======================================================================

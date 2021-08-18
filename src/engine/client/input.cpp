@@ -21,16 +21,10 @@ GNU General Public License for more details.
 #include "wrect.h"
 #include "joyinput.h"
 
-#ifdef XASH_SDL
 #include <SDL.h>
-#endif
 
 #ifdef _WIN32
 #include "windows.h"
-#endif
-
-#ifdef XASH_IMGUI
-#include "imgui_impl_xash.h"
 #endif
 
 Xash_Cursor*	in_mousecursor;
@@ -443,9 +437,7 @@ static void IN_ActivateCursor( void )
 {
 	if( cls.key_dest == key_menu )
 	{
-#ifdef XASH_SDL
 		SDL_SetCursor( in_mousecursor );
-#endif
 	}
 }
 
@@ -475,19 +467,18 @@ void IN_ToggleClientMouse( int newstate, int oldstate )
 	else if( newstate == key_game )
 	{
 		// reset mouse pos, so cancel effect in game
-#ifdef XASH_SDL
 			SDL_WarpMouseInWindow( host.hWnd, host.window_center_x, host.window_center_y );
 			SDL_SetWindowGrab( host.hWnd, SDL_TRUE );
-#endif
+
 		if( cls.initialized )
 			clgame.dllFuncs.IN_ActivateMouse();
 	}
 
 	if( ( newstate == key_menu || newstate == key_console || newstate == key_message ) && ( !CL_IsBackgroundMap() || CL_IsBackgroundDemo()))
 	{
-#ifdef XASH_SDL
+
 		SDL_SetWindowGrab(host.hWnd, SDL_FALSE);
-#endif
+
 #ifdef USE_EVDEV
 		Evdev_SetGrab( false );
 #endif
@@ -527,9 +518,8 @@ void IN_ActivateMouse( qboolean force )
 		{
 			if( in_mouse_suspended )
 			{
-#ifdef XASH_SDL
 				SDL_ShowCursor( false );
-#endif
+
 				UI_ShowCursor( false );
 			}
 		}
@@ -552,9 +542,7 @@ void IN_ActivateMouse( qboolean force )
 	if( cls.key_dest == key_game )
 	{
 		clgame.dllFuncs.IN_ActivateMouse();
-#ifdef XASH_SDL
 		SDL_GetRelativeMouseState( 0, 0 ); // Reset mouse position
-#endif
 	}
 
 }
@@ -576,9 +564,8 @@ void IN_DeactivateMouse( void )
 		clgame.dllFuncs.IN_DeactivateMouse();
 	}
 	in_mouseactive = false;
-#ifdef XASH_SDL
+
 	SDL_SetWindowGrab( host.hWnd, SDL_FALSE );
-#endif
 }
 
 /*
@@ -594,7 +581,6 @@ void IN_MouseMove( void )
 		return;
 
 	// find mouse movement
-#ifdef XASH_SDL
 	SDL_GetMouseState( (int*)&current_pos.x, (int*)&current_pos.y );
 #ifdef TARGET_OS_MAC
 	int w1, w2, h1, h2;
@@ -604,18 +590,6 @@ void IN_MouseMove( void )
 	current_pos.x = (int)((float)current_pos.x * (float)w1 / (float)w2);
 	current_pos.y = (int)((float)current_pos.y * (float)h1 / (float)h2);
 #endif
-#endif
-
-#ifdef XASH_IMGUI
-	if (ImGui_ImplGL_MouseMove(current_pos.x, current_pos.y))
-	{
-#ifdef XASH_SDL
-		SDL_ShowCursor( SDL_TRUE );
-#endif
-		IN_ActivateCursor();
-		return;
-	}
-#endif
 
 	VGui_MouseMove( current_pos.x, current_pos.y );
 
@@ -623,10 +597,8 @@ void IN_MouseMove( void )
 		return;
 
 	// Show cursor in UI
-#ifdef XASH_SDL
 	if( UI_IsVisible() )
 		SDL_ShowCursor( SDL_TRUE );
-#endif
 
 	// if the menu is visible, move the menu cursor
 	UI_MouseMove( current_pos.x, current_pos.y );
@@ -648,7 +620,6 @@ void IN_MouseEvent( int mstate )
 
 	if( cls.key_dest == key_game )
 	{
-#if defined( XASH_SDL )
 		static qboolean ignore; // igonre mouse warp event
 		int x, y;
 		SDL_GetMouseState(&x, &y);
@@ -678,15 +649,13 @@ void IN_MouseEvent( int mstate )
 			SDL_GetRelativeMouseState( 0, 0 ); // reset relative state
 			ignore = 0;
 		}
-#endif
 		return;
 	}
 	else
 	{
-#if defined(XASH_SDL)
 		SDL_SetRelativeMouseMode( SDL_FALSE );
 		SDL_ShowCursor( SDL_TRUE );
-#endif
+
 		IN_MouseMove();
 	}
 
@@ -849,7 +818,7 @@ void IN_EngineAppendMove( float frametime, usercmd_t *cmd, qboolean active )
 	if(active)
 	{
 		float sensitivity = ( (float)cl.refdef.fov_x / (float)90.0f );
-#if XASH_INPUT == INPUT_SDL
+
 		if( m_enginemouse->integer)
 		{
 			int mouse_x, mouse_y;
@@ -857,7 +826,6 @@ void IN_EngineAppendMove( float frametime, usercmd_t *cmd, qboolean active )
 			cl.refdef.cl_viewangles[PITCH] += mouse_y * m_pitch->value * sensitivity;
 			cl.refdef.cl_viewangles[YAW] -= mouse_x * m_yaw->value * sensitivity;
 		}
-#endif
 		Joy_FinalizeMove( &forward, &side, &dyaw, &dpitch );
 		IN_JoyAppendMove( cmd, forward, side );
 #ifdef USE_EVDEV

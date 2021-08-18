@@ -1102,7 +1102,6 @@ static void GL_TextureImage( GLenum inFormat, GLenum outFormat, GLenum glTarget,
 
 static void GL_TextureImageDXT( GLenum format, GLenum glTarget, GLint side, GLint level, GLint width, GLint height, GLint depth, qboolean subImage, size_t size, const void *data )
 {
-#if !defined XASH_NANOGL && !defined XASH_WES
 	if( glTarget == GL_TEXTURE_1D )
 	{
 		if( subImage ) pglCompressedTexSubImage1DARB( glTarget, level, 0, width, format, size, data );
@@ -1123,7 +1122,6 @@ static void GL_TextureImageDXT( GLenum format, GLenum glTarget, GLint side, GLin
 		if( subImage ) pglCompressedTexSubImage2DARB( glTarget, level, 0, 0, width, height, format, size, data );
 		else pglCompressedTexImage2DARB( glTarget, level, format, width, height, 0, size, data );
 	}
-#endif
 }
 
 /*

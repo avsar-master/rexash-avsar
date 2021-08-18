@@ -15,10 +15,6 @@ GNU General Public License for more details.
 
 #include "common.h"
 
-#if XASH_IMGUI
-#include "imgui_console.h"
-#endif
-
 #define HASH_SIZE 256
 
 convar_t	*cvar_vars; // head of list
@@ -250,10 +246,6 @@ convar_t *Cvar_Get( const char *var_name, const char *var_value, int flags, cons
 	BaseCmd_Insert( HM_CVAR, cvar, cvar->name );
 #endif
 
-#if XASH_IMGUI
-	ImGui_Console_UpdateCommandList();
-#endif
-
 	return cvar;
 }
 
@@ -339,10 +331,6 @@ void Cvar_RegisterVariable( cvar_t *var )
 		BaseCmd_Insert( HM_CVAR, var, var->name );
 #endif
 	}
-
-#if XASH_IMGUI
-	ImGui_Console_UpdateCommandList();
-#endif
 }
 	
 /*

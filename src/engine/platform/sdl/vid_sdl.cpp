@@ -14,7 +14,6 @@ GNU General Public License for more details.
 */
 
 #include "common.h"
-#if XASH_VIDEO == VIDEO_SDL
 #include "client.h"
 #include "gl_local.h"
 #include "mod_local.h"
@@ -572,5 +571,3 @@ qboolean VID_GetDPI(float* out)
 		*out = dpi;
 	return success;
 }
-
-#endif // XASH_VIDEO

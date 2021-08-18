@@ -24,10 +24,10 @@ GNU General Public License for more details.
 #include <sys/stat.h>
 #include <time.h>
 #include <stdarg.h> // va
-#ifdef XASH_SDL
+
 #include <SDL_system.h> // Android External storage
 #include <SDL_filesystem.h> // Android External storage
-#endif
+
 #ifdef _WIN32
 #include <io.h>
 #include <direct.h>

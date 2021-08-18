@@ -16,77 +16,6 @@ GNU General Public License for more details.
 #ifndef DEFAULTS_H
 #define DEFAULTS_H
 
-#include "backends.h"
-
-/*
-===================================================================
-
-SETUP BACKENDS DEFINITIONS
-
-===================================================================
-*/
-#ifndef XASH_DEDICATED
-
-	#ifdef XASH_SDL
-
-		// by default, use SDL subsystems
-		#ifndef XASH_VIDEO
-			#define XASH_VIDEO VIDEO_SDL
-		#endif // XASH_VIDEO
-
-		#ifndef XASH_TIMER
-			#define XASH_TIMER TIMER_SDL
-		#endif
-
-		#ifndef XASH_INPUT
-			#define XASH_INPUT INPUT_SDL
-		#endif
-
-		#ifndef XASH_SOUND
-			#define XASH_SOUND SOUND_SDL
-		#endif
-
-	#endif //XASH_SDL
-
-#endif // XASH_DEDICATED
-
-// select crashhandler based on defines
-#ifndef XASH_CRASHHANDLER
-	#ifdef _WIN32
-		#ifdef DBGHELP
-			#define XASH_CRASHHANDLER CRASHHANDLER_DBGHELP
-		#endif
-	#elif defined CRASHHANDLER
-		#define XASH_CRASHHANDLER CRASHHANDLER_UCONTEXT
-	#else
-		#define XASH_CRASHHANDLER CRASHHANDLER_NULL
-	#endif
-#endif
-
-// no timer - no xash
-#ifndef XASH_TIMER
-	#ifdef _WIN32
-		#define XASH_TIMER TIMER_WIN32
-	#else
-		#define XASH_TIMER TIMER_LINUX
-	#endif
-#endif
-
-//
-// fallback to NULL
-//
-#ifndef XASH_VIDEO
-	#define XASH_VIDEO VIDEO_NULL
-#endif
-
-#ifndef XASH_SOUND
-	#define XASH_SOUND SOUND_NULL
-#endif
-
-#ifndef XASH_INPUT
-	#define XASH_INPUT INPUT_NULL
-#endif
-
 /*
 =========================================================================
 
@@ -95,19 +24,11 @@ Default build-depended cvar and constant values
 =========================================================================
 */
 
-#if defined XASH_NANOGL || defined XASH_WES || defined XASH_REGAL
-#ifndef XASH_GLES
-#define XASH_GLES
-#endif // XASH_GLES
-#ifndef XASH_GL_STATIC
-#define XASH_GL_STATIC
-#endif // XASH_GL_STATIC
-#endif // XASH_NANOGL || XASH_WES || XASH_REGAL
-
 #define DEFAULT_PRIMARY_MASTER "ms.xash.su:27010"
 #define DEFAULT_SECONDARY_MASTER "ms2.xash.su:27010"
 // Set ForceSimulating to 1 by default for dedicated, because AMXModX timers require this
 // TODO: enable simulating for any server?
+
 #ifdef XASH_DEDICATED
 	#define DEFAULT_SV_FORCESIMULATING "1"
 #else
@@ -122,7 +43,6 @@ Default build-depended cvar and constant values
 #ifndef DEFAULT_FULLSCREEN
 #define DEFAULT_FULLSCREEN 1
 #endif
-
 
 #define DEFAULT_CON_MAXFRAC "1"
 
