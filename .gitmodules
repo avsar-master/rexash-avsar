@@ -1,6 +1,3 @@
 [submodule "src/3rdparty/SDL2"]
 	path = src/3rdparty/SDL2
 	url = https://github.com/libsdl-org/SDL
-[submodule "src/imgui_support/imgui"]
-	path = src/imgui_support/imgui
-	url = https://github.com/MoeMod/imgui
