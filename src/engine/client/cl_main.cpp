@@ -520,13 +520,13 @@ void CL_WriteUsercmd( sizebuf_t *msg, int from, int to )
 
 /*
 ===================
-CL_WritePacket
+CL_Move
 
 Create and send the command packet to the server
 Including both the reliable commands and the usercmds
 ===================
 */
-void CL_WritePacket( void )
+void CL_Move( void )
 {
 	sizebuf_t		buf;
 	qboolean		send_command = false;
@@ -742,7 +742,7 @@ void CL_SendCmd( void )
 	// we create commands even if a demo is playing,
 	CL_CreateCmd();
 	// clc_move, userinfo etc
-	CL_WritePacket();
+	CL_Move();
 
 	// make sure what menu and CL_WritePacket catch changes
 	userinfo->modified = false;
