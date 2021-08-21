@@ -117,7 +117,6 @@ void Wcon_Clear( void );
 char *Wcon_Input( void );
 
 // text messages
-void Msg( const char *pMsg, ... ) _format(1);
 void MsgDev( int level, const char *pMsg, ... ) _format(2);
 
 #endif//SYSTEM_H

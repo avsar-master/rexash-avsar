@@ -297,7 +297,7 @@ const char *Com_NameForFunction( void *hInstance, void *function )
 
 		if( SymGetSymFromAddr64( process, function, &displacement, symbol ) )
 		{
-			Msg( "%s\n", symbol->Name );
+			Con_Printf( "%s\n", symbol->Name );
 			return copystring( symbol->Name );
 		}
 

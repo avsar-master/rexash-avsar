@@ -185,7 +185,7 @@ long _stdcall Wcon_InputLineProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			Q_strncat( s_wcd.consoleText, inputBuffer, sizeof( s_wcd.consoleText ) - Q_strlen( s_wcd.consoleText ) - 5 );
 			Q_strcat( s_wcd.consoleText, "\n" );
 			SetWindowText( s_wcd.hwndInputLine, "" );
-			Msg( ">%s\n", inputBuffer );
+			Con_Printf( ">%s\n", inputBuffer );
 
 			// copy line to history buffer
 			Q_strncpy( s_wcd.historyLines[s_wcd.nextHistoryLine % COMMAND_HISTORY], inputBuffer, MAX_STRING );

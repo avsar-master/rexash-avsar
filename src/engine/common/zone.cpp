@@ -442,8 +442,8 @@ void Mem_PrintStats( void )
 		realsize += pool->realsize;
 	}
 
-	Msg( "^3%lu^7 memory pools, totalling: ^1%s\n", (long unsigned int)count, Q_memprint( size ));
-	Msg( "Total allocated size: ^1%s\n", Q_memprint( realsize ));
+	Con_Printf( "^3%lu^7 memory pools, totalling: ^1%s\n", (long unsigned int)count, Q_memprint( size ));
+	Con_Printf( "Total allocated size: ^1%s\n", Q_memprint( realsize ));
 }
 
 void Mem_PrintList( size_t minallocationsize )
@@ -453,20 +453,20 @@ void Mem_PrintList( size_t minallocationsize )
 
 	Mem_Check();
 
-	Msg( "memory pool list:\n""  ^3size                    name\n");
+	Con_Printf( "memory pool list:\n""  ^3size                    name\n");
 	for( pool = poolchain; pool; pool = pool->next )
 	{
 		// poolnames can contain color symbols, make sure what color is reset
 		if( (pool->totalsize - pool->lastchecksize ) != 0 )
-			Msg( "%5luk (%5luk actual) %s (^7%+3li byte change)\n",
+			Con_Printf( "%5luk (%5luk actual) %s (^7%+3li byte change)\n",
 				 (long unsigned int)((pool->totalsize + 1023) / 1024),
 				 (long unsigned int)((pool->realsize + 1023) / 1024),
 				 pool->name,
 				 pool->totalsize - pool->lastchecksize );
-		else Msg( "%5luk (%5luk actual) %s\n", (long unsigned int)((pool->totalsize + 1023) / 1024), (long unsigned int)((pool->realsize + 1023) / 1024), pool->name );
+		else Con_Printf( "%5luk (%5luk actual) %s\n", (long unsigned int)((pool->totalsize + 1023) / 1024), (long unsigned int)((pool->realsize + 1023) / 1024), pool->name );
 		pool->lastchecksize = pool->totalsize;
 		for( mem = pool->chain; mem; mem = mem->next )
 			if( mem->size >= minallocationsize )
-				Msg( "%10lu bytes allocated at %s:%i\n", (long unsigned int)mem->size, mem->filename, mem->fileline );
+				Con_Printf( "%10lu bytes allocated at %s:%i\n", (long unsigned int)mem->size, mem->filename, mem->fileline );
 	}
 }

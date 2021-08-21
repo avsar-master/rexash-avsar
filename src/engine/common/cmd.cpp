@@ -397,7 +397,7 @@ static void Cmd_StuffCmds_f( void )
 
 	if( Cmd_Argc() != 1 )
 	{
-		Msg( "Usage: stuffcmds : execute command line parameters\n" );
+		Con_Printf( "Usage: stuffcmds : execute command line parameters\n" );
 		return;
 	}
 
@@ -471,7 +471,7 @@ static void Cmd_Echo_f( void )
 	int	i;
 
 	for( i = 1; i < Cmd_Argc(); i++ )
-		Msg( "%s ", Cmd_Argv( i ));
+		Con_Printf( "%s ", Cmd_Argv( i ));
 	Sys_Print( "\n" );
 }
 
@@ -492,9 +492,9 @@ static void Cmd_Alias_f( void )
 
 	if( Cmd_Argc() == 1 )
 	{
-		Msg( "Current alias commands:\n" );
+		Con_Printf( "Current alias commands:\n" );
 		for( a = cmd_alias; a; a = a->next )
-			Msg( "^2%s^7 : ^3%s^7\n", a->name, a->value );
+			Con_Printf( "^2%s^7 : ^3%s^7\n", a->name, a->value );
 		return;
 	}
 
@@ -502,7 +502,7 @@ static void Cmd_Alias_f( void )
 
 	if( Q_strlen( s ) >= MAX_ALIAS_NAME )
 	{
-		Msg( "Alias name is too long\n" );
+		Con_Printf( "Alias name is too long\n" );
 		return;
 	}
 
@@ -574,7 +574,7 @@ static void Cmd_UnAlias_f ( void )
 
 	if( Cmd_Argc() == 1 )
 	{
-		Msg( "Usage: unalias alias1 [alias2 ...]\n" );
+		Con_Printf( "Usage: unalias alias1 [alias2 ...]\n" );
 		return;
 	}
 
@@ -598,7 +598,7 @@ static void Cmd_UnAlias_f ( void )
 			}
 		}
 		if( !a )
-			Msg( "unalias: %s alias not found\n", s );
+			Con_Printf( "unalias: %s alias not found\n", s );
 	}
 }
 
@@ -926,14 +926,14 @@ void Cmd_If_f( void )
 	// usage
 	if( cmd_argc == 1 )
 	{
-		Msg("Usage: if <op1> [ <operator> <op2> ]\n");
-		Msg(":<action1>\n" );
-		Msg(":<action2>\n" );
-		Msg("else\n" );
-		Msg(":<action3>\n" );
-		Msg("operands are string or float values\n" );
-		Msg("and substituted cvars like '$cl_lw'\n" );
-		Msg("operator is '='', '==', '>', '<', '>=', '<=' or '!='\n" );
+		Con_Printf("Usage: if <op1> [ <operator> <op2> ]\n");
+		Con_Printf(":<action1>\n" );
+		Con_Printf(":<action2>\n" );
+		Con_Printf("else\n" );
+		Con_Printf(":<action3>\n" );
+		Con_Printf("operands are string or float values\n" );
+		Con_Printf("and substituted cvars like '$cl_lw'\n" );
+		Con_Printf("operator is '='', '==', '>', '<', '>=', '<=' or '!='\n" );
 	}
 	// one argument - check if nonzero
 	else if( cmd_argc == 2 )
@@ -1189,23 +1189,23 @@ void Cmd_List_f( void )
 			continue;
 
 		// doesn't look exactly as anticipated, but still better
-		Msg( "%-*s %s\n", maxcmdnamelen, cmd->name, cmd->desc );
+		Con_Printf( "%-*s %s\n", maxcmdnamelen, cmd->name, cmd->desc );
 		j++;
 	}
 
 	if( len )
 	{
 		if( ispattern )
-			Msg( "\n%i command%s matching \"%s\"\n", j, ( j > 1 ) ? "s" : "", partial );
+			Con_Printf( "\n%i command%s matching \"%s\"\n", j, ( j > 1 ) ? "s" : "", partial );
 		else
-			Msg( "\n%i command%s beginning with \"%s\"\n", j, ( j > 1 ) ? "s" : "", partial );
+			Con_Printf( "\n%i command%s beginning with \"%s\"\n", j, ( j > 1 ) ? "s" : "", partial );
 	}
 	else
 	{
-		Msg( "\n%i command%s\n", j, ( j > 1 ) ? "s" : "" );
+		Con_Printf( "\n%i command%s\n", j, ( j > 1 ) ? "s" : "" );
 	}
 
-	Msg( "%i total commands\n", i );
+	Con_Printf( "%i total commands\n", i );
 }
 
 static void Cmd_Apropos_f( void )
@@ -1221,7 +1221,7 @@ static void Cmd_Apropos_f( void )
 		partial = Cmd_Args();
 	else
 	{
-		Msg( "usage: apropos <string>\n" );
+		Con_Printf( "usage: apropos <string>\n" );
 		return;
 	}
 
@@ -1251,7 +1251,7 @@ static void Cmd_Apropos_f( void )
 		
 		// TODO: maybe add flags output like cvarlist, also
 		// fix inconsistencies in output from different commands
-		Msg( "cvar ^3%s^7 is \"%s\" [\"%s\"] %s\n", var->name, var->string, ( var->flags & CVAR_EXTDLL ) ? "" : var->reset_string, ( var->flags & CVAR_EXTDLL ) ? "game cvar" : var->description );
+		Con_Printf( "cvar ^3%s^7 is \"%s\" [\"%s\"] %s\n", var->name, var->string, ( var->flags & CVAR_EXTDLL ) ? "" : var->reset_string, ( var->flags & CVAR_EXTDLL ) ? "game cvar" : var->description );
 		count++;
 	}
 
@@ -1264,7 +1264,7 @@ static void Cmd_Apropos_f( void )
 		if( !matchpattern_with_separator( cmd->desc, partial, true, "", false ))
 			continue;
 
-		Msg( "command ^2%s^7: %s\n", cmd->name, cmd->desc );
+		Con_Printf( "command ^2%s^7: %s\n", cmd->name, cmd->desc );
 		count++;
 	}
 
@@ -1275,11 +1275,11 @@ static void Cmd_Apropos_f( void )
 		if( !matchpattern_with_separator( alias->value, partial, true, "\n", false )) // when \n is a separator, wildcards don't match it //-V666
 			continue;
 
-		Msg( "alias ^5%s^7: %s", alias->name, alias->value ); // do not print an extra \n
+		Con_Printf( "alias ^5%s^7: %s", alias->name, alias->value ); // do not print an extra \n
 		count++;
 	}
 
-	Msg( "\n%i result%s\n\n", count, (count > 1) ? "s" : "" );
+	Con_Printf( "\n%i result%s\n\n", count, (count > 1) ? "s" : "" );
 }
 
 /*
@@ -1296,13 +1296,13 @@ void Cmd_Unlink( int group )
 
 	if( Cvar_VariableInteger( "host_gameloaded" ) && ( group & CMD_EXTDLL ))
 	{
-		Msg( "Can't unlink commands while game is loaded\n" );
+		Con_Printf( "Can't unlink commands while game is loaded\n" );
 		return;
 	}
 
 	if( Cvar_VariableInteger( "host_clientloaded" ) && ( group & CMD_CLIENTDLL ))
 	{
-		Msg( "Can't unlink commands while client is loaded\n" );
+		Con_Printf( "Can't unlink commands while client is loaded\n" );
 		return;
 	}
 

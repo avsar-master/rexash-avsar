@@ -373,8 +373,8 @@ void R_TextureList_f( void )
 	gltexture_t	*image;
 	int		i, texCount, bytes = 0;
 
-	Msg( "\n" );
-	Msg("      -w-- -h-- -size- -fmt- type -data-- -encode-- -wrap-- -name--------\n" );
+	Con_Printf( "\n" );
+	Con_Printf("      -w-- -h-- -size- -fmt- type -data-- -encode-- -wrap-- -name--------\n" );
 
 	for( i = texCount = 0, image = r_textures; i < r_numTextures; i++, image++ )
 	{
@@ -383,181 +383,181 @@ void R_TextureList_f( void )
 		bytes += image->size;
 		texCount++;
 
-		Msg( "%4i: ", i );
-		Msg( "%4i %4i ", image->width, image->height );
-		Msg( "%5lik ", image->size >> 10 );
+		Con_Printf( "%4i: ", i );
+		Con_Printf( "%4i %4i ", image->width, image->height );
+		Con_Printf( "%5lik ", image->size >> 10 );
 
 		switch( image->format )
 		{
 		case GL_COMPRESSED_RGBA_ARB:
-			Msg( "CRGBA " );
+			Con_Printf( "CRGBA " );
 			break;
 		case GL_COMPRESSED_RGB_ARB:
-			Msg( "CRGB  " );
+			Con_Printf( "CRGB  " );
 			break;
 		case GL_COMPRESSED_LUMINANCE_ALPHA_ARB:
-			Msg( "CLA   " );
+			Con_Printf( "CLA   " );
 			break;
 		case GL_COMPRESSED_LUMINANCE_ARB:
-			Msg( "CL    " );
+			Con_Printf( "CL    " );
 			break;
 		case GL_COMPRESSED_ALPHA_ARB:
-			Msg( "CA    " );
+			Con_Printf( "CA    " );
 			break;
 		case GL_COMPRESSED_INTENSITY_ARB:
-			Msg( "CI    " );
+			Con_Printf( "CI    " );
 			break;
 		case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-			Msg( "DXT1c " );
+			Con_Printf( "DXT1c " );
 			break;
 		case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-			Msg( "DXT1a " );
+			Con_Printf( "DXT1a " );
 			break;
 		case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-			Msg( "DXT3  " );
+			Con_Printf( "DXT3  " );
 			break;
 		case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-			Msg( "DXT5  " );
+			Con_Printf( "DXT5  " );
 			break;
 		case GL_RGBA:
-			Msg( "RGBA  " );
+			Con_Printf( "RGBA  " );
 			break;
 		case GL_RGBA8:
-			Msg( "RGBA8 " );
+			Con_Printf( "RGBA8 " );
 			break;
 		case GL_RGBA4:
-			Msg( "RGBA4 " );
+			Con_Printf( "RGBA4 " );
 			break;
 		case GL_RGB:
-			Msg( "RGB   " );
+			Con_Printf( "RGB   " );
 			break;
 		case GL_RGB8:
-			Msg( "RGB8  " );
+			Con_Printf( "RGB8  " );
 			break;
 		case GL_RGB5:
-			Msg( "RGB5  " );
+			Con_Printf( "RGB5  " );
 			break;
 		case GL_LUMINANCE4_ALPHA4:
-			Msg( "L4A4  " );
+			Con_Printf( "L4A4  " );
 			break;
 		case GL_LUMINANCE_ALPHA:
 		case GL_LUMINANCE8_ALPHA8:
-			Msg( "L8A8  " );
+			Con_Printf( "L8A8  " );
 			break;
 		case GL_LUMINANCE4:
-			Msg( "L4    " );
+			Con_Printf( "L4    " );
 			break;
 		case GL_LUMINANCE:
 		case GL_LUMINANCE8:
-			Msg( "L8    " );
+			Con_Printf( "L8    " );
 			break;
 		case GL_ALPHA8:
-			Msg( "A8    " );
+			Con_Printf( "A8    " );
 			break;
 		case GL_INTENSITY8:
-			Msg( "I8    " );
+			Con_Printf( "I8    " );
 			break;
 		case GL_DEPTH_COMPONENT:
 		case GL_DEPTH_COMPONENT24:
-			Msg( "DEPTH24" );
+			Con_Printf( "DEPTH24" );
 			break;
 		case GL_DEPTH_COMPONENT32F:
-			Msg( "DEPTH32" );
+			Con_Printf( "DEPTH32" );
 			break;
 		case GL_LUMINANCE16F_ARB:
-			Msg( "L16F  " );
+			Con_Printf( "L16F  " );
 			break;
 		case GL_LUMINANCE32F_ARB:
-			Msg( "L32F  " );
+			Con_Printf( "L32F  " );
 			break;
 		case GL_LUMINANCE_ALPHA16F_ARB:
-			Msg( "LA16F " );
+			Con_Printf( "LA16F " );
 			break;
 		case GL_LUMINANCE_ALPHA32F_ARB:
-			Msg( "LA32F " );
+			Con_Printf( "LA32F " );
 			break;
 		case GL_RGB16F_ARB:
-			Msg( "RGB16F" );
+			Con_Printf( "RGB16F" );
 			break;
 		case GL_RGB32F_ARB:
-			Msg( "RGB32F" );
+			Con_Printf( "RGB32F" );
 			break;
 		case GL_RGBA16F_ARB:
-			Msg( "RGBA16F" );
+			Con_Printf( "RGBA16F" );
 			break;
 		case GL_RGBA32F_ARB:
-			Msg( "RGBA32F" );
+			Con_Printf( "RGBA32F" );
 			break;
 		default:
-			Msg( "????? " );
+			Con_Printf( "????? " );
 			break;
 		}
 
 		switch( image->target )
 		{
 		case GL_TEXTURE_1D:
-			Msg( " 1D  " );
+			Con_Printf( " 1D  " );
 			break;
 		case GL_TEXTURE_2D:
-			Msg( " 2D  " );
+			Con_Printf( " 2D  " );
 			break;
 		case GL_TEXTURE_3D:
-			Msg( " 3D  " );
+			Con_Printf( " 3D  " );
 			break;
 		case GL_TEXTURE_CUBE_MAP_ARB:
-			Msg( "CUBE " );
+			Con_Printf( "CUBE " );
 			break;
 		case GL_TEXTURE_RECTANGLE_EXT:
-			Msg( "RECT " );
+			Con_Printf( "RECT " );
 			break;
 		default:
-			Msg( "???? " );
+			Con_Printf( "???? " );
 			break;
 		}
 
 		if( image->flags & TF_NORMALMAP )
-			Msg( "normal  " );
-		else Msg( "diffuse " );
+			Con_Printf( "normal  " );
+		else Con_Printf( "diffuse " );
 
 		switch( image->encode )
 		{
 		case DXT_ENCODE_COLOR_YCoCg:
-			Msg( "YCoCg     " );
+			Con_Printf( "YCoCg     " );
 			break;
 		case DXT_ENCODE_NORMAL_AG_ORTHO:
-			Msg( "ortho     " );
+			Con_Printf( "ortho     " );
 			break;
 		case DXT_ENCODE_NORMAL_AG_STEREO:
-			Msg( "stereo    " );
+			Con_Printf( "stereo    " );
 			break;
 		case DXT_ENCODE_NORMAL_AG_PARABOLOID:
-			Msg( "parabolic " );
+			Con_Printf( "parabolic " );
 			break;
 		case DXT_ENCODE_NORMAL_AG_QUARTIC:
-			Msg( "quartic   " );
+			Con_Printf( "quartic   " );
 			break;
 		case DXT_ENCODE_NORMAL_AG_AZIMUTHAL:
-			Msg( "azimuthal " );
+			Con_Printf( "azimuthal " );
 			break;
 		default:
-			Msg( "default   " );
+			Con_Printf( "default   " );
 			break;
 		}
 
 		if( image->flags & TF_CLAMP )
-			Msg( "clamp  " );
+			Con_Printf( "clamp  " );
 		else if( image->flags & TF_BORDER )
-			Msg( "border " );
+			Con_Printf( "border " );
 		else if( image->flags & TF_ALPHA_BORDER )
-			Msg( "aborder" );
-		else Msg( "repeat " );
-		Msg( "  %s\n", image->name );
+			Con_Printf( "aborder" );
+		else Con_Printf( "repeat " );
+		Con_Printf( "  %s\n", image->name );
 	}
 
-	Msg( "---------------------------------------------------------\n" );
-	Msg( "%i total textures\n", texCount );
-	Msg( "%s total memory used\n", Q_memprint( bytes ));
-	Msg( "\n" );
+	Con_Printf( "---------------------------------------------------------\n" );
+	Con_Printf( "%i total textures\n", texCount );
+	Con_Printf( "%s total memory used\n", Q_memprint( bytes ));
+	Con_Printf( "\n" );
 }
 
 /*

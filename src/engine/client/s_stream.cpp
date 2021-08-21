@@ -27,11 +27,11 @@ int			s_rawend;
 void S_PrintBackgroundTrackState( void )
 {
 	if( s_bgTrack.current[0] && s_bgTrack.loopName[0] )
-		Msg( "BackgroundTrack: intro %s, loop %s\n", s_bgTrack.current, s_bgTrack.loopName );
+		Con_Printf( "BackgroundTrack: intro %s, loop %s\n", s_bgTrack.current, s_bgTrack.loopName );
 	else if( s_bgTrack.current[0] )
-		Msg( "BackgroundTrack: %s\n", s_bgTrack.current );
+		Con_Printf( "BackgroundTrack: %s\n", s_bgTrack.current );
 	else if( s_bgTrack.loopName[0] )
-		Msg( "BackgroundTrack: %s [loop]\n", s_bgTrack.loopName );
+		Con_Printf( "BackgroundTrack: %s [loop]\n", s_bgTrack.loopName );
 }
 
 void S_CheckLerpingState( void )

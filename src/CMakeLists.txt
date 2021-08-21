@@ -1,25 +1,8 @@
 add_subdirectory(external)
 add_subdirectory(filesystem_helper)
-add_subdirectory(vgui2_support)
 add_subdirectory(engine)
 
 set(CMAKE_CXX_STANDARD 17)
-
-if(MSVC)
-	add_compile_options(/wd4091 /wd4819 /wd4828 /wd5033 /permissive- /utf-8)
-	add_compile_definitions(_CRT_SECURE_NO_WARNINGS=1)
-elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-	add_compile_options(-Wno-register)
-endif()
-
-add_library(vinterface STATIC
-    tier1/interface.cpp
-)
-
-target_include_directories(vinterface PUBLIC
-    public
-    public/tier1
-)
 
 add_library(vstdlib INTERFACE)
 target_include_directories(vstdlib INTERFACE
@@ -98,7 +81,7 @@ target_sources(tier0_src INTERFACE
     tier0/threadtools.cpp
     tier0/testthread.cpp
     tier0/vcrmode.cpp
-    commandline.cpp
+    common/commandline.cpp
 )
 
 if( POSIX )
@@ -159,6 +142,106 @@ add_library(mathlib STATIC
     mathlib/sse.cpp
 )
 
+add_library(vgui_controls STATIC
+	vgui_controls/AnalogBar.cpp
+	vgui_controls/AnimatingImagePanel.cpp
+	vgui_controls/AnimationController.cpp
+	vgui_controls/BitmapImagePanel.cpp
+	vgui_controls/BuildFactoryHelper.cpp
+	vgui_controls/BuildGroup.cpp
+	vgui_controls/BuildModeDialog.cpp
+	vgui_controls/Button.cpp
+	vgui_controls/CheckButton.cpp
+	vgui_controls/CheckButtonList.cpp
+	vgui_controls/CircularProgressBar.cpp
+	vgui_controls/ComboBox.cpp
+	vgui_controls/consoledialog.cpp
+	vgui_controls/ControllerMap.cpp
+	vgui_controls/controls.cpp
+	vgui_controls/DirectorySelectDialog.cpp
+	vgui_controls/Divider.cpp
+	vgui_controls/EditablePanel.cpp
+	vgui_controls/ExpandButton.cpp
+	vgui_controls/FileOpenDialog.cpp
+	vgui_controls/FocusNavGroup.cpp
+	vgui_controls/Frame.cpp
+	vgui_controls/GraphPanel.cpp
+	vgui_controls/HTML.cpp
+	vgui_controls/Image.cpp
+	vgui_controls/ImageList.cpp
+	vgui_controls/ImagePanel.cpp
+	vgui_controls/InputDialog.cpp
+	vgui_controls/KeyRepeat.cpp
+	vgui_controls/Label.cpp
+	vgui_controls/ListPanel.cpp
+	vgui_controls/ListViewPanel.cpp
+	vgui_controls/Menu.cpp
+	vgui_controls/MenuBar.cpp
+	vgui_controls/MenuButton.cpp
+	vgui_controls/MenuItem.cpp
+	vgui_controls/MessageBox.cpp
+	vgui_controls/MessageDialog.cpp
+	vgui_controls/Panel.cpp
+	vgui_controls/PanelListPanel.cpp
+	vgui_controls/ProgressBar.cpp
+	vgui_controls/ProgressBox.cpp
+	vgui_controls/PropertyDialog.cpp
+	vgui_controls/PropertyPage.cpp
+	vgui_controls/PropertySheet.cpp
+	vgui_controls/QueryBox.cpp
+	vgui_controls/RadioButton.cpp
+	vgui_controls/RichText.cpp
+	vgui_controls/RotatingProgressBar.cpp
+	vgui_controls/savedocumentquery.cpp
+	vgui_controls/ScrollableEditablePanel.cpp
+	vgui_controls/ScrollBar.cpp
+	vgui_controls/ScrollBarSlider.cpp
+	vgui_controls/SectionedListPanel.cpp
+	vgui_controls/Slider.cpp
+	vgui_controls/Splitter.cpp
+	vgui_controls/subrectimage.cpp
+	vgui_controls/TextEntry.cpp
+	vgui_controls/TextImage.cpp
+	vgui_controls/ToggleButton.cpp
+	vgui_controls/Tooltip.cpp
+	vgui_controls/ToolWindow.cpp
+	vgui_controls/TreeView.cpp
+	vgui_controls/TreeViewListControl.cpp
+	vgui_controls/URLLabel.cpp
+	vgui_controls/vgui_controls.cpp
+	vgui_controls/WizardPanel.cpp
+	vgui_controls/WizardSubPanel.cpp
+)
+
+target_include_directories(vgui_controls PRIVATE 
+    ./
+    ./public
+    ./common
+    ./engine
+    ./pm_shared
+)
+
+target_link_libraries(vgui_controls PRIVATE filesystem_helper tier0 tier1 wrapper)
+
+add_library(wrapper STATIC
+    wrapper/deadfilesystem.cpp
+    wrapper/deadinput.cpp
+    wrapper/deadipanel.cpp
+    wrapper/deadscheme.cpp
+    wrapper/deadsurface.cpp
+)
+
+target_include_directories(wrapper PRIVATE 
+    ./
+    public
+    public/tier1/
+    common
+    engine
+    pm_shared
+)
+
+target_link_libraries(wrapper PRIVATE tier0)
+
 if(NOT MSVC)
     target_compile_options(mathlib PRIVATE -Wno-c++11-narrowing)
 endif()
@@ -168,4 +251,4 @@ target_include_directories(mathlib PUBLIC
     public/mathlib/
 )
 
-target_link_libraries(tier1 PUBLIC vinterface tier0 mathlib)
+target_link_libraries(tier1 PUBLIC tier0 mathlib)

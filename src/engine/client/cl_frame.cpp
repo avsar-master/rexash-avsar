@@ -296,7 +296,7 @@ qboolean CL_InterpolateModel( cl_entity_t *e )
 		if( e->model->type == mod_brush )
 			return true; //keep curstate
 
-		//Msg("%s %f %f %f %f\n", e->model->name, e->curstate.animtime, cl.time - e->curstate.msg_time, t1, t2 );
+		//Con_Printf("%s %f %f %f %f\n", e->model->name, e->curstate.animtime, cl.time - e->curstate.msg_time, t1, t2 );
 
 		if( e->curstate.animtime == 0 )
 			return false; // hide new non-interpolated entity
@@ -871,8 +871,8 @@ void CL_DeltaEntity( sizebuf_t *msg, frame_t *frame, int newnum, entity_state_t 
 #if 0
 		// this is for reference
 		if( state->number == -1 )
-			Msg( "Entity %i was removed from server\n", newnum );
-		else Msg( "Entity %i was removed from delta-message\n", newnum );
+			Con_Printf( "Entity %i was removed from server\n", newnum );
+		else Con_Printf( "Entity %i was removed from delta-message\n", newnum );
 #endif
 		if( state->number == -1 )
 		{

@@ -255,7 +255,7 @@ static SDL_Scancode EVDEV_Keycodes[] = {
     SDL_SCANCODE_UNKNOWN,       /*  KEY_KBDILLUMUP      230 */
     SDL_SCANCODE_UNKNOWN,       /*  KEY_SEND        231 AC Send */
     SDL_SCANCODE_UNKNOWN,       /*  KEY_REPLY       232 AC Reply */
-    SDL_SCANCODE_UNKNOWN,       /*  KEY_FORWARDMAIL     233 AC Forward Msg */
+    SDL_SCANCODE_UNKNOWN,       /*  KEY_FORWARDMAIL     233 AC Forward Con_Printf */
     SDL_SCANCODE_UNKNOWN,       /*  KEY_SAVE        234 AC Save */
     SDL_SCANCODE_UNKNOWN,       /*  KEY_DOCUMENTS       235 */
     SDL_SCANCODE_UNKNOWN,       /*  KEY_BATTERY     236  */

@@ -955,7 +955,7 @@ void CL_Connect_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: connect <server>\n" );
+		Con_Printf( "Usage: connect <server>\n" );
 		return;
 	}
 
@@ -994,7 +994,7 @@ void CL_Connect_f( void )
 
 	NET_Config( true, !cl_nat->integer ); // allow remote
 
-	//Msg( "server %s\n", server );
+	//Con_Printf( "server %s\n", server );
 	CL_Disconnect();
 
 	HTTP_Clear_f();
@@ -1021,7 +1021,7 @@ void CL_Rcon_f( void )
 
 	if( !rcon_client_password->string )
 	{
-		Msg( "You must set 'rcon_password' before issuing an rcon command.\n" );
+		Con_Printf( "You must set 'rcon_password' before issuing an rcon command.\n" );
 		return;
 	}
 
@@ -1068,7 +1068,7 @@ void CL_Rcon_f( void )
 	{
 		if( !Q_strlen( rcon_address->string ))
 		{
-			Msg( "You must either be connected or set the 'rcon_address' cvar to issue rcon commands\n" );
+			Con_Printf( "You must either be connected or set the 'rcon_address' cvar to issue rcon commands\n" );
 			return;
 		}
 
@@ -1295,7 +1295,7 @@ void CL_QueryServer_f( void )
 	}
 	else
 	{
-		Msg( "Bad address\n" );
+		Con_Printf( "Bad address\n" );
 	}
 }
 
@@ -1315,7 +1315,7 @@ void CL_Packet_f( void )
 
 	if( Cmd_Argc() != 3 )
 	{
-		Msg( "packet <destination> <contents>\n" );
+		Con_Printf( "packet <destination> <contents>\n" );
 		return;
 	}
 
@@ -1323,7 +1323,7 @@ void CL_Packet_f( void )
 
 	if( !NET_StringToAdr( Cmd_Argv( 1 ), &adr ))
 	{
-		Msg( "Bad address\n" );
+		Con_Printf( "Bad address\n" );
 		return;
 	}
 
@@ -1425,7 +1425,7 @@ void CL_Reconnect_f( void )
 
 		cls.demonum = cls.movienum = -1;	// not in the demo loop now
 		cls.state = ca_connecting;
-		Msg( "reconnecting...\n" );
+		Con_Printf( "reconnecting...\n" );
 	}
 }
 
@@ -1768,7 +1768,7 @@ void CL_ConnectionlessPacket( netadr_t from, sizebuf_t *msg )
 		// remote command from gui front end
 		if( !NET_IsLocalAddress( from ))
 		{
-			Msg( "Command packet from remote host. Ignored.\n" );
+			Con_Printf( "Command packet from remote host. Ignored.\n" );
 			return;
 		}
 
@@ -1782,10 +1782,10 @@ void CL_ConnectionlessPacket( netadr_t from, sizebuf_t *msg )
 	{
 		// print command from somewhere
 		char *str = BF_ReadString( msg );
-		Msg("^5r:^7%s", str );
+		Con_Printf("^5r:^7%s", str );
 
 		if( str[0] == 0 || str[ Q_strlen( str ) - 1 ] != '\n' )
-			Msg( "\n" );
+			Con_Printf( "\n" );
 	}
 	else if( !Q_strcmp( c, "errormsg" ))
 	{
@@ -1797,7 +1797,7 @@ void CL_ConnectionlessPacket( netadr_t from, sizebuf_t *msg )
 		str = BF_ReadString( msg );
 		if( UI_IsVisible() )
 			Cmd_ExecuteString( va("menu_showmessagebox \"^3Server message^7\n%s\"", str ), src_command );
-		Msg( "%s", str );
+		Con_Printf( "%s", str );
 	}
 	else if( !Q_strcmp( c, "updatemsg" ))
 	{
@@ -2001,7 +2001,7 @@ void CL_ReadPackets( void )
 		{
 			if( ++cl.timeoutcount > 5 ) // timeoutcount saves debugger
 			{
-				Msg( "\nServer connection timed out.\n" );
+				Con_Printf( "\nServer connection timed out.\n" );
 				CL_Disconnect();
 				CL_ClearEdicts();
 				return;
@@ -2056,9 +2056,9 @@ CL_Userinfo_f
 */
 void CL_Userinfo_f( void )
 {
-	Msg( "User info settings:\n" );
+	Con_Printf( "User info settings:\n" );
 	Info_Print( Cvar_Userinfo( ));
-	Msg( "Total %i symbols\n", Q_strlen( Cvar_Userinfo( )));
+	Con_Printf( "Total %i symbols\n", Q_strlen( Cvar_Userinfo( )));
 }
 
 /*
@@ -2068,9 +2068,9 @@ CL_Physinfo_f
 */
 void CL_Physinfo_f( void )
 {
-	Msg( "Phys info settings:\n" );
+	Con_Printf( "Phys info settings:\n" );
 	Info_Print( cl.frame.client.physinfo );
-	Msg( "Total %i symbols\n", Q_strlen( cl.frame.client.physinfo ));
+	Con_Printf( "Total %i symbols\n", Q_strlen( cl.frame.client.physinfo ));
 }
 
 /*
@@ -2408,8 +2408,6 @@ void CL_Init( void )
 		Com_ResetLibraryError();
 		if( Sys_GetParmFromCmdLine( "-clientlib", clientlib ) )
 			loaded = CL_LoadProgs( clientlib );
-		else if(FS_FileExists(VGUI2_SUPPORT_DLL, false))
-			loaded = CL_LoadProgs(VGUI2_SUPPORT_DLL);
 		else
 #ifdef XASH_INTERNAL_GAMELIBS
 			loaded = CL_LoadProgs( "client" );

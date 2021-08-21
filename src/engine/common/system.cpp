@@ -575,7 +575,7 @@ void Sys_Warn( const char *format, ... )
 	va_start( argptr, format );
 	Q_vsnprintf( text, MAX_SYSPATH, format, argptr );
 	va_end( argptr );
-	Msg( "Sys_Warn: %s\n", text );
+	Con_Printf( "Sys_Warn: %s\n", text );
 	if( !Host_IsDedicated() ) // dedicated server should not hang on messagebox
 		MSGBOX(text);
 }
@@ -776,12 +776,14 @@ void Sys_Print( const char *pMsg )
 
 /*
 ================
-Msg
+Con_Printf
 
 formatted message
 ================
 */
-void Msg( const char *pMsg, ... )
+
+/*
+void Con_Printf( const char *pMsg, ... )
 {
 	va_list	argptr;
 	char	text[8192];
@@ -792,6 +794,7 @@ void Msg( const char *pMsg, ... )
 
 	Sys_Print( text );
 }
+*/
 
 /*
 ================

@@ -330,19 +330,19 @@ void Key_Unbind_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: unbind <key> : remove commands from a key\n" );
+		Con_Printf( "Usage: unbind <key> : remove commands from a key\n" );
 		return;
 	}
 	
 	b = Key_StringToKeynum( Cmd_Argv( 1 ));
 	if( b == -1 )
 	{
-		Msg( "\"%s\" isn't a valid key\n", Cmd_Argv( 1 ));
+		Con_Printf( "\"%s\" isn't a valid key\n", Cmd_Argv( 1 ));
 		return;
 	}
 	if( b == K_ESCAPE )
 	{
-		Msg( "Can't unbind ESCAPE key\n" );
+		Con_Printf( "Can't unbind ESCAPE key\n" );
 		return;
 	}
 	Key_SetBinding( b, "" );
@@ -400,7 +400,7 @@ void Key_Bind_f( void )
 
 	if( c < 2 )
 	{
-		Msg( "Usage: bind <key> [command] : attach a command to a key\n" );
+		Con_Printf( "Usage: bind <key> [command] : attach a command to a key\n" );
 		return;
 	}
 
@@ -414,15 +414,15 @@ void Key_Bind_f( void )
 			cls.keybind_changed = true;
 			return;
 		}
-		Msg( "\"%s\" isn't a valid key\n", Cmd_Argv( 1 ));
+		Con_Printf( "\"%s\" isn't a valid key\n", Cmd_Argv( 1 ));
 		return;
 	}
 
 	if( c == 2 )
 	{
 		if( keys[b].binding )
-			Msg( "\"%s\" = \"%s\"\n", Cmd_Argv( 1 ), keys[b].binding );
-		else Msg( "\"%s\" is not bound\n", Cmd_Argv( 1 ));
+			Con_Printf( "\"%s\" = \"%s\"\n", Cmd_Argv( 1 ), keys[b].binding );
+		else Con_Printf( "\"%s\" is not bound\n", Cmd_Argv( 1 ));
 		return;
 	}
 	
@@ -477,7 +477,7 @@ void Key_Bindlist_f( void )
 	for( i = 0; i < 256; i++ )
 	{
 		if( keys[i].binding && keys[i].binding[0] )
-			Msg( "%s \"%s\"\n", Key_KeynumToString( i ), keys[i].binding );
+			Con_Printf( "%s \"%s\"\n", Key_KeynumToString( i ), keys[i].binding );
 	}
 }
 

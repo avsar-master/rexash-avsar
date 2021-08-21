@@ -758,7 +758,6 @@ void Host_Error( const char *error, ... ) _format(1);
 void Host_MapDesignError( const char *error, ... ) _format(1);
 void Host_PrintEngineFeatures( void );
 void Host_InitDecals( void );
-void Host_Credits( void );
 
 /*
 ==============================================================

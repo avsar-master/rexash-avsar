@@ -89,6 +89,9 @@ static dllfunc_t cdll_new_exports[] = 	// allowed only in SDK 2.3 and higher
 { NULL, NULL }
 };
 
+void LoadFFuncs(void* pv);
+
+
 /*
 ====================
 CL_GetServerTime
@@ -1238,8 +1241,9 @@ qboolean CL_LoadProgs( const char *name )
 	// NOTE: important stuff!
 	// vgui must startup BEFORE loading client.dll to avoid get error ERROR_NOACESS
 	// during LoadLibrary
-	VGui_Startup (menu.globals->scrWidth, menu.globals->scrHeight);
-	
+	//VGui_Startup (menu.globals->scrWidth, menu.globals->scrHeight);
+	// WHY?
+
 	clgame.hInstance = Com_LoadLibrary( name, false );
 	if( !clgame.hInstance ) return false;
 
@@ -1253,7 +1257,7 @@ qboolean CL_LoadProgs( const char *name )
 		MsgDev( D_NOTE, "CL_LoadProgs: found single callback export\n" );		
 
 		// trying to fill interface now
-		F( &clgame.dllFuncs );
+		LoadFFuncs( &clgame.dllFuncs );
 
 		// check critical functions again
 		for( func = cdll_exports; func && func->name; func++ )
@@ -1305,6 +1309,8 @@ qboolean CL_LoadProgs( const char *name )
 			MsgDev( D_NOTE, "CL_LoadProgs: failed to get address of %s proc\n", func->name );
 	}
 
+
+	/*
 	if( !clgame.dllFuncs.pfnInitialize( &cl_enginefuncs, CLDLL_INTERFACE_VERSION ))
 	{
 		Com_FreeLibrary( clgame.hInstance );
@@ -1312,6 +1318,9 @@ qboolean CL_LoadProgs( const char *name )
 		clgame.hInstance = NULL;
 		return false;
 	}
+	*/ // AVSARTODO:
+
+	VGui_Startup(menu.globals->scrWidth, menu.globals->scrHeight);
 
 	Cvar_Get( "cl_nopred", "1", CVAR_ARCHIVE|CVAR_USERINFO, "disable client movement predicting" );
 	cl_lw = Cvar_Get( "cl_lw", "0", CVAR_ARCHIVE|CVAR_USERINFO, "enable client weapon predicting" );

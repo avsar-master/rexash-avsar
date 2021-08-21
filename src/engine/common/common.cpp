@@ -21,6 +21,11 @@ GNU General Public License for more details.
 #include "library.h"
 #include "Sequence.h"
 
+#include "public/FileSystem.h"
+#include "vgui/ISurface.h"
+#include "vgui_controls/controls.h"
+
+
 /*
 ==============
 COM_ParseFile
@@ -157,6 +162,7 @@ This doesn't search in the pak file.
 */
 int COM_ExpandFilename( const char *fileName, char *nameOutBuffer, int nameOutBufferSize )
 {
+/*
 	const char	*path;
 	char		result[MAX_SYSPATH];
 
@@ -175,6 +181,9 @@ int COM_ExpandFilename( const char *fileName, char *nameOutBuffer, int nameOutBu
 		return 1;
 	}
 	return 0;
+*/
+
+	return vgui2::filesystem()->GetLocalPath(fileName, nameOutBuffer, nameOutBufferSize) != NULL; // lost mental health
 }
 
 /*
@@ -491,7 +500,7 @@ used by CS:CZ
 */
 void* pfnSequenceGet( const char *fileName, const char *entryName )
 {
-	Msg( "Sequence_Get: file %s, entry %s\n", fileName, entryName );
+	Con_Printf( "Sequence_Get: file %s, entry %s\n", fileName, entryName );
 
 
 	return Sequence_Get( fileName, entryName );
@@ -506,7 +515,7 @@ used by CS:CZ
 */
 void* pfnSequencePickSentence( const char *groupName, int pickMethod, int *picked )
 {
-	Msg( "Sequence_PickSentence: group %s, pickMethod %i\n", groupName, pickMethod );
+	Con_Printf( "Sequence_PickSentence: group %s, pickMethod %i\n", groupName, pickMethod );
 
 	return  Sequence_PickSentence( groupName, pickMethod, picked );
 

@@ -895,7 +895,7 @@ xash_force_inline int Q_strncmp( const char *s1, const char *s2, int n )
 	r2 = Q_strncmp_unaligned( s1, s2, n );
 	if( r1 != r2 || last1 != l1 || last2 != l2 )
 	{
-		Msg("ERROR \"%s\" \"%s\" %p %p %d %d %d %p %p %p %p %08X %08X\n", s1, s2, s1, s2, n, r1, r2, l1, last1, l2, last2, *s1, *s2 );
+		Con_Printf("ERROR \"%s\" \"%s\" %p %p %d %d %d %p %p %p %p %08X %08X\n", s1, s2, s1, s2, n, r1, r2, l1, last1, l2, last2, *s1, *s2 );
 		exit(-6);
 	}
 	return r1;
@@ -922,7 +922,7 @@ xash_force_inline int Q_strnicmp( const char *s1, const char *s2, int n )
 	r2 = Q_strnicmp_unaligned( s1, s2, n );
 	if( r1 != r2 || last1 != l1 || last2 != l2 )
 	{
-		Msg("ERROR \"%s\" \"%s\" %p %p %d %d %d %p %p %p %p %08X %08X\n", s1, s2, s1, s2, n, r1, r2, l1, last1, l2, last2, *s1, *s2 );
+		Con_Printf("ERROR \"%s\" \"%s\" %p %p %d %d %d %p %p %p %p %08X %08X\n", s1, s2, s1, s2, n, r1, r2, l1, last1, l2, last2, *s1, *s2 );
 		exit(-6);
 	}
 	return r1;

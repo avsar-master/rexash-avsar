@@ -504,12 +504,12 @@ void GL_SetupAttributes()
 	}
 
 	if( glw_state.safe > SAFE_NO )
-		Msg("Trying safe opengl mode %d\n", glw_state.safe );
+		Con_Printf("Trying safe opengl mode %d\n", glw_state.safe );
 
 	if( glw_state.safe >= SAFE_NOACC )
 		SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1 );
 
-	Msg ("bpp %d\n", glw_state.desktopBitsPixel );
+	Con_Printf ("bpp %d\n", glw_state.desktopBitsPixel );
 
 	if( glw_state.safe < SAFE_NODEPTH )
 		SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );

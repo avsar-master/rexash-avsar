@@ -82,15 +82,15 @@ int Mod_ArrayUsage( const char *szItem, int items, int maxitems, int itemsize )
 {
 	float	percentage = maxitems ? (items * 100.0f / maxitems) : 0.0f;
 
-	Msg( "%-12s  %7i/%-7i  %7i/%-7i  (%4.1f%%)", szItem, items, maxitems, items * itemsize, maxitems * itemsize, percentage );
+	Con_Printf( "%-12s  %7i/%-7i  %7i/%-7i  (%4.1f%%)", szItem, items, maxitems, items * itemsize, maxitems * itemsize, percentage );
 
 	if( percentage > 99.9f )
-		Msg( "^1SIZE OVERFLOW!!!^7\n" );
+		Con_Printf( "^1SIZE OVERFLOW!!!^7\n" );
 	else if( percentage > 95.0f )
-		Msg( "^3SIZE DANGER!^7\n" );
+		Con_Printf( "^3SIZE DANGER!^7\n" );
 	else if( percentage > 80.0f )
-		Msg( "^2VERY FULL!^7\n" );
-	else Msg( "\n" );
+		Con_Printf( "^2VERY FULL!^7\n" );
+	else Con_Printf( "\n" );
 
 	return items * itemsize;
 }
@@ -104,15 +104,15 @@ int Mod_GlobUsage( const char *szItem, int itemstorage, int maxstorage )
 {
 	float	percentage = maxstorage ? (itemstorage * 100.0f / maxstorage) : 0.0f;
 
-	Msg( "%-12s     [variable]    %7i/%-7i  (%4.1f%%)", szItem, itemstorage, maxstorage, percentage );
+	Con_Printf( "%-12s     [variable]    %7i/%-7i  (%4.1f%%)", szItem, itemstorage, maxstorage, percentage );
 
 	if( percentage > 99.9f )
-		Msg( "^1SIZE OVERFLOW!!!^7\n" );
+		Con_Printf( "^1SIZE OVERFLOW!!!^7\n" );
 	else if( percentage > 95.0f )
-		Msg( "^3SIZE DANGER!^7\n" );
+		Con_Printf( "^3SIZE DANGER!^7\n" );
 	else if( percentage > 80.0f )
-		Msg( "^2VERY FULL!^7\n" );
-	else Msg( "\n" );
+		Con_Printf( "^2VERY FULL!^7\n" );
+	else Con_Printf( "\n" );
 
 	return itemstorage;
 }
@@ -131,13 +131,13 @@ void Mod_PrintBSPFileSizes_f( void )
 
 	if( !w || !w->numsubmodels )
 	{
-		Msg( "No map loaded\n" );
+		Con_Printf( "No map loaded\n" );
 		return;
 	}
 
-	Msg( "\n" );
-	Msg( "Object names  Objects/Maxobjs  Memory / Maxmem  Fullness\n" );
-	Msg( "------------  ---------------  ---------------  --------\n" );
+	Con_Printf( "\n" );
+	Con_Printf( "Object names  Objects/Maxobjs  Memory / Maxmem  Fullness\n" );
+	Con_Printf( "------------  ---------------  ---------------  --------\n" );
 
 	totalmemory += Mod_ArrayUsage( "models",	w->numsubmodels,	MAX_MAP_MODELS,		sizeof( dmodel_t ));
 	totalmemory += Mod_ArrayUsage( "planes",	w->numplanes,	MAX_MAP_PLANES,		sizeof( dplane_t ));
@@ -160,10 +160,10 @@ void Mod_PrintBSPFileSizes_f( void )
 	totalmemory += Mod_GlobUsage( "visdata",	world.visdatasize,	MAX_MAP_VISIBILITY );
 	totalmemory += Mod_GlobUsage( "entdata",	world.entdatasize,	MAX_MAP_ENTSTRING );
 
-	Msg( "=== Total BSP file data space used: %s ===\n", Q_memprint( totalmemory ));
-	Msg( "World size ( %g %g %g ) units\n", world.size[0], world.size[1], world.size[2] );
-	Msg( "Original name: ^1%s\n", worldmodel->name );
-	Msg( "Internal name: %s\n", (world.message[0]) ? va( "^2%s", world.message ) : "none" );
+	Con_Printf( "=== Total BSP file data space used: %s ===\n", Q_memprint( totalmemory ));
+	Con_Printf( "World size ( %g %g %g ) units\n", world.size[0], world.size[1], world.size[2] );
+	Con_Printf( "Original name: ^1%s\n", worldmodel->name );
+	Con_Printf( "Internal name: %s\n", (world.message[0]) ? va( "^2%s", world.message ) : "none" );
 }
 
 /*
@@ -176,21 +176,21 @@ void Mod_Modellist_f( void )
 	int	i, nummodels;
 	model_t	*mod;
 
-	Msg( "\n" );
-	Msg( "-----------------------------------\n" );
+	Con_Printf( "\n" );
+	Con_Printf( "-----------------------------------\n" );
 
 	for( i = nummodels = 0, mod = cm_models; i < cm_nummodels; i++, mod++ )
 	{
 		if( !mod->name[0] )
 			continue; // free slot
 
-		Msg( "%s%s\n", mod->name, (mod->type == mod_bad) ? " (DEFAULTED)" : "" );
+		Con_Printf( "%s%s\n", mod->name, (mod->type == mod_bad) ? " (DEFAULTED)" : "" );
 		nummodels++;
 	}
 
-	Msg( "-----------------------------------\n" );
-	Msg( "%i total models\n", nummodels );
-	Msg( "\n" );
+	Con_Printf( "-----------------------------------\n" );
+	Con_Printf( "%i total models\n", nummodels );
+	Con_Printf( "\n" );
 }
 
 /*

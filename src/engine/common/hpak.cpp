@@ -879,7 +879,7 @@ void HPAK_Validate_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: hpkval <filename>\n" );
+		Con_Printf( "Usage: hpkval <filename>\n" );
 		return;
 	}
 

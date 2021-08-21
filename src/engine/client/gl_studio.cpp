@@ -569,7 +569,7 @@ void R_StudioSetUpTransform( cl_entity_t *e )
 		if( m_fDoInterp && ( RI.refdef.time < e->curstate.animtime + 1.0f ) && ( e->curstate.animtime != e->latched.prevanimtime ))
 		{
 			f = ( RI.refdef.time - e->curstate.animtime ) / ( e->curstate.animtime - e->latched.prevanimtime );
-			// Msg( "%4.2f %.2f %.2f\n", f, e->curstate.animtime, RI.refdef.time );
+			// Con_Printf( "%4.2f %.2f %.2f\n", f, e->curstate.animtime, RI.refdef.time );
 		}
 
 		if( m_fDoInterp )

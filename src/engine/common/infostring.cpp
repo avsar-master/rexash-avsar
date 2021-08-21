@@ -55,11 +55,11 @@ void Info_Print( const char *s )
 			key[20] = 0;
 		}
 		else *o = 0;
-		Msg( "%s", key );
+		Con_Printf( "%s", key );
 
 		if( !*s )
 		{
-			Msg( "(null)\n" );
+			Con_Printf( "(null)\n" );
 			return;
 		}
 
@@ -70,7 +70,7 @@ void Info_Print( const char *s )
 		*o = 0;
 
 		if( *s ) s++;
-		Msg( "%s\n", value );
+		Con_Printf( "%s\n", value );
 	}
 }
 

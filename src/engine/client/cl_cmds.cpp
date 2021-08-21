@@ -32,13 +32,13 @@ void CL_PlayVideo_f( void )
 
 	if( Cmd_Argc() != 2 && Cmd_Argc() != 3 )
 	{
-		Msg( "movie <moviename> [full]\n" );
+		Con_Printf( "movie <moviename> [full]\n" );
 		return;
 	}
 
 	if( cls.state == ca_active )
 	{
-		Msg( "Can't play movie while connected to a server.\nPlease disconnect first.\n" );
+		Con_Printf( "Can't play movie while connected to a server.\nPlease disconnect first.\n" );
 		return;
 	}
 
@@ -120,16 +120,16 @@ void CL_PlayCDTrack_f( void )
 		for( maxTrack = i = 0; i < MAX_CDTRACKS; i++ )
 			if( Q_strlen( clgame.cdtracks[i] )) maxTrack++;
 			
-		Msg( "%u tracks\n", maxTrack );
+		Con_Printf( "%u tracks\n", maxTrack );
 		if( track )
 		{
-			if( paused ) Msg( "Paused %s track %u\n", looped ? "looping" : "playing", track );
-			else Msg( "Currently %s track %u\n", looped ? "looping" : "playing", track );
+			if( paused ) Con_Printf( "Paused %s track %u\n", looped ? "looping" : "playing", track );
+			else Con_Printf( "Currently %s track %u\n", looped ? "looping" : "playing", track );
 		}
-		Msg( "Volume is %f\n", Cvar_VariableValue( "MP3Volume" ));
+		Con_Printf( "Volume is %f\n", Cvar_VariableValue( "MP3Volume" ));
 		return;
 	}
-	else Msg( "cd: unknown command %s\n", command );
+	else Con_Printf( "cd: unknown command %s\n", command );
 }
 
 /*
@@ -306,7 +306,7 @@ void CL_EnvShot_f( void )
 {
 	if( Cmd_Argc() < 2 )
 	{
-		Msg( "Usage: envshot <shotname>\n" );
+		Con_Printf( "Usage: envshot <shotname>\n" );
 		return;
 	}
 
@@ -327,7 +327,7 @@ void CL_SkyShot_f( void )
 {
 	if( Cmd_Argc() < 2 )
 	{
-		Msg( "Usage: skyshot <shotname>\n" );
+		Con_Printf( "Usage: skyshot <shotname>\n" );
 		return;
 	}
 
@@ -389,7 +389,7 @@ void CL_SaveShot_f( void )
 {
 	if( Cmd_Argc() < 2 )
 	{
-		Msg( "Usage: saveshot <savename>\n" );
+		Con_Printf( "Usage: saveshot <savename>\n" );
 		return;
 	}
 
@@ -408,7 +408,7 @@ void CL_DemoShot_f( void )
 {
 	if( Cmd_Argc() < 2 )
 	{
-		Msg( "Usage: demoshot <demoname>\n" );
+		Con_Printf( "Usage: demoshot <demoname>\n" );
 		return;
 	}
 
@@ -426,13 +426,13 @@ void CL_DeleteDemo_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: killdemo <name>\n" );
+		Con_Printf( "Usage: killdemo <name>\n" );
 		return;
 	}
 
 	if( cls.demorecording && !Q_stricmp( cls.demoname, Cmd_Argv( 1 )))
 	{
-		Msg( "Can't delete %s - recording\n", Cmd_Argv( 1 ));
+		Con_Printf( "Can't delete %s - recording\n", Cmd_Argv( 1 ));
 		return;
 	}
 
@@ -452,7 +452,7 @@ void CL_SetSky_f( void )
 {
 	if( Cmd_Argc() < 2 )
 	{
-		Msg( "Usage: skyname <shadername>\n" );
+		Con_Printf( "Usage: skyname <shadername>\n" );
 		return;
 	}
 
@@ -502,7 +502,7 @@ void SCR_TimeRefresh_f( void )
 
 	stop = Sys_DoubleTime ();
 	time = (stop - start);
-	Msg( "%f seconds (%f fps)\n", time, 128 / time );
+	Con_Printf( "%f seconds (%f fps)\n", time, 128 / time );
 }
 
 /*
@@ -514,8 +514,8 @@ viewpos (level-designer helper)
 */
 void SCR_Viewpos_f( void )
 {
-	Msg( "org ( %g %g %g )\n", cl.refdef.vieworg[0], cl.refdef.vieworg[1], cl.refdef.vieworg[2] );
-	Msg( "ang ( %g %g %g )\n", cl.refdef.viewangles[0], cl.refdef.viewangles[1], cl.refdef.viewangles[2] );
+	Con_Printf( "org ( %g %g %g )\n", cl.refdef.vieworg[0], cl.refdef.vieworg[1], cl.refdef.vieworg[2] );
+	Con_Printf( "ang ( %g %g %g )\n", cl.refdef.viewangles[0], cl.refdef.viewangles[1], cl.refdef.viewangles[2] );
 }
 
 #endif //XASH_DEDICATED

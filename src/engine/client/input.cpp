@@ -225,7 +225,7 @@ void Evdev_Autodetect_f( void )
 open:
 		Q_strncpy( evdev.paths[evdev.devices], path, MAX_STRING );
 		evdev.fds[evdev.devices++] = fd;
-		Msg( "Opened device %s\n", path );
+		Con_Printf( "Opened device %s\n", path );
 		goto next;
 close:
 		close( fd );
@@ -249,7 +249,7 @@ void Evdev_OpenDevice ( const char *path )
 
 	if ( evdev.devices >= MAX_EVDEV_DEVICES )
 	{
-		Msg( "Only %d devices supported!\n", MAX_EVDEV_DEVICES );
+		Con_Printf( "Only %d devices supported!\n", MAX_EVDEV_DEVICES );
 		return;
 	}
 
@@ -261,7 +261,7 @@ void Evdev_OpenDevice ( const char *path )
 	{
 		if( !Q_strncmp( evdev.paths[i], path, MAX_STRING ) )
 		{
-			Msg( "device %s already open!\n", path );
+			Con_Printf( "device %s already open!\n", path );
 			return;
 		}
 	}
@@ -272,7 +272,7 @@ void Evdev_OpenDevice ( const char *path )
 		MsgDev( D_ERROR, "Could not open input device %s: %s\n", path, strerror( errno ) );
 		return;
 	}
-	Msg( "Input device #%d: %s opened sucessfully\n", evdev.devices, path );
+	Con_Printf( "Input device #%d: %s opened sucessfully\n", evdev.devices, path );
 	evdev.fds[evdev.devices] = ret;
 	Q_strncpy( evdev.paths[evdev.devices++], path, MAX_STRING );
 }
@@ -280,7 +280,7 @@ void Evdev_OpenDevice ( const char *path )
 void Evdev_OpenDevice_f( void )
 {
 	if( Cmd_Argc() < 2 )
-		Msg( "Usage: evdev_opendevice <path>\n" );
+		Con_Printf( "Usage: evdev_opendevice <path>\n" );
 
 	Evdev_OpenDevice( Cmd_Argv( 1 ) );
 }
@@ -308,13 +308,13 @@ void Evdev_CloseDevice_f ( void )
 
 	if( i >= evdev.devices )
 	{
-		Msg( "Device %s is not open\n", arg );
+		Con_Printf( "Device %s is not open\n", arg );
 		return;
 	}
 
 	close( evdev.fds[i] );
 	evdev.devices--;
-	Msg( "Device %s closed successfully\n", evdev.paths[i] );
+	Con_Printf( "Device %s closed successfully\n", evdev.paths[i] );
 
 	for( ; i < evdev.devices; i++ )
 	{

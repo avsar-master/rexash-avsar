@@ -2132,7 +2132,7 @@ void CL_ReadLineFile_f( void )
 		return;
 	}
 
-	Msg( "Reading %s...\n", filename );
+	Con_Printf( "Reading %s...\n", filename );
 
 	count = 0;
 	pfile = afile;
@@ -2186,7 +2186,7 @@ void CL_ReadLineFile_f( void )
 
 	Mem_Free( afile );
 
-	if( count ) Msg( "%i lines read\n", count );
-	else Msg( "map %s has no leaks!\n", clgame.mapname );
+	if( count ) Con_Printf( "%i lines read\n", count );
+	else Con_Printf( "map %s has no leaks!\n", clgame.mapname );
 }
 #endif // XASH_DEDICATED

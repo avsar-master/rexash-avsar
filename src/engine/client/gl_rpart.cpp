@@ -1741,7 +1741,7 @@ void CL_ReadPointFile_f( void )
 		return;
 	}
 	
-	Msg( "Reading %s...\n", filename );
+	Con_Printf( "Reading %s...\n", filename );
 
 	count = 0;
 	pfile = afile;
@@ -1784,7 +1784,7 @@ void CL_ReadPointFile_f( void )
 
 	Mem_Free( afile );
 
-	if( count ) Msg( "%i points read\n", count );
-	else Msg( "map %s has no leaks!\n", clgame.mapname );
+	if( count ) Con_Printf( "%i points read\n", count );
+	else Con_Printf( "map %s has no leaks!\n", clgame.mapname );
 }
 #endif // XASH_DEDICATED

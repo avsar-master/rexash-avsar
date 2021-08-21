@@ -652,7 +652,7 @@ void SV_InitGame( void )
 				if( CL_IsInMenu() )
 					Sys_Warn( "SV_InitGame: can't initialize \"%s\":\n%s", SI.gamedll, Com_GetLibraryError() );
 				else
-					Msg( "SV_InitGame: can't initialize \"%s\":\n%s", SI.gamedll, Com_GetLibraryError() );
+					Con_Printf( "SV_InitGame: can't initialize \"%s\":\n%s", SI.gamedll, Com_GetLibraryError() );
 				return; // can't load
 			}
 			MsgDev( D_INFO, "Server loaded\n" );

@@ -1106,7 +1106,7 @@ void CL_CheckingResFile( char *pResFileName )
 
 	if( cl_allow_fragment->integer )
 	{
-		Msg( "Starting file download: %s\n", pResFileName );
+		Con_Printf( "Starting file download: %s\n", pResFileName );
 		if( cls.state == ca_disconnected ) return;
 
 		BF_Init( &buf, "ClientPacket", data, sizeof( data ));
@@ -1455,15 +1455,6 @@ void CL_ParseUserMessage( sizebuf_t *msg, int svc_num )
 	if( clgame.msg[i].func )
 	{
 		clgame.msg[i].func( clgame.msg[i].name, iSize, pbuf );
-
-		// HACKHACK: run final credits for Half-Life
-		// because hl1 doesn't have call END_SECTION
-		if( !Q_stricmp( clgame.msg[i].name, "HudText" ) && !Q_stricmp( GI->gamefolder, "valve" ))
-		{
-			// it's a end, so we should run credits
-			if( !Q_strcmp( (char *)pbuf, "END3" ))
-				Host_Credits();
-		}
 	}
 	else
 	{
@@ -1500,7 +1491,7 @@ void CL_ParseStuffText( sizebuf_t *msg )
 	char *s = BF_ReadString( msg );
 	if( cl_trace_stufftext->integer )
 	{
-		Msg("^3STUFFTEXT:\n^2%s\n^3END^7\n", s);
+		Con_Printf("^3STUFFTEXT:\n^2%s\n^3END^7\n", s);
 	}
 	if( cls.state != ca_active && !CL_IsPlaybackDemo() )
 	{

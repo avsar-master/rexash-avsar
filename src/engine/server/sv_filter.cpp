@@ -162,7 +162,7 @@ void SV_BanID_f( void )
 
 	if( !id[0] )
 	{
-		Msg( "Usage: banid <minutes> <#userid or unique id>\n0 minutes for permanent ban\n");
+		Con_Printf( "Usage: banid <minutes> <#userid or unique id>\n0 minutes for permanent ban\n");
 		return;
 	}
 
@@ -226,8 +226,8 @@ void SV_ListID_f( void )
 {
 	cidfilter_t *filter;
 
-	Msg( "id ban list\n" );
-	Msg( "-----------\n" );
+	Con_Printf( "id ban list\n" );
+	Con_Printf( "-----------\n" );
 
 	for( filter = cidfilter; filter; filter = filter->next )
 	{
@@ -235,9 +235,9 @@ void SV_ListID_f( void )
 			continue; // no negative time
 
 		if( filter->endTime )
-			Msg( "%s expries in %f minutes\n", filter->id, ( filter->endTime - host.realtime ) / 60.0f );
+			Con_Printf( "%s expries in %f minutes\n", filter->id, ( filter->endTime - host.realtime ) / 60.0f );
 		else
-			Msg( "%s permanent\n", filter->id );
+			Con_Printf( "%s permanent\n", filter->id );
 	}
 }
 void SV_RemoveID_f( void )
@@ -256,7 +256,7 @@ void SV_RemoveID_f( void )
 
 	if( !id[0] )
 	{
-		Msg("Usage: removeid <#slotnumber or uniqueid>\n");
+		Con_Printf("Usage: removeid <#slotnumber or uniqueid>\n");
 		return;
 	}
 
@@ -349,7 +349,7 @@ void SV_AddIP_f( void )
 
 	if( !StringToIP( ipstr, maskstr, &ip, &mask ) )
 	{
-		Msg( "Usage: addip <minutes> <ip> [mask]\n0 minutes for permanent ban\n");
+		Con_Printf( "Usage: addip <minutes> <ip> [mask]\n0 minutes for permanent ban\n");
 		return;
 	}
 
@@ -368,8 +368,8 @@ void SV_ListIP_f( void )
 {
 	ipfilter_t *filter;
 
-	Msg( "ip ban list\n" );
-	Msg( "-----------\n" );
+	Con_Printf( "ip ban list\n" );
+	Con_Printf( "-----------\n" );
 
 	for( filter = ipfilter; filter; filter = filter->next )
 	{
@@ -377,9 +377,9 @@ void SV_ListIP_f( void )
 			continue; // no negative time
 
 		if( filter->endTime )
-			Msg( "%d.%d.%d.%d %d.%d.%d.%d expries in %f minutes\n", IPARGS( filter->ip ), IPARGS( filter->mask ), ( filter->endTime - host.realtime ) / 60.0f );
+			Con_Printf( "%d.%d.%d.%d %d.%d.%d.%d expries in %f minutes\n", IPARGS( filter->ip ), IPARGS( filter->mask ), ( filter->endTime - host.realtime ) / 60.0f );
 		else
-			Msg( "%d.%d.%d.%d %d.%d.%d.%d permanent\n", IPARGS( filter->ip ), IPARGS( filter->mask ) );
+			Con_Printf( "%d.%d.%d.%d %d.%d.%d.%d permanent\n", IPARGS( filter->ip ), IPARGS( filter->mask ) );
 	}
 }
 void SV_RemoveIP_f( void )
@@ -388,7 +388,7 @@ void SV_RemoveIP_f( void )
 
 	if( !StringToIP( Cmd_Argv(1), Cmd_Argv(2), &ip, &mask ) )
 	{
-		Msg( "Usage: removeip <ip> [mask]\n" );
+		Con_Printf( "Usage: removeip <ip> [mask]\n" );
 		return;
 	}
 

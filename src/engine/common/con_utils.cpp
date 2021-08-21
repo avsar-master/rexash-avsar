@@ -98,8 +98,8 @@ static void Con_PrintMatches( const char *s, const char *unused1, const char *m,
 {
 	if( !Q_strnicmp( s, con.shortestMatch, Q_strlen( con.shortestMatch )))
 	{
-		if( m && *m ) Msg( "    %s ^3\"%s\"\n", s, m );
-		else Msg( "    %s\n", s ); // variable or command without description
+		if( m && *m ) Con_Printf( "    %s ^3\"%s\"\n", s, m );
+		else Con_Printf( "    %s\n", s ); // variable or command without description
 	}
 }
 
@@ -255,7 +255,7 @@ void Con_CompleteCommand( field_t *field )
 		con.completionField->cursor = Q_strlen( con.completionField->buffer );
 		ConcatRemaining( temp.buffer, con.completionString );
 
-		Msg( "]%s\n", con.completionField->buffer );
+		Con_Printf( "]%s\n", con.completionField->buffer );
 
 		// run through again, printing matches
 		Cmd_LookupCmds( NULL, NULL, (setpair_t)Con_PrintMatches );
@@ -449,11 +449,11 @@ qboolean Cmd_GetMapList( const char *s, char *completedname, int length )
 			break;
 		}
 
-		Msg( "%16s (%s) ^3%s^7\n", matchbuf, buf, message );
+		Con_Printf( "%16s (%s) ^3%s^7\n", matchbuf, buf, message );
 		nummaps++;
 	}
 
-	Msg( "\n^3 %i maps found.\n", nummaps );
+	Con_Printf( "\n^3 %i maps found.\n", nummaps );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -494,11 +494,11 @@ qboolean Cmd_GetDemoList( const char *s, char *completedname, int length )
 
 		if( Q_stricmp( ext, "dem" )) continue;
 		FS_FileBase( t->filenames[i], matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numdems++;
 	}
 
-	Msg( "\n^3 %i demos found.\n", numdems );
+	Con_Printf( "\n^3 %i demos found.\n", numdems );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -539,11 +539,11 @@ qboolean Cmd_GetMovieList( const char *s, char *completedname, int length )
 
 		if( Q_stricmp( ext, "avi" )) continue;
 		FS_FileBase( t->filenames[i], matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		nummovies++;
 	}
 
-	Msg( "\n^3 %i movies found.\n", nummovies );
+	Con_Printf( "\n^3 %i movies found.\n", nummovies );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -587,11 +587,11 @@ qboolean Cmd_GetMusicList( const char *s, char *completedname, int length )
 			continue;
 
 		FS_FileBase( t->filenames[i], matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numtracks++;
 	}
 
-	Msg( "\n^3 %i soundtracks found.\n", numtracks );
+	Con_Printf( "\n^3 %i soundtracks found.\n", numtracks );
 	Mem_Free(t);
 
 	// cut shortestMatch to the amount common with s
@@ -632,11 +632,11 @@ qboolean Cmd_GetSavesList( const char *s, char *completedname, int length )
 
 		if( Q_stricmp( ext, "sav" )) continue;
 		FS_FileBase( t->filenames[i], matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numsaves++;
 	}
 
-	Msg( "\n^3 %i saves found.\n", numsaves );
+	Con_Printf( "\n^3 %i saves found.\n", numsaves );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -678,11 +678,11 @@ qboolean Cmd_GetConfigList( const char *s, char *completedname, int length )
 
 		if( Q_stricmp( ext, "cfg" )) continue;
 		Q_strncpy( matchbuf, t->filenames[i], 256 );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numconfigs++;
 	}
 
-	Msg( "\n^3 %i configs found.\n", numconfigs );
+	Con_Printf( "\n^3 %i configs found.\n", numconfigs );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -729,11 +729,11 @@ qboolean Cmd_GetSoundList( const char *s, char *completedname, int length )
 
 		Q_strncpy( matchbuf, t->filenames[i] + Q_strlen(snddir), MAX_STRING ); 
 		FS_StripExtension( matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numsounds++;
 	}
 
-	Msg( "\n^3 %i sounds found.\n", numsounds );
+	Con_Printf( "\n^3 %i sounds found.\n", numsounds );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -783,11 +783,11 @@ qboolean Cmd_GetFilesList( const char *s, char *completedname, int length )
 		if( *pfilename == '/' )
 			pfilename++;
 		Q_strncpy( matchbuf, pfilename, MAX_STRING );
-		Msg( "%16s\n", t->filenames[i] );
+		Con_Printf( "%16s\n", t->filenames[i] );
 		numfiles++;
 	}
 
-	Msg( "\n^3 %i files found.\n", numfiles );
+	Con_Printf( "\n^3 %i files found.\n", numfiles );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -841,11 +841,11 @@ qboolean Cmd_GetItemsList( const char *s, char *completedname, int length )
 
 		if( Q_stricmp( ext, "txt" )) continue;
 		FS_FileBase( t->filenames[i], matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numitems++;
 	}
 
-	Msg( "\n^3 %i items found.\n", numitems );
+	Con_Printf( "\n^3 %i items found.\n", numitems );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -890,11 +890,11 @@ qboolean Cmd_GetCustomList( const char *s, char *completedname, int length )
 
 		if( Q_stricmp( ext, "hpk" )) continue;
 		FS_FileBase( t->filenames[i], matchbuf );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 		numitems++;
 	}
 
-	Msg( "\n^3 %i items found.\n", numitems );
+	Con_Printf( "\n^3 %i items found.\n", numitems );
 	Mem_Free( t );
 
 	// cut shortestMatch to the amount common with s
@@ -947,10 +947,10 @@ qboolean Cmd_GetTextureModes( const char *s, char *completedname, int length )
 	for( i = 0; i < numtexturemodes; i++ )
 	{
 		Q_strncpy( matchbuf, texturemodes[i], MAX_STRING ); 
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 	}
 
-	Msg( "\n^3 %i filters found.\n", numtexturemodes );
+	Con_Printf( "\n^3 %i filters found.\n", numtexturemodes );
 
 	// cut shortestMatch to the amount common with s
 	if( completedname && length )
@@ -996,10 +996,10 @@ qboolean Cmd_GetGamesList( const char *s, char *completedname, int length )
 	for( i = 0; i < numgamedirs; i++ )
 	{
 		Q_strncpy( matchbuf, gamedirs[i], MAX_STRING ); 
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 	}
 
-	Msg( "\n^3 %i games found.\n", numgamedirs );
+	Con_Printf( "\n^3 %i games found.\n", numgamedirs );
 
 	// cut shortestMatch to the amount common with s
 	if( completedname && length )
@@ -1196,10 +1196,10 @@ qboolean Cmd_GetCdCommands( const char *s, char *completedname, int length )
 	for( i = 0; i < numcdcommands; i++ )
 	{
 		Q_strncpy( matchbuf, cdcommands[i], MAX_STRING );
-		Msg( "%16s\n", matchbuf );
+		Con_Printf( "%16s\n", matchbuf );
 	}
 
-	Msg( "\n^3 %i commands found.\n", numcdcommands );
+	Con_Printf( "\n^3 %i commands found.\n", numcdcommands );
 
 	// cut shortestMatch to the amount common with s
 	if( completedname && length )
@@ -1509,7 +1509,7 @@ void Key_EnumCmds_f( void )
 	FS_AllowDirectPaths( true );
 	if( FS_FileExists( "../help.txt", false ))
 	{
-		Msg( "help.txt already exist\n" );
+		Con_Printf( "help.txt already exist\n" );
 		FS_AllowDirectPaths( false );
 		return;
 	}
@@ -1528,7 +1528,7 @@ void Key_EnumCmds_f( void )
 		Cmd_LookupCmds( NULL, f, (setpair_t)Cmd_WriteHelp );
   		FS_Printf( f, "\n\n");
 		FS_Close( f );
-		Msg( "help.txt created\n" );
+		Con_Printf( "help.txt created\n" );
 	}
 	else MsgDev( D_ERROR, "Couldn't write help.txt.\n");
 	FS_AllowDirectPaths( false );

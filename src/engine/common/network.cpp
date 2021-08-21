@@ -1533,7 +1533,7 @@ void NET_GetLocalAddress( void )
 		else
 		{
 			net_local.port = address.sin_port;
-			Msg( "Server IP address: %s\n", NET_AdrToString( net_local ));
+			Con_Printf( "Server IP address: %s\n", NET_AdrToString( net_local ));
 		}
 	}
 }
@@ -1611,16 +1611,16 @@ void NET_ShowIP_f( void )
 
 	if( !( h = pGetHostByName( s )))
 	{
-		Msg( "Can't get host\n" );
+		Con_Printf( "Can't get host\n" );
 		return;
 	}
 
-	Msg( "HostName: %s\n", h->h_name );
+	Con_Printf( "HostName: %s\n", h->h_name );
 
 	for( i = 0; h->h_addr_list[i]; i++ )
 	{
 		in.s_addr = *(int *)h->h_addr_list[i];
-		Msg( "IP: %s\n", pInet_Ntoa( in ));
+		Con_Printf( "IP: %s\n", pInet_Ntoa( in ));
 	}
 }
 
@@ -1836,7 +1836,7 @@ void HTTP_FreeFile( httpfile_t *file, qboolean error )
 		if( http_autoremove->integer == 1 ) // remove broken file
 			FS_Delete( incname );
 		else // autoremove disabled, keep file
-			Msg( "HTTP: Cannot download %s from any server. "
+			Con_Printf( "HTTP: Cannot download %s from any server. "
 				"You may remove %s now\n", file->path, incname ); // Warn about trash file
 
 		if( file->process )
@@ -1853,7 +1853,7 @@ void HTTP_FreeFile( httpfile_t *file, qboolean error )
 		if( file->process )
 			CL_ProcessFile( true, name );
 		else
-			Msg ( "HTTP: Successfully downloaded %s, processing disabled!\n", name );
+			Con_Printf ( "HTTP: Successfully downloaded %s, processing disabled!\n", name );
 	}
 	// Now free list node
 	if( http.first_file == file )
@@ -1917,7 +1917,7 @@ void HTTP_Run( void )
 
 	if( !server )
 	{
-		Msg( "HTTP: No servers to download %s!\n", curfile->path );
+		Con_Printf( "HTTP: No servers to download %s!\n", curfile->path );
 		HTTP_FreeFile( curfile, true );
 		return;
 	}
@@ -1926,7 +1926,7 @@ void HTTP_Run( void )
 	{
 		char name[PATH_MAX];
 
-		Msg( "HTTP: Starting download %s from %s\n", curfile->path, server->host );
+		Con_Printf( "HTTP: Starting download %s from %s\n", curfile->path, server->host );
 		Cbuf_AddText( va( "menu_connectionprogress dl \"%s\" \"%s%s\" %d %d \"(starting)\"\n", curfile->path, server->host, server->path, downloadfileid, downloadcount ) );
 		Q_snprintf( name, PATH_MAX, "downloaded/%s.incomplete", curfile->path );
 
@@ -1934,7 +1934,7 @@ void HTTP_Run( void )
 
 		if( !curfile->file )
 		{
-			Msg( "HTTP: Cannot open %s!\n", name );
+			Con_Printf( "HTTP: Cannot open %s!\n", name );
 			HTTP_FreeFile( curfile, true );
 			return;
 		}
@@ -1974,7 +1974,7 @@ void HTTP_Run( void )
 
 		if( !res )
 		{
-			Msg( "HTTP: Failed to resolve server address for %s!\n", server->host );
+			Con_Printf( "HTTP: Failed to resolve server address for %s!\n", server->host );
 			HTTP_FreeFile( curfile, true ); // Cannot connect
 			return;
 		}
@@ -1999,7 +1999,7 @@ void HTTP_Run( void )
 				curfile->state = HTTP_CONNECTED;
 			else
 			{
-				Msg( "HTTP: Cannot connect to server: %s\n", NET_ErrorString( ) );
+				Con_Printf( "HTTP: Cannot connect to server: %s\n", NET_ErrorString( ) );
 				HTTP_FreeFile( curfile, true ); // Cannot connect
 				return;
 			}
@@ -2037,7 +2037,7 @@ void HTTP_Run( void )
 				if( errno != EWOULDBLOCK )
 #endif
 				{
-					Msg( "HTTP: Failed to send request: %s\n", NET_ErrorString() );
+					Con_Printf( "HTTP: Failed to send request: %s\n", NET_ErrorString() );
 					HTTP_FreeFile( curfile, true );
 					return;
 				}
@@ -2046,7 +2046,7 @@ void HTTP_Run( void )
 
 				if( curfile->blocktime > http_timeout->value )
 				{
-					Msg( "HTTP: Timeout on request send:\n%s\n", http.buf );
+					Con_Printf( "HTTP: Timeout on request send:\n%s\n", http.buf );
 					HTTP_FreeFile( curfile, true );
 					return;
 				}
@@ -2059,7 +2059,7 @@ void HTTP_Run( void )
 			}
 		}
 
-		Msg( "HTTP: Request sent!\n");
+		Con_Printf( "HTTP: Request sent!\n");
 		Q_memset( http.buf, 0, BUFSIZ );
 		curfile->state = HTTP_REQUEST_SENT;
 	}
@@ -2082,12 +2082,12 @@ void HTTP_Run( void )
 				int cutheadersize = begin - http.buf + 4; // after that begin of data
 				char *length;
 
-				Msg( "HTTP: Got response!\n" );
+				Con_Printf( "HTTP: Got response!\n" );
 
 				if( !Q_strstr(http.buf, "200 OK") )
 				{
 					*begin = 0; // cut string to print out response
-					Msg( "HTTP: Bad response:\n%s\n", http.buf );
+					Con_Printf( "HTTP: Bad response:\n%s\n", http.buf );
 					HTTP_FreeFile( curfile, true );
 					return;
 				}
@@ -2098,7 +2098,7 @@ void HTTP_Run( void )
 				{
 					int size = Q_atoi( length += 16 );
 
-					Msg( "HTTP: File size is %d\n", size );
+					Con_Printf( "HTTP: File size is %d\n", size );
 					Cbuf_AddText( va( "menu_connectionprogress dl \"%s\" \"%s%s\" %d %d \"(file size is %s)\"\n", curfile->path, server->host, server->path, downloadfileid, downloadcount, Q_pretifymem( size, 1 ) ) );
 
 					if( ( curfile->size != -1 ) && ( curfile->size != size ) ) // check size if specified, not used
@@ -2110,7 +2110,7 @@ void HTTP_Run( void )
 				if( curfile->size == -1 )
 				{
 					// Usually fastdl's reports file size if link is correct
-					Msg( "HTTP: File size is unknown!\n" );
+					Con_Printf( "HTTP: File size is unknown!\n" );
 					HTTP_FreeFile( curfile, true );
 					return;
 				}
@@ -2126,7 +2126,7 @@ void HTTP_Run( void )
 					if( ret != res - cutheadersize - http.header_size ) // could not write file
 					{
 						// close it and go to next
-						Msg( "HTTP: Write failed for %s!\n", curfile->path );
+						Con_Printf( "HTTP: Write failed for %s!\n", curfile->path );
 						curfile->state = HTTP_FREE;
 						HTTP_FreeFile( curfile, true );
 						return;
@@ -2144,7 +2144,7 @@ void HTTP_Run( void )
 			if ( ret != res )
 			{
 				// close it and go to next
-				Msg( "HTTP: Write failed for %s!\n", curfile->path );
+				Con_Printf( "HTTP: Write failed for %s!\n", curfile->path );
 				curfile->state = HTTP_FREE;
 				HTTP_FreeFile( curfile, true );
 				return;
@@ -2159,7 +2159,7 @@ void HTTP_Run( void )
 			if( curfile->checktime > 5 )
 			{
 				curfile->checktime = 0;
-				Msg( "HTTP: %f KB/s\n", (float)curfile->lastchecksize / ( 5.0 * 1024 ) );
+				Con_Printf( "HTTP: %f KB/s\n", (float)curfile->lastchecksize / ( 5.0 * 1024 ) );
 				Cbuf_AddText( va( "menu_connectionprogress dl \"%s\" \"%s%s\" %d %d \"(file size is %s, speed is %.2f KB/s)\"\n", curfile->path, server->host, server->path, downloadfileid, downloadcount, Q_pretifymem( curfile->size, 1 ), (float)curfile->lastchecksize / ( 5.0 * 1024 ) ) );
 				curfile->lastchecksize = 0;
 			}
@@ -2180,7 +2180,7 @@ void HTTP_Run( void )
 #else
 	if( errno != EWOULDBLOCK )
 #endif
-		Msg( "HTTP: Problem downloading %s:\n%s\n", curfile->path, NET_ErrorString() );
+		Con_Printf( "HTTP: Problem downloading %s:\n%s\n", curfile->path, NET_ErrorString() );
 	else
 		curfile->blocktime += host.frametime;
 
@@ -2188,7 +2188,7 @@ void HTTP_Run( void )
 
 	if( curfile->blocktime > http_timeout->value )
 	{
-		Msg( "HTTP: Timeout on receiving data!\n");
+		Con_Printf( "HTTP: Timeout on receiving data!\n");
 		HTTP_FreeFile( curfile, true );
 		return;
 	}
@@ -2244,7 +2244,7 @@ static void HTTP_Download_f( void )
 {
 	if( Cmd_Argc() < 2 )
 	{
-		Msg("Use download <gamedir_path>\n");
+		Con_Printf("Use download <gamedir_path>\n");
 		return;
 	}
 
@@ -2412,13 +2412,13 @@ void HTTP_List_f( void )
 	while( file )
 	{
 		if( file->id == -1 )
-			Msg ( "\t(empty)\n");
+			Con_Printf ( "\t(empty)\n");
 		else if ( file->server )
-			Msg ( "\t%d %d http://%s:%d/%s%s %d\n", file->id, file->state,
+			Con_Printf ( "\t%d %d http://%s:%d/%s%s %d\n", file->id, file->state,
 				file->server->host, file->server->port, file->server->path,
 				file->path, file->downloaded );
 		else
-			Msg ( "\t%d %d (no server) %s\n", file->id, file->state, file->path );
+			Con_Printf ( "\t%d %d (no server) %s\n", file->id, file->state, file->path );
 
 		file = file->next;
 	}

@@ -774,8 +774,8 @@ qboolean Cvar_Command( convar_t *v )
 	// perform a variable print or set
 	if( Cmd_Argc() == 1 )
 	{
-		if( v->flags & ( CVAR_INIT|CVAR_EXTDLL )) Msg( "%s: %s\n", v->name, v->string );
-		else Msg( "%s: %s ( ^3%s^7 )\n", v->name, v->string, v->reset_string );
+		if( v->flags & ( CVAR_INIT|CVAR_EXTDLL )) Con_Printf( "%s: %s\n", v->name, v->string );
+		else Con_Printf( "%s: %s ( ^3%s^7 )\n", v->name, v->string, v->reset_string );
 		return true;
 	}
 
@@ -852,7 +852,7 @@ void Cvar_Toggle_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: toggle <variable>\n" );
+		Con_Printf( "Usage: toggle <variable>\n" );
 		return;
 	}
 
@@ -878,7 +878,7 @@ void Cvar_Set_f( void )
 	c = Cmd_Argc();
 	if( c < 3 )
 	{
-		Msg( "Usage: set <variable> <value>\n" );
+		Con_Printf( "Usage: set <variable> <value>\n" );
 		return;
 	}
 	combined[0] = 0;
@@ -909,7 +909,7 @@ void Cvar_SetU_f( void )
 
 	if( Cmd_Argc() != 3 )
 	{
-		Msg( "Usage: setu <variable> <value>\n" );
+		Con_Printf( "Usage: setu <variable> <value>\n" );
 		return;
 	}
 
@@ -934,7 +934,7 @@ void Cvar_SetP_f( void )
 
 	if( Cmd_Argc() != 3 )
 	{
-		Msg( "Usage: setp <variable> <value>\n" );
+		Con_Printf( "Usage: setp <variable> <value>\n" );
 		return;
 	}
 
@@ -959,7 +959,7 @@ void Cvar_SetS_f( void )
 
 	if( Cmd_Argc() != 3 )
 	{
-		Msg( "Usage: sets <variable> <value>\n" );
+		Con_Printf( "Usage: sets <variable> <value>\n" );
 		return;
 	}
 	Cvar_Set_f();
@@ -983,7 +983,7 @@ void Cvar_SetA_f( void )
 
 	if( Cmd_Argc() < 3 )
 	{
-		Msg( "Usage: seta <variable> <value> [<description>]\n" );
+		Con_Printf( "Usage: seta <variable> <value> [<description>]\n" );
 		return;
 	}
 
@@ -1011,7 +1011,7 @@ void Cvar_SetR_f( void )
 {
 	if( Cmd_Argc() != 3 )
 	{
-		Msg( "Usage: setr <variable> <value>\n" );
+		Con_Printf( "Usage: setr <variable> <value>\n" );
 		return;
 	}
 
@@ -1029,7 +1029,7 @@ void Cvar_SetGL_f( void )
 {
 	if( Cmd_Argc() != 3 )
 	{
-		Msg( "Usage: setgl <variable> <value>\n" );
+		Con_Printf( "Usage: setgl <variable> <value>\n" );
 		return;
 	}
 
@@ -1045,7 +1045,7 @@ void Cvar_Reset_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: reset <variable>\n" );
+		Con_Printf( "Usage: reset <variable>\n" );
 		return;
 	}
 	Cvar_Reset( Cmd_Argv( 1 ));
@@ -1086,55 +1086,55 @@ void Cvar_List_f( void )
 			continue;
 
 		// TODO: fix ugly formatting
-		if( var->flags & CVAR_SERVERINFO ) Msg( "SV    " );
-		else Msg( " " );
+		if( var->flags & CVAR_SERVERINFO ) Con_Printf( "SV    " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_USERINFO ) Msg( "USER  " );
-		else Msg( " " );
+		if( var->flags & CVAR_USERINFO ) Con_Printf( "USER  " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_PHYSICINFO ) Msg( "PHYS  " );
-		else Msg( " " );
+		if( var->flags & CVAR_PHYSICINFO ) Con_Printf( "PHYS  " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_READ_ONLY ) Msg( "READ  " );
-		else Msg( " " );
+		if( var->flags & CVAR_READ_ONLY ) Con_Printf( "READ  " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_INIT ) Msg( "INIT  " );
-		else Msg( " " );
+		if( var->flags & CVAR_INIT ) Con_Printf( "INIT  " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_ARCHIVE ) Msg( "ARCH  " );
-		else Msg( " " );
+		if( var->flags & CVAR_ARCHIVE ) Con_Printf( "ARCH  " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_LATCH ) Msg( "LATCH " );
-		else Msg( " " );
+		if( var->flags & CVAR_LATCH ) Con_Printf( "LATCH " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_LATCH_VIDEO ) Msg( "VIDEO " );
-		else Msg( " " );
+		if( var->flags & CVAR_LATCH_VIDEO ) Con_Printf( "VIDEO " );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_GLCONFIG ) Msg( "OPENGL" );
-		else Msg( " " );
+		if( var->flags & CVAR_GLCONFIG ) Con_Printf( "OPENGL" );
+		else Con_Printf( " " );
 
-		if( var->flags & CVAR_CHEAT ) Msg( "CHEAT " );
-		else Msg( " " );
+		if( var->flags & CVAR_CHEAT ) Con_Printf( "CHEAT " );
+		else Con_Printf( " " );
 
 		if( var->flags & CVAR_EXTDLL )
-			Msg(" %s \"%s\" %s\n", var->name, var->string, "game cvar" );
-		else Msg(" %s \"%s\" %s\n", var->name, var->string, var->description );
+			Con_Printf(" %s \"%s\" %s\n", var->name, var->string, "game cvar" );
+		else Con_Printf(" %s \"%s\" %s\n", var->name, var->string, var->description );
 		j++;
 	}
 
 	if( len )
 	{
 		if( ispattern )
-			Msg( "\n%i cvar%s matching \"%s\"\n\n", j, ( j > 1 ) ? "s" : "", partial );
+			Con_Printf( "\n%i cvar%s matching \"%s\"\n\n", j, ( j > 1 ) ? "s" : "", partial );
 		else
-			Msg( "\n%i cvar%s beginning with \"%s\"\n\n", j, ( j > 1 ) ? "s" : "", partial );
+			Con_Printf( "\n%i cvar%s beginning with \"%s\"\n\n", j, ( j > 1 ) ? "s" : "", partial );
 	}
 	else
 	{
-		Msg( "\n%i cvar%s\n", j, ( j > 1 ) ? "s" : "" );
+		Con_Printf( "\n%i cvar%s\n", j, ( j > 1 ) ? "s" : "" );
 	}
 
-	Msg( "%i total cvars\n", i );
+	Con_Printf( "%i total cvars\n", i );
 }
 
 /*

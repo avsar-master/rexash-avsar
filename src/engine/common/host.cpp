@@ -307,7 +307,7 @@ void Host_ChangeGame_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: game <directory>\n" );
+		Con_Printf( "Usage: game <directory>\n" );
 		return;
 	}
 
@@ -320,11 +320,11 @@ void Host_ChangeGame_f( void )
 
 	if( i == SI.numgames )
 	{
-		Msg( "%s not exist\n", Cmd_Argv( 1 ));
+		Con_Printf( "%s not exist\n", Cmd_Argv( 1 ));
 	}
 	else if( !Q_stricmp( GI->gamefolder, Cmd_Argv( 1 )))
 	{
-		Msg( "%s already active\n", Cmd_Argv( 1 ));	
+		Con_Printf( "%s already active\n", Cmd_Argv( 1 ));	
 	}
 	else
 	{
@@ -347,7 +347,7 @@ void Host_Exec_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: exec <filename>\n" );
+		Con_Printf( "Usage: exec <filename>\n" );
 		return;
 	}
 
@@ -374,8 +374,8 @@ void Host_Exec_f( void )
 			Q_strstr( f, "//\t\t\tCopyright XashXT Group" ) &&
 			Q_strstr( f, "//\t\t\tserver.cfg - server temp" ) )
 		{
-			Msg( "^1Found old generated xash3d listenserver config, skipping!\n" );
-			Msg( "^1Remove Xash3D header to use it\n" );
+			Con_Printf( "^1Found old generated xash3d listenserver config, skipping!\n" );
+			Con_Printf( "^1Remove Xash3D header to use it\n" );
 			Mem_Free( f );
 			return;
 		}
@@ -425,7 +425,7 @@ void Host_MemStats_f( void )
 		Mem_PrintStats();
 		break;
 	default:
-		Msg( "Usage: memlist <all>\n" );
+		Con_Printf( "Usage: memlist <all>\n" );
 		break;
 	}
 }
@@ -812,7 +812,7 @@ void Host_Error( const char *error, ... )
 		{
 			UI_SetActiveMenu( false );
 			Key_SetKeyDest( key_console );
-			Msg( "^1Host_Error: ^7%s", hosterror1 );
+			Con_Printf( "^1Host_Error: ^7%s", hosterror1 );
 		}
 		else MSGBOX2( hosterror1 );
 	}
@@ -822,7 +822,7 @@ void Host_Error( const char *error, ... )
 
 	if( recursive )
 	{ 
-		Msg( "Host_RecursiveError: %s", hosterror2 );
+		Con_Printf( "Host_RecursiveError: %s", hosterror2 );
 		Sys_Error( "%s", hosterror1 );
 		return; // don't multiple executes
 	}
@@ -895,7 +895,7 @@ void Host_MapDesignError( const char *format, ... )
 	if( host_mapdesign_fatal->integer )
 		Host_Error( "Map Design Error: %s\n", str );
 	else
-		Msg( "^1Map Design Error: ^3%s", str );
+		Con_Printf( "^1Map Design Error: ^3%s", str );
 }
 /*
 =================

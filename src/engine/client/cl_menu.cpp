@@ -27,108 +27,10 @@ GNU General Public License for more details.
 
 static MENUAPI	GetMenuAPI;
 static ADDTOUCHBUTTONTOLIST pfnAddTouchButtonToList;
-static void UI_UpdateUserinfo( void );
+
+void UI_Init(void);
 
 menu_static_t	menu;
-
-void UI_UpdateMenu( float realtime )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnRedraw( realtime );
-	UI_UpdateUserinfo();
-}
-
-void UI_KeyEvent( int key, qboolean down )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnKeyEvent( key, down );
-}
-
-void UI_MouseMove( int x, int y )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnMouseMove( x, y );
-}
-
-void UI_SetActiveMenu( qboolean fActive )
-{
-	movie_state_t	*cin_state;
-
-	if( host_xashds_hacks->integer )
-	{
-		if( !cl.refdef.paused && !cls.changelevel && fActive )
-		{
-			Cbuf_InsertText("pause\n");
-			Cbuf_Execute();
-		}
-	}
-
-
-	if( !menu.hInstance )
-	{
-		if( !fActive )
-			Key_SetKeyDest( key_game );
-		return;
-	}
-
-	menu.drawLogo = fActive;
-	menu.dllFuncs.pfnSetActiveMenu( fActive );
-
-	if( !fActive )
-	{
-		// close logo when menu is shutdown
-		cin_state = AVI_GetState( CIN_LOGO );
-		AVI_CloseVideo( cin_state );
-	}
-}
-
-void UI_AddServerToList( netadr_t adr, const char *info )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnAddServerToList( adr, info );
-}
-
-void UI_GetCursorPos( int *pos_x, int *pos_y )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnGetCursorPos( pos_x, pos_y );
-}
-
-void UI_SetCursorPos( int pos_x, int pos_y )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnSetCursorPos( pos_x, pos_y );
-}
-
-void UI_ShowCursor( qboolean show )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnShowCursor( show );
-}
-
-qboolean UI_CreditsActive( void )
-{
-	if( !menu.hInstance ) return 0;
-	return menu.dllFuncs.pfnCreditsActive();
-}
-
-void UI_CharEvent( int key )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnCharEvent( key );
-}
-
-qboolean UI_MouseInRect( void )
-{
-	if( !menu.hInstance ) return 1;
-	return menu.dllFuncs.pfnMouseInRect();
-}
-
-qboolean UI_IsVisible( void )
-{
-	if( !menu.hInstance ) return 0;
-	return menu.dllFuncs.pfnIsVisible();
-}
 
 static void UI_DrawLogo( const char *filename, float x, float y, float width, float height )
 {
@@ -214,7 +116,7 @@ static float UI_GetLogoLength( void )
 	return menu.logo_length;
 }
 
-static void UI_UpdateUserinfo( void )
+void UI_UpdateUserinfo( void )
 {
 	player_info_t	*player;
 
@@ -227,12 +129,7 @@ static void UI_UpdateUserinfo( void )
 	player->topcolor = Q_atoi( Info_ValueForKey( player->userinfo, "topcolor" ));
 	player->bottomcolor = Q_atoi( Info_ValueForKey( player->userinfo, "bottomcolor" ));
 }
-	
-void Host_Credits( void )
-{
-	if( !menu.hInstance ) return;
-	menu.dllFuncs.pfnFinalCredits();
-}
+
 
 static void UI_ConvertGameInfo( GAMEINFO *out, gameinfo_t *in )
 {
@@ -656,22 +553,6 @@ void UI_AddTouchButtonToList( const char *name, const char *texture, const char 
 }
 
 /*
-=======================
-UI_HandleMessageMode_f
-
-send messagemode handler to menu
-=======================
-*/
-int UI_HandleMessageMode_f( void )
-{
-	if( menu.dllFuncs.pfnHandleMessageMode_f )
-	{
-		return menu.dllFuncs.pfnHandleMessageMode_f();
-	}
-	return 0;
-}
-
-/*
 ====================
 pfnGetPlayerModel
 
@@ -1071,86 +952,21 @@ static ui_textfuncs_t gTextfuncs =
 
 void UI_UnloadProgs( void )
 {
-	if( !menu.hInstance ) return;
+	Mem_FreePool(&menu.mempool);
 
-	// deinitialize game
-	menu.dllFuncs.pfnShutdown();
-
-	Com_FreeLibrary( menu.hInstance );
-	Mem_FreePool( &menu.mempool );
-	Q_memset( &menu, 0, sizeof( menu ));
+	//AVSARDELETE
 }
 
 qboolean UI_LoadProgs( void )
 {
 	static ui_enginefuncs_t	gpEngfuncs;
-	static ui_textfuncs_t	gpTextfuncs;
 	static ui_globalvars_t	gpGlobals;
-	int			i;
-        UITEXTAPI GiveTextApi;
-	if( menu.hInstance ) UI_UnloadProgs();
 
-	// setup globals
+	menu.mempool = Mem_AllocPool("Menu Pool");
 	menu.globals = &gpGlobals;
-#ifdef XASH_INTERNAL_GAMELIBS
-	if(!( menu.hInstance = Com_LoadLibrary( "menu", false )))
-		return false;
-#else
-	if (FS_FileExists(VGUI2_SUPPORT_DLL, false) &&
-		(menu.hInstance = Com_LoadLibrary(VGUI2_SUPPORT_DLL, false)) &&
-		(GetMenuAPI = (MENUAPI)Com_GetProcAddress(menu.hInstance, "GetMenuAPI"))
-		)
-		; // HANDLED BY VGUI2_SUPPORT
-	else if(!( menu.hInstance = Com_LoadLibrary( va( "%s/" MENUDLL, GI->dll_path ), false )))
-	{
-		FS_AllowDirectPaths( true );
-
-		if(!( menu.hInstance = Com_LoadLibrary( "../" MENUDLL, false ))
-				&& !( menu.hInstance = Com_LoadLibrary( MENUDLL, false )))
-
-		{
-			FS_AllowDirectPaths( false );
-			return false;
-		}
-	}
-#endif
-	FS_AllowDirectPaths( false );
-	if(!( GetMenuAPI = (MENUAPI)Com_GetProcAddress( menu.hInstance, "GetMenuAPI" )))
-	{
-		Com_FreeLibrary( menu.hInstance );
-		MsgDev( D_NOTE, "vgui2_support.dll: can't init GetMenuAPI\n" );
-		menu.hInstance = NULL;
-		return false;
-	}
-
-	// make local copy of engfuncs to prevent overwrite it with user dll
-	Q_memcpy( &gpEngfuncs, &gEngfuncs, sizeof( gpEngfuncs ));
-
-	menu.mempool = Mem_AllocPool( "Menu Pool" );
-
-	if( !GetMenuAPI( &menu.dllFuncs, &gpEngfuncs, menu.globals ))
-	{
-		Com_FreeLibrary( menu.hInstance );
-		MsgDev( D_NOTE, "vgui2_support.dll: can't init GetMenuAPI\n" );
-		Mem_FreePool( &menu.mempool );
-		menu.hInstance = NULL;
-		return false;
-	}
-
-	menu.use_text_api = false;
-
-	if( ( GiveTextApi = (UITEXTAPI)Com_GetProcAddress( menu.hInstance, "GiveTextAPI" ) ) )
-	{
-		// make local copy of engfuncs to prevent overwrite it with user dll
-		Q_memcpy( &gpTextfuncs, &gTextfuncs, sizeof( gpTextfuncs ));
-		if( GiveTextApi( &gpTextfuncs ) )
-			menu.use_text_api = true;
-	}
-
-	pfnAddTouchButtonToList = (ADDTOUCHBUTTONTOLIST)Com_GetProcAddress( menu.hInstance, "AddTouchButtonToList" );
 
 	// setup gameinfo
-	for( i = 0; i < SI.numgames; i++ )
+	for(int i = 0; i < SI.numgames; i++ )
 	{
 		menu.modsInfo[i] = (GAMEINFO*)Mem_Alloc(menu.mempool, sizeof(GAMEINFO));
 		UI_ConvertGameInfo( menu.modsInfo[i], SI.games[i] );
@@ -1162,8 +978,9 @@ qboolean UI_LoadProgs( void )
 	menu.globals->developer = host.developer;
 
 	// initialize game
-	menu.dllFuncs.pfnInit();
+	UI_Init();
 
 	return true;
 }
+
 #endif // XASH_DEDICATED

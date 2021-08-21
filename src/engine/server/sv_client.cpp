@@ -620,7 +620,7 @@ void Rcon_Print( const char *pMsg )
 				host.rd.lines--;
 			host.rd.buffer[0] = 0;
 			if( !host.rd.lines )
-				Msg( "End of redirection!\n" );
+				Con_Printf( "End of redirection!\n" );
 		}
 	}
 }
@@ -778,7 +778,7 @@ SV_Ack
 */
 void SV_Ack( netadr_t from )
 {
-	Msg( "ping %s\n", NET_AdrToString( from ));
+	Con_Printf( "ping %s\n", NET_AdrToString( from ));
 }
 
 /*
@@ -1643,8 +1643,8 @@ void SV_SendResourceList_f( sv_client_t *cl )
 	cl->resources_sent = index;
 	cl->resources_count = sv.reslist.rescount;
 
-	Msg( "Count res: %d\n", sv.reslist.rescount );
-	Msg( "ResList size: %s\n", Q_memprint( BF_GetRealBytesWritten( &cl->netchan.message ) - msg_size ));
+	Con_Printf( "Count res: %d\n", sv.reslist.rescount );
+	Con_Printf( "ResList size: %s\n", Q_memprint( BF_GetRealBytesWritten( &cl->netchan.message ) - msg_size ));
 }
 
 /*
@@ -2019,7 +2019,7 @@ void SV_Begin_f( sv_client_t *cl )
 	// handle the case of a level changing while a client was connecting
 	if( Q_atoi( Cmd_Argv( 1 )) != svs.spawncount )
 	{
-		Msg( "begin from different level\n" );
+		Con_Printf( "begin from different level\n" );
 		SV_New_f( cl );
 		return;
 	}

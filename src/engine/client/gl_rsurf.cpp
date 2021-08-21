@@ -2529,7 +2529,7 @@ static void R_DrawLightmappedVBO( vboarray_t *vbo, vbotexture_t *vbotex, texture
 		pglEnable( GL_TEXTURE_2D );
 		R_SetDecalMode( false );
 	}
-	//Msg( "%d %d %d\n", vbo->array_len, vbotex->len, lightmap );
+	//Con_Printf( "%d %d %d\n", vbo->array_len, vbotex->len, lightmap );
 	if( skiplighting )
 	{
 		vbotex->curindex = 0;

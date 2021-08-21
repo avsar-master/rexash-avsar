@@ -239,7 +239,7 @@ S_PrintDeviceName
 */
 void S_PrintDeviceName( void )
 {
-	Msg( "Audio: SDL (driver: %s)\n", SDL_GetCurrentAudioDriver( ) );
+	Con_Printf( "Audio: SDL (driver: %s)\n", SDL_GetCurrentAudioDriver( ) );
 }
 
 /*

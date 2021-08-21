@@ -206,7 +206,22 @@ set(XASH_ENGINE_CLIENT_SOURCES
    client/s_stream.cpp
    client/s_utils.cpp
    client/s_vox.cpp
-   client/vgui/vgui_draw.cpp
+   client/vgui2/LoadExports.cpp
+   client/vgui2/BaseUISurface.cpp
+   client/vgui2/CBaseUI.cpp
+   client/vgui2/CGameUIFuncs.cpp
+   client/vgui2/LoadBMP.cpp
+   client/vgui2/LoadTGA.cpp
+   client/vgui2/udll_int.cpp
+   client/vgui2/vgui_draw.cpp
+   client/vgui2/vgui_int.cpp
+   ../tier1/interface.cpp
+   ../vgui2/vgui_surfacelib/FontAmalgam.cpp
+   ../vgui2/vgui_surfacelib/FontManager.cpp
+   ../vgui2/vgui_surfacelib/Win32Font.cpp
+
+   client/vgui2/Clip2D.cpp
+   client/vgui2/FontTextureCache.cpp
 )
 
 set(XASH_ENGINE_DEDICATED_SOURCES
@@ -242,10 +257,15 @@ include_directories(
 	common/imagelib/
 	common/soundlib/
 	client/
-	client/vgui/
+	client/vgui2/
 	server/
 	../common
 	../pm_shared
+	../
+	../vgui2
+	../vgui2/vgui_surfacelib/
+	../public
+	../public/tier1
 )
 
 add_definitions(-DXASH_FORCEINLINE)
@@ -384,6 +404,11 @@ if(NOT WIN32)
 	endif()
 elseif(WIN32)
 	target_link_libraries(${XASH_ENGINE} imm32)
+	target_link_libraries(${XASH_ENGINE} mathlib)
+	target_link_libraries(${XASH_ENGINE} vgui_controls)
+	target_link_libraries(${XASH_ENGINE} wrapper)
+	target_link_libraries(${XASH_ENGINE} vstdlib)
+	target_link_libraries(${XASH_ENGINE} tier0)
 	# For Win32 we have split DLL names
 	if(XASH_DEDICATED)
 		set_target_properties(${XASH_ENGINE} PROPERTIES

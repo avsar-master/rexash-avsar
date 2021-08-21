@@ -604,7 +604,7 @@ int SV_IsValidSave( void )
 
 	if( !svs.initialized || sv.state != ss_active )
 	{
-		Msg( "Not playing a local game.\n" );
+		Con_Printf( "Not playing a local game.\n" );
 		return 0;
 	}
 
@@ -612,7 +612,7 @@ int SV_IsValidSave( void )
 	{
 		if( !svgame.physFuncs.SV_AllowSaveGame( ))
 		{
-			Msg( "Savegame is not allowed.\n" );
+			Con_Printf( "Savegame is not allowed.\n" );
 			return 0;
 		}
 	}
@@ -623,19 +623,19 @@ int SV_IsValidSave( void )
 
 		if( !CL_Active( ))
 		{
-			Msg( "Can't save if not active.\n" );
+			Con_Printf( "Can't save if not active.\n" );
 			return 0;
 		}
 
 		if( CL_IsIntermission( ))
 		{
-			Msg( "Can't save during intermission.\n" );
+			Con_Printf( "Can't save during intermission.\n" );
 			return 0;
 		}
 
 		if( sv_maxclients->integer != 1 )
 		{
-			Msg( "Can't save multiplayer games.\n" );
+			Con_Printf( "Can't save multiplayer games.\n" );
 			return 0;
 		}
 
@@ -647,13 +647,13 @@ int SV_IsValidSave( void )
 		
 		if( !pl )
 		{
-			Msg( "Can't savegame without a player!\n" );
+			Con_Printf( "Can't savegame without a player!\n" );
 			return 0;
 		}
 			
 		if( pl->v.deadflag != false || pl->v.health <= 0.0f )
 		{
-			Msg( "Can't savegame with a dead player.\n" );
+			Con_Printf( "Can't savegame with a dead player.\n" );
 			return 0;
 		}
 
@@ -661,7 +661,7 @@ int SV_IsValidSave( void )
 		return 1;
 	}
 
-	Msg( "Can't savegame without a client!\n" );
+	Con_Printf( "Can't savegame without a client!\n" );
 
 	return 0;
 }
@@ -1923,7 +1923,7 @@ void SV_ChangeLevel( qboolean loadfromsavedgame, const char *mapname, const char
 	
 	if( sv.state != ss_active )
 	{
-		Msg( "SV_ChangeLevel: server not running\n");
+		Con_Printf( "SV_ChangeLevel: server not running\n");
 		return;
 	}
 
@@ -2234,7 +2234,7 @@ void SV_SaveGame( const char *pName )
 
 		if( n == 1000 )
 		{
-			Msg( "^3ERROR: no free slots for savegame\n" );
+			Con_Printf( "^3ERROR: no free slots for savegame\n" );
 			return;
 		}
 	}

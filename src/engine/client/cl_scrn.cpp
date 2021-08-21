@@ -43,6 +43,8 @@ typedef struct
 static dirty_t	scr_dirty, scr_old_dirty[2];
 static qboolean	scr_init = false;
 
+int UI_VidInit(void);
+
 /*
 ==============
 SCR_DrawFPS
@@ -664,12 +666,13 @@ void SCR_VidInit( void )
 	}
 
 	SCR_RebuildGammaTable();
-	VGui_Startup (scr_width->integer, scr_height->integer);
+	//VGui_Startup (scr_width->integer, scr_height->integer);
+	// AVSARWHY?
 
 	clgame.load_sequence++; // now all hud sprites are invalid
 	
 	// vid_state has changed
-	if( menu.hInstance ) menu.dllFuncs.pfnVidInit();
+	UI_VidInit();
 	if( clgame.hInstance ) clgame.dllFuncs.pfnVidInit();
 
 	// restart console size

@@ -63,7 +63,7 @@ void SV_BroadcastPrintf( int level, char *fmt, ... )
 	va_end( argptr );
 	
 	// echo to console
-	if( Host_IsDedicated() ) Msg( "%s", string );
+	if( Host_IsDedicated() ) Con_Printf( "%s", string );
 
 	for( i = 0, cl = svs.clients; i < sv_maxclients->integer; i++, cl++ )
 	{
@@ -112,7 +112,7 @@ qboolean SV_SetPlayer( void )
 
 	if( !svs.clients || sv.background )
 	{
-		Msg( "^3No server running.\n" );
+		Con_Printf( "^3No server running.\n" );
 		return false;
 	}
 
@@ -132,7 +132,7 @@ qboolean SV_SetPlayer( void )
 		idnum = Q_atoi( s );
 		if( idnum < 0 || idnum >= sv_maxclients->integer )
 		{
-			Msg( "Bad client slot: %i\n", idnum );
+			Con_Printf( "Bad client slot: %i\n", idnum );
 			return false;
 		}
 
@@ -141,7 +141,7 @@ qboolean SV_SetPlayer( void )
 
 		if( !svs.currentPlayer->state )
 		{
-			Msg( "Client %i is not active\n", idnum );
+			Con_Printf( "Client %i is not active\n", idnum );
 			return false;
 		}
 		return true;
@@ -159,7 +159,7 @@ qboolean SV_SetPlayer( void )
 		}
 	}
 
-	Msg( "Userid %s is not on the server\n", s );
+	Con_Printf( "Userid %s is not on the server\n", s );
 	svs.currentPlayer = NULL;
 	svs.currentPlayerNum = 0;
 
@@ -183,7 +183,7 @@ void SV_Map_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: map <mapname>\n" );
+		Con_Printf( "Usage: map <mapname>\n" );
 		return;
 	}
 
@@ -233,7 +233,7 @@ void SV_Map_f( void )
 		if( CL_IsInMenu() )
 			Sys_Warn( "SV_NewMap: map %s is invalid or not supported\n", mapname );
 		else
-			Msg( "SV_NewMap: map %s is invalid or not supported\n", mapname );
+			Con_Printf( "SV_NewMap: map %s is invalid or not supported\n", mapname );
 		return;
 	}
 	
@@ -242,7 +242,7 @@ void SV_Map_f( void )
 		if( CL_IsInMenu() )
 			Sys_Warn( "SV_NewMap: map %s doesn't exist\n", mapname );
 		else
-			Msg( "SV_NewMap: map %s doesn't exist\n", mapname );
+			Con_Printf( "SV_NewMap: map %s doesn't exist\n", mapname );
 		return;
 	}
 
@@ -251,7 +251,7 @@ void SV_Map_f( void )
 		if( CL_IsInMenu() )
 			Sys_Warn( "SV_NewMap: map %s doesn't have a valid spawnpoint\n", mapname );
 		else
-			Msg( "SV_NewMap: map %s doesn't have a valid spawnpoint\n", mapname );
+			Con_Printf( "SV_NewMap: map %s doesn't have a valid spawnpoint\n", mapname );
 		return;
 	}
 
@@ -272,7 +272,7 @@ void SV_Map_f( void )
 	SV_DeactivateServer();
 	if( !SV_SpawnServer( mapname, NULL ) )
 	{
-		Msg("Could not spawn server!\n");
+		Con_Printf("Could not spawn server!\n");
 		return;
 	}
 	SV_LevelInit( mapname, NULL, NULL, false );
@@ -299,17 +299,17 @@ void SV_Maps_f(void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Msg("Usage:  maps <substring>\nmaps * for full listing\n");
+		Con_Printf("Usage:  maps <substring>\nmaps * for full listing\n");
 		return;
 	}
 
         mapList = FS_Search(va("maps/*%s*.bsp", argStr), false, true);
 	if (!mapList)
 	{
-		Msg("No related map found in \"%s/maps\"\n", GI->gamefolder);
+		Con_Printf("No related map found in \"%s/maps\"\n", GI->gamefolder);
 		return;
 	}
-	Msg("%s\n", seperator);
+	Con_Printf("%s\n", seperator);
 	for (listIndex = 0; listIndex != mapList->numfilenames; ++listIndex)
 	{
 		const char *ext;
@@ -318,10 +318,10 @@ void SV_Maps_f(void)
 		if (Q_strcmp(ext, "bsp")) continue;
 		if ( (Q_strcmp(argStr, "*") == 0) || (Q_stristr(mapName, argStr) != NULL) )
 		{
-			Msg("%s\n", &mapName[5]); //Do not show "maps/"
+			Con_Printf("%s\n", &mapName[5]); //Do not show "maps/"
 		}
 	}
-	Msg("%s\nDirectory: \"%s/maps\" - Maps listed: %d\n", seperator, GI->basedir, mapList->numfilenames);
+	Con_Printf("%s\nDirectory: \"%s/maps\" - Maps listed: %d\n", seperator, GI->basedir, mapList->numfilenames);
 }
 
 /*
@@ -338,13 +338,13 @@ void SV_MapBackground_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: map_background <mapname>\n" );
+		Con_Printf( "Usage: map_background <mapname>\n" );
 		return;
 	}
 
 	if( sv.state == ss_active && !sv.background )
 	{
-		Msg( "SV_NewMap: can't set background map while game is active\n" );
+		Con_Printf( "SV_NewMap: can't set background map while game is active\n" );
 		return;
 	}
 
@@ -354,7 +354,7 @@ void SV_MapBackground_f( void )
 
 	if(!( flags & MAP_IS_EXIST ))
 	{
-		Msg( "SV_NewMap: map %s doesn't exist\n", mapname );
+		Con_Printf( "SV_NewMap: map %s doesn't exist\n", mapname );
 		return;
 	}
 
@@ -393,7 +393,7 @@ void SV_NewGame_f( void )
 {
 	if( Cmd_Argc() != 1 )
 	{
-		Msg( "Usage: newgame\n" );
+		Con_Printf( "Usage: newgame\n" );
 		return;
 	}
 
@@ -410,7 +410,7 @@ void SV_StartDefaultMap_f( void )
 {
 	if( Cmd_Argc() != 1 )
 	{
-		Msg( "Usage: startdefaultmap\n" );
+		Con_Printf( "Usage: startdefaultmap\n" );
 		return;
 	}
 
@@ -424,7 +424,7 @@ void SV_StartDefaultMap_f( void )
 
 	auto defaultmap = Cvar_VariableString( "defaultmap" );
 	if( !defaultmap[0] )
-		Msg( "Please add \"defaultmap\" cvar with default map name to your server.cfg!\n" );
+		Con_Printf( "Please add \"defaultmap\" cvar with default map name to your server.cfg!\n" );
 	else
 		Cbuf_AddText( va( "map %s\n", defaultmap ));
 	startingdefmap = true;
@@ -440,7 +440,7 @@ void SV_HazardCourse_f( void )
 {
 	if( Cmd_Argc() != 1 )
 	{
-		Msg( "Usage: hazardcourse\n" );
+		Con_Printf( "Usage: hazardcourse\n" );
 		return;
 	}
 
@@ -481,7 +481,7 @@ void SV_Load_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: load <savename>\n" );
+		Con_Printf( "Usage: load <savename>\n" );
 		return;
 	}
 
@@ -532,7 +532,7 @@ void SV_Save_f( void )
 	case 1: name = "new"; break;
 	case 2: name = Cmd_Argv( 1 ); break;
 	default:
-		Msg( "Usage: save <savename>\n" );
+		Con_Printf( "Usage: save <savename>\n" );
 		return;
 	}
 
@@ -566,7 +566,7 @@ void SV_DeleteSave_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: killsave <name>\n" );
+		Con_Printf( "Usage: killsave <name>\n" );
 		return;
 	}
 
@@ -585,7 +585,7 @@ void SV_AutoSave_f( void )
 {
 	if( Cmd_Argc() != 1 )
 	{
-		Msg( "Usage: autosave\n" );
+		Con_Printf( "Usage: autosave\n" );
 		return;
 	}
 
@@ -606,7 +606,7 @@ void SV_ChangeLevel_f( void )
 
 	if( c < 2 )
 	{
-		Msg( "Usage: changelevel <map> [landmark]\n" );
+		Con_Printf( "Usage: changelevel <map> [landmark]\n" );
 		return;
 	}
 
@@ -627,13 +627,13 @@ void SV_ChangeLevel_f( void )
 
 	if( flags & MAP_INVALID_VERSION )
 	{
-		Msg( "SV_ChangeLevel: Map %s is invalid or not supported\n", mapname );
+		Con_Printf( "SV_ChangeLevel: Map %s is invalid or not supported\n", mapname );
 		return;
 	}
 	
 	if(!( flags & MAP_IS_EXIST ))
 	{
-		Msg( "SV_ChangeLevel: Map %s doesn't exist\n", mapname );
+		Con_Printf( "SV_ChangeLevel: Map %s doesn't exist\n", mapname );
 		return;
 	}
 
@@ -709,7 +709,7 @@ void SV_ChangeLevel2_f( void )
 
 	if( c < 2 )
 	{
-		Msg( "Usage: changelevel2 <map> [landmark]\n" );
+		Con_Printf( "Usage: changelevel2 <map> [landmark]\n" );
 		return;
 	}
 
@@ -730,13 +730,13 @@ void SV_ChangeLevel2_f( void )
 
 	if( flags & MAP_INVALID_VERSION )
 	{
-		Msg( "SV_ChangeLevel: Map %s is invalid or not supported.\n", mapname );
+		Con_Printf( "SV_ChangeLevel: Map %s is invalid or not supported.\n", mapname );
 		return;
 	}
 	
 	if(!( flags & MAP_IS_EXIST ))
 	{
-		Msg( "SV_ChangeLevel: Map %s doesn't exist.\n", mapname );
+		Con_Printf( "SV_ChangeLevel: Map %s doesn't exist.\n", mapname );
 		return;
 	}
 
@@ -834,13 +834,13 @@ void SV_Kick_f( void )
 
 	if( !SV_Active() )
 	{
-		Msg( "Can't kick when not running local server.");
+		Con_Printf( "Can't kick when not running local server.");
 		return;
 	}
 
 	if( Cmd_Argc() < 2 )
 	{
-		Msg( "Usage: kick <#id|name> [reason]\n" );
+		Con_Printf( "Usage: kick <#id|name> [reason]\n" );
 		return;
 	}
 
@@ -852,13 +852,13 @@ void SV_Kick_f( void )
 
 	if( !cl )
 	{
-		Msg( "Client is not on the server\n" );
+		Con_Printf( "Client is not on the server\n" );
 		return;
 	}
 
 	if( NET_IsLocalAddress( cl->netchan.remote_address ))
 	{
-		Msg( "The local player cannot be kicked!\n" );
+		Con_Printf( "The local player cannot be kicked!\n" );
 		return;
 	}
 
@@ -915,7 +915,7 @@ void SV_EntPatch_f( void )
 		}
 		else
 		{
-			Msg( "Usage: entpatch <mapname>\n" );
+			Con_Printf( "Usage: entpatch <mapname>\n" );
 			return;
 		}
 	}
@@ -936,13 +936,13 @@ void SV_Status_f( void )
 
 	if( !svs.clients || sv.background )
 	{
-		Msg( "^3No server running.\n" );
+		Con_Printf( "^3No server running.\n" );
 		return;
 	}
 
-	Msg( "map: %s\n", sv.name );
-	Msg( "num score ping    name                             lastmsg   address               port  \n" );
-	Msg( "--- ----- ------- -------------------------------- --------- --------------------- ------\n" );
+	Con_Printf( "map: %s\n", sv.name );
+	Con_Printf( "num score ping    name                             lastmsg   address               port  \n" );
+	Con_Printf( "--- ----- ------- -------------------------------- --------- --------------------- ------\n" );
 
 	for( i = 0, cl = svs.clients; i < sv_maxclients->integer; i++, cl++ )
 	{
@@ -951,31 +951,31 @@ void SV_Status_f( void )
 
 		if( !cl->state ) continue;
 
-		Msg( "%3i ", cl->userid );
-		Msg( "%5i ", (int)cl->edict->v.frags );
+		Con_Printf( "%3i ", cl->userid );
+		Con_Printf( "%5i ", (int)cl->edict->v.frags );
 
-		if( cl->state == cs_connected ) Msg( "Connect" );
-		else if( cl->state == cs_zombie ) Msg( "Zombie " );
-		else if( cl->fakeclient ) Msg( "Bot   " );
-		else if( cl->netchan.remote_address.type == NA_LOOPBACK ) Msg( "Local ");
+		if( cl->state == cs_connected ) Con_Printf( "Connect" );
+		else if( cl->state == cs_zombie ) Con_Printf( "Zombie " );
+		else if( cl->fakeclient ) Con_Printf( "Bot   " );
+		else if( cl->netchan.remote_address.type == NA_LOOPBACK ) Con_Printf( "Local ");
 		else
 		{
 			ping = min( cl->ping, 9999 );
-			Msg( "%7i ", ping );
+			Con_Printf( "%7i ", ping );
 		}
 
-		Msg( "%s", cl->name );
+		Con_Printf( "%s", cl->name );
 		l = 33 - Q_strlen( cl->name );
-		for( j = 0; j < l; j++ ) Msg( " " );
-		Msg( "%9g ", ( host.realtime - cl->lastmessage ));
+		for( j = 0; j < l; j++ ) Con_Printf( " " );
+		Con_Printf( "%9g ", ( host.realtime - cl->lastmessage ));
 		s = NET_BaseAdrToString( cl->netchan.remote_address );
-		Msg( "%s", s );
+		Con_Printf( "%s", s );
 		l = 22 - Q_strlen( s );
-		for( j = 0; j < l; j++ ) Msg( " " );
-		Msg( "%5i", cl->netchan.qport );
-		Msg( "\n" );
+		for( j = 0; j < l; j++ ) Con_Printf( " " );
+		Con_Printf( "%5i", cl->netchan.qport );
+		Con_Printf( "\n" );
 	}
-	Msg( "\n" );
+	Con_Printf( "\n" );
 }
 
 /*
@@ -993,7 +993,7 @@ void SV_ConSay_f( void )
 
 	if( !svs.clients || sv.background )
 	{
-		Msg( "^3No server running.\n" );
+		Con_Printf( "^3No server running.\n" );
 		return;
 	}
 
@@ -1036,7 +1036,7 @@ Examine serverinfo string
 */
 void SV_ServerInfo_f( void )
 {
-	Msg( "Server info settings:\n" );
+	Con_Printf( "Server info settings:\n" );
 	Info_Print( Cvar_Serverinfo( ));
 }
 
@@ -1044,26 +1044,26 @@ void SV_LocalInfo_f( void )
 {
 	if ( Cmd_Argc( ) > 3 )
 	{
-		Msg( "Usage: localinfo [ <key> [value] ]\n" );
+		Con_Printf( "Usage: localinfo [ <key> [value] ]\n" );
 		return;
 	}
 
 	if ( Cmd_Argc( ) == 1 )
 	{
-		Msg( "Local info settings:\n" );
+		Con_Printf( "Local info settings:\n" );
 		Info_Print( localinfo );
 		return;
 	}
 	else if ( Cmd_Argc( ) == 2 )
 	{
 		auto value = Info_ValueForKey( localinfo, Cmd_Argv( 1 ) );
-		Msg( "%s: %s\n", Cmd_Argv( 1 ), *value ? value : "Key not exists" );
+		Con_Printf( "%s: %s\n", Cmd_Argv( 1 ), *value ? value : "Key not exists" );
 		return;
 	}
 
 	if ( Cmd_Argv( 1 )[0] == '*' )
 	{
-		Msg( "Star variables cannot be changed.\n" );
+		Con_Printf( "Star variables cannot be changed.\n" );
 		return;
 	}
 
@@ -1081,13 +1081,13 @@ void SV_ClientInfo_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: clientinfo <userid>\n" );
+		Con_Printf( "Usage: clientinfo <userid>\n" );
 		return;
 	}
 
 	if( !SV_SetPlayer( )) return;
-	Msg( "userinfo\n" );
-	Msg( "--------\n" );
+	Con_Printf( "userinfo\n" );
+	Con_Printf( "--------\n" );
 	Info_Print( svs.currentPlayer->userinfo );
 }
 
@@ -1102,13 +1102,13 @@ void SV_ClientUserAgent_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: clientuseragent <userid>\n" );
+		Con_Printf( "Usage: clientuseragent <userid>\n" );
 		return;
 	}
 
 	if( !SV_SetPlayer( )) return;
-	Msg( "useragent\n" );
-	Msg( "---------\n" );
+	Con_Printf( "useragent\n" );
+	Con_Printf( "---------\n" );
 	Info_Print( svs.currentPlayer->useragent );
 }
 
@@ -1156,14 +1156,14 @@ void SV_EdictsInfo_f( void )
 
 	if( sv.state != ss_active )
 	{
-		Msg( "^3No server running.\n" );
+		Con_Printf( "^3No server running.\n" );
 		return;
 	}
 
 	active = pfnNumberOfEntities(); 
-	Msg( "%5i used edicts\n", active );
-	Msg( "%5i free edicts\n", svgame.globals->maxEntities - active );
-	Msg( "%5i total\n", svgame.globals->maxEntities );
+	Con_Printf( "%5i used edicts\n", active );
+	Con_Printf( "%5i free edicts\n", svgame.globals->maxEntities - active );
+	Con_Printf( "%5i total\n", svgame.globals->maxEntities );
 }
 
 /*
@@ -1179,7 +1179,7 @@ void SV_EntityInfo_f( void )
 
 	if( sv.state != ss_active )
 	{
-		Msg( "^3No server running.\n" );
+		Con_Printf( "^3No server running.\n" );
 		return;
 	}
 
@@ -1188,24 +1188,24 @@ void SV_EntityInfo_f( void )
 		ent = EDICT_NUM( i );
 		if( !SV_IsValidEdict( ent )) continue;
 
-		Msg( "%5i origin: %.f %.f %.f", i, ent->v.origin[0], ent->v.origin[1], ent->v.origin[2] );
+		Con_Printf( "%5i origin: %.f %.f %.f", i, ent->v.origin[0], ent->v.origin[1], ent->v.origin[2] );
 
 		if( ent->v.classname )
-			Msg( ", class: %s", STRING( ent->v.classname ));
+			Con_Printf( ", class: %s", STRING( ent->v.classname ));
 
 		if( ent->v.globalname )
-			Msg( ", global: %s", STRING( ent->v.globalname ));
+			Con_Printf( ", global: %s", STRING( ent->v.globalname ));
 
 		if( ent->v.targetname )
-			Msg( ", name: %s", STRING( ent->v.targetname ));
+			Con_Printf( ", name: %s", STRING( ent->v.targetname ));
 
 		if( ent->v.target )
-			Msg( ", target: %s", STRING( ent->v.target ));
+			Con_Printf( ", target: %s", STRING( ent->v.target ));
 
 		if( ent->v.model )
-			Msg( ", model: %s", STRING( ent->v.model ));
+			Con_Printf( ", model: %s", STRING( ent->v.model ));
 
-		Msg( "\n" );
+		Con_Printf( "\n" );
 	}
 }
 /*
@@ -1232,7 +1232,7 @@ void SV_DumpPrecache_f( void )
 
 	if( !f )
 	{
-		Msg( "Could not write precache-dump.txt\n" );
+		Con_Printf( "Could not write precache-dump.txt\n" );
 		return;
 	}
 
@@ -1258,7 +1258,7 @@ void SV_DumpPrecache_f( void )
 		FS_Printf( f, "%s\n", sv.files_precache[index] );
 
 	FS_Close( f );
-	Msg( "Successfully created precache-dump.txt\n" );
+	Con_Printf( "Successfully created precache-dump.txt\n" );
 }
 
 void SV_DumpResList_f( void )
@@ -1268,7 +1268,7 @@ void SV_DumpResList_f( void )
 
 	if( !f )
 	{
-		Msg( "Could not write reslist-dump.txt\n" );
+		Con_Printf( "Could not write reslist-dump.txt\n" );
 		return;
 	}
 
@@ -1280,7 +1280,7 @@ void SV_DumpResList_f( void )
 		FS_Printf( f, sv.reslist.restype[index] == t_sound ? "sound/%s\n":"%s\n", sv.reslist.resnames[index] );
 
 	FS_Close( f );
-	Msg( "Successfully created precache-dump.txt\n" );
+	Con_Printf( "Successfully created precache-dump.txt\n" );
 
 }
 
@@ -1297,7 +1297,7 @@ void Rcon_Redirect_f( void )
 
 	if( !host.rd.target )
 	{
-		Msg( "redirect is only valid from rcon\n" );
+		Con_Printf( "redirect is only valid from rcon\n" );
 		return;
 	}
 
@@ -1305,7 +1305,7 @@ void Rcon_Redirect_f( void )
 		lines = Q_atoi( Cmd_Argv( 1 ) );
 
 	host.rd.lines = lines;
-	Msg( "Redirection enabled for next %d lines\n", lines );
+	Con_Printf( "Redirection enabled for next %d lines\n", lines );
 }
 
 /*

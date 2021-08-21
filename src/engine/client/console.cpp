@@ -144,7 +144,7 @@ void Con_SetColor_f( void )
 	switch( Cmd_Argc() )
 	{
 	case 1:
-		Msg( "\"con_color\" is %i %i %i\n", g_color_table[7][0], g_color_table[7][1], g_color_table[7][2] );
+		Con_Printf( "\"con_color\" is %i %i %i\n", g_color_table[7][0], g_color_table[7][1], g_color_table[7][2] );
 		break;
 	case 2:
 		VectorSet( color, g_color_table[7][0], g_color_table[7][1], g_color_table[7][2] );
@@ -156,7 +156,7 @@ void Con_SetColor_f( void )
 		Con_DefaultColor( color[0], color[1], color[2] );
 		break;
 	default:
-		Msg( "Usage: con_color \"r g b\"\n" );
+		Con_Printf( "Usage: con_color \"r g b\"\n" );
 		break;
 	}
 }
@@ -239,8 +239,6 @@ Con_MessageMode_f
 */
 void Con_MessageMode_f( void )
 {
-	if (UI_HandleMessageMode_f())
-		return;
 	if( Cmd_Argc() == 2 )
 		Q_strncpy( con.chat_cmd, Cmd_Argv( 1 ), sizeof( con.chat_cmd ));
 	else Q_strncpy( con.chat_cmd, "say", sizeof( con.chat_cmd ));
@@ -1352,7 +1350,7 @@ void Key_Console( int key )
 		Cbuf_AddText( "\n" );
 
 		// echo to console
-		Msg( ">%s\n", con.input.buffer );
+		Con_Printf( ">%s\n", con.input.buffer );
 
 		// copy line to history buffer
 		con.historyLines[con.nextHistoryLine % CON_HISTORY] = con.input;

@@ -104,11 +104,11 @@ void ID_BloomFilter_f( void )
 	for( i = 1; i < Cmd_Argc(); i++ )
 		value |= BloomFilter_ProcessStr( Cmd_Argv( i ) );
 
-	Msg( "%d %016llX\n", BloomFilter_Weight( value ), value );
+	Con_Printf( "%d %016llX\n", BloomFilter_Weight( value ), value );
 
 	// test
 	// for( i = 1; i < Cmd_Argc(); i++ )
-	//	Msg( "%s: %d\n", Cmd_Argv( i ), BloomFilter_ContainsString( value, Cmd_Argv( i ) ) );
+	//	Con_Printf( "%s: %d\n", Cmd_Argv( i ), BloomFilter_ContainsString( value, Cmd_Argv( i ) ) );
 }
 
 qboolean ID_VerifyHEX( const char *hex )
@@ -156,9 +156,9 @@ qboolean ID_VerifyHEX( const char *hex )
 void ID_VerifyHEX_f( void )
 {
 	if( ID_VerifyHEX( Cmd_Argv( 1 ) ) )
-		Msg( "Good\n" );
+		Con_Printf( "Good\n" );
 	else
-		Msg( "Bad\n" );
+		Con_Printf( "Bad\n" );
 }
 
 #ifdef __linux__
@@ -284,9 +284,9 @@ void ID_TestCPUInfo_f( void )
 	bloomfilter_t value = 0;
 
 	if( ID_ProcessCPUInfo( &value ) )
-		Msg( "Got %016llX\n", value );
+		Con_Printf( "Got %016llX\n", value );
 	else
-		Msg( "Could not get serial\n" );
+		Con_Printf( "Could not get serial\n" );
 }
 
 #endif
@@ -518,7 +518,7 @@ uint ID_CheckRawId( bloomfilter_t filter )
 #endif
 
 #if 0
-	Msg( "ID_CheckRawId: %d\n", count );
+	Con_Printf( "ID_CheckRawId: %d\n", count );
 #endif
 	return count;
 }
@@ -538,7 +538,7 @@ void ID_Check()
 	{
 		id = 0;
 #if 0
-		Msg( "ID_Check(): fail %d\n", weight );
+		Con_Printf( "ID_Check(): fail %d\n", weight );
 #endif
 		return;
 	}
@@ -546,7 +546,7 @@ void ID_Check()
 	if( ID_CheckRawId( id ) < mincount )
 		id = 0;
 #if 0
-	Msg( "ID_Check(): success %d\n", weight );
+	Con_Printf( "ID_Check(): success %d\n", weight );
 #endif
 }
 
@@ -662,6 +662,6 @@ void ID_Init( void )
 #endif
 	FS_WriteFile( ".xash_id", va("%016llX", id^GAME_XOR_MASK), 16 );
 #if 0
-	Msg("MD5 id: %s\nRAW id:%016llX\n", id_md5, id );
+	Con_Printf("MD5 id: %s\nRAW id:%016llX\n", id_md5, id );
 #endif
 }

@@ -797,46 +797,46 @@ R_RenderInfo_f
 */
 void R_RenderInfo_f( void )
 {
-	Msg( "\n" );
-	Msg( "GL_VENDOR: %s\n", glConfig.vendor_string );
-	Msg( "GL_RENDERER: %s\n", glConfig.renderer_string );
-	Msg( "GL_VERSION: %s\n", glConfig.version_string );
+	Con_Printf( "\n" );
+	Con_Printf( "GL_VENDOR: %s\n", glConfig.vendor_string );
+	Con_Printf( "GL_RENDERER: %s\n", glConfig.renderer_string );
+	Con_Printf( "GL_VERSION: %s\n", glConfig.version_string );
 
 	// don't spam about extensions
 	if( host.developer >= 4 )
-		Msg( "GL_EXTENSIONS: %s\n", glConfig.extensions_string );
+		Con_Printf( "GL_EXTENSIONS: %s\n", glConfig.extensions_string );
 
-	Msg( "GL_MAX_TEXTURE_SIZE: %i\n", glConfig.max_2d_texture_size );
+	Con_Printf( "GL_MAX_TEXTURE_SIZE: %i\n", glConfig.max_2d_texture_size );
 
 	if( GL_Support( GL_ARB_MULTITEXTURE ))
-		Msg( "GL_MAX_TEXTURE_UNITS_ARB: %i\n", glConfig.max_texture_units );
+		Con_Printf( "GL_MAX_TEXTURE_UNITS_ARB: %i\n", glConfig.max_texture_units );
 	if( GL_Support( GL_TEXTURECUBEMAP_EXT ))
-		Msg( "GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB: %i\n", glConfig.max_cubemap_size );
+		Con_Printf( "GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB: %i\n", glConfig.max_cubemap_size );
 	if( GL_Support( GL_ANISOTROPY_EXT ))
-		Msg( "GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT: %.1f\n", glConfig.max_texture_anisotropy );
+		Con_Printf( "GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT: %.1f\n", glConfig.max_texture_anisotropy );
 	if( GL_Support( GL_TEXTURE_LODBIAS ))
-		Msg( "GL_MAX_TEXTURE_LODBIAS: %f\n", glConfig.max_texture_lodbias );
+		Con_Printf( "GL_MAX_TEXTURE_LODBIAS: %f\n", glConfig.max_texture_lodbias );
 	if( glConfig.texRectangle )
-		Msg( "GL_MAX_RECTANGLE_TEXTURE_SIZE_NV: %i\n", glConfig.max_2d_rectangle_size );
+		Con_Printf( "GL_MAX_RECTANGLE_TEXTURE_SIZE_NV: %i\n", glConfig.max_2d_rectangle_size );
 	if( GL_Support( GL_SHADER_GLSL100_EXT ))
 	{
-		Msg( "GL_MAX_TEXTURE_COORDS_ARB: %i\n", glConfig.max_texture_coords );
-		Msg( "GL_MAX_TEXTURE_IMAGE_UNITS_ARB: %i\n", glConfig.max_teximage_units );
-		Msg( "GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB: %i\n", glConfig.max_vertex_uniforms );
-		Msg( "GL_MAX_VERTEX_ATTRIBS_ARB: %i\n", glConfig.max_vertex_attribs );
+		Con_Printf( "GL_MAX_TEXTURE_COORDS_ARB: %i\n", glConfig.max_texture_coords );
+		Con_Printf( "GL_MAX_TEXTURE_IMAGE_UNITS_ARB: %i\n", glConfig.max_teximage_units );
+		Con_Printf( "GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB: %i\n", glConfig.max_vertex_uniforms );
+		Con_Printf( "GL_MAX_VERTEX_ATTRIBS_ARB: %i\n", glConfig.max_vertex_attribs );
 	}
 
-	Msg( "\n" );
-	Msg( "MODE: %i x %i\n", scr_width->integer, scr_height->integer );
-	Msg( "GAMMA: %s\n", "software" );
-	Msg( "\n" );
-	Msg( "PICMIP: %i\n", gl_picmip->integer );
-	Msg( "SKYMIP: %i\n", gl_skymip->integer );
-	Msg( "TEXTUREMODE: %s\n", gl_texturemode->string );
-	Msg( "VERTICAL SYNC: %s\n", gl_swapInterval->integer ? "enabled" : "disabled" );
-	Msg( "Color %d bits, Alpha %d bits, Depth %d bits, Stencil %d bits\n", glConfig.color_bits,
+	Con_Printf( "\n" );
+	Con_Printf( "MODE: %i x %i\n", scr_width->integer, scr_height->integer );
+	Con_Printf( "GAMMA: %s\n", "software" );
+	Con_Printf( "\n" );
+	Con_Printf( "PICMIP: %i\n", gl_picmip->integer );
+	Con_Printf( "SKYMIP: %i\n", gl_skymip->integer );
+	Con_Printf( "TEXTUREMODE: %s\n", gl_texturemode->string );
+	Con_Printf( "VERTICAL SYNC: %s\n", gl_swapInterval->integer ? "enabled" : "disabled" );
+	Con_Printf( "Color %d bits, Alpha %d bits, Depth %d bits, Stencil %d bits\n", glConfig.color_bits,
 		glConfig.alpha_bits, glConfig.depth_bits, glConfig.stencil_bits );
-	Msg( "MSAA samples: %d\n", glConfig.msaasamples );
+	Con_Printf( "MSAA samples: %d\n", glConfig.msaasamples );
 }
 
 //=======================================================================

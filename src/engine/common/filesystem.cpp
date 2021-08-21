@@ -470,19 +470,19 @@ void FS_Path_f( void )
 {
 	searchpath_t	*s;
 
-	Msg( "Current search path:\n" );
+	Con_Printf( "Current search path:\n" );
 
 	for( s = fs_searchpaths; s; s = s->next )
 	{
-		if( s->pack ) Msg( "%s (%i files)", s->pack->filename, s->pack->numfiles );
-		else if( s->wad ) Msg( "%s (%i files)", s->wad->filename, s->wad->numlumps );
-		else Msg( "%s", s->filename );
+		if( s->pack ) Con_Printf( "%s (%i files)", s->pack->filename, s->pack->numfiles );
+		else if( s->wad ) Con_Printf( "%s (%i files)", s->wad->filename, s->wad->numlumps );
+		else Con_Printf( "%s", s->filename );
 
-		if( s->flags & FS_GAMERODIR_PATH ) Msg( " ^2rodir^7" );
-		if( s->flags & FS_GAMEDIR_PATH ) Msg( " ^2gamedir^7" );
-		if( s->flags & FS_CUSTOM_PATH ) Msg ( " ^2custom^7" );
+		if( s->flags & FS_GAMERODIR_PATH ) Con_Printf( " ^2rodir^7" );
+		if( s->flags & FS_GAMEDIR_PATH ) Con_Printf( " ^2gamedir^7" );
+		if( s->flags & FS_CUSTOM_PATH ) Con_Printf ( " ^2custom^7" );
 
-		Msg( "\n" );
+		Con_Printf( "\n" );
 	}
 }
 
@@ -504,11 +504,11 @@ void FS_Crc32_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Use crc32 <path>\n");
+		Con_Printf( "Use crc32 <path>\n");
 		return;
 	}
 	if( CRC32_File( &crc, Cmd_Argv( 1 ) ) )
-		Msg( "0x%x\n", crc );
+		Con_Printf( "0x%x\n", crc );
 }
 
 void FS_MD5_f( void )
@@ -517,7 +517,7 @@ void FS_MD5_f( void )
 
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Use md5 <path>\n");
+		Con_Printf( "Use md5 <path>\n");
 		return;
 	}
 
@@ -528,7 +528,7 @@ void FS_MD5_f( void )
 
 		for( i = 0; i < 16; i++ )
 			phex += Q_sprintf( phex, "%02hhx", hash[i] );
-		Msg( "%s\n", hex );
+		Con_Printf( "%s\n", hex );
 	}
 }
 
@@ -3951,7 +3951,7 @@ fs_api_t g_fsapi =
 	FS_FindFile,
 	FS_GetSearchPaths,
 	FS_AddPack_Fullpath,
-	Msg,
+	Con_Printf,
 	FSAPI_MemAlloc,
 	_Mem_Free
 };

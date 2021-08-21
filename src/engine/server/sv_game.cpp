@@ -676,7 +676,7 @@ void SV_WriteEntityPatch( const char *filename )
 		entities = (char *)Z_Malloc( lumplen + 1 );
 		FS_Read( f, entities, lumplen );
 		FS_WriteFile( va( "maps/%s.ent", filename ), entities, lumplen );
-		Msg( "Write 'maps/%s.ent'\n", filename );
+		Con_Printf( "Write 'maps/%s.ent'\n", filename );
 		Mem_Free( entities );
 	}
 
@@ -3226,14 +3226,14 @@ string_t SV_AllocString( const char *szValue )
 #ifdef XASH_64BIT
 void SV_PrintStr64Stats_f( void )
 {
-	Msg( "====================\n" );
-	Msg( "64 bit string pool statistics\n" );
-	Msg( "====================\n" );
-	Msg( "string array size: %lu\n", str64.maxstringarray );
-	Msg( "total alloc %lu\n", str64.totalalloc );
-	Msg( "maximum array usage: %lu\n", str64.maxalloc );
-	Msg( "overflow counter: %lu\n", str64.numoverflows );
-	Msg( "dup string counter: %lu\n", str64.numdups );
+	Con_Printf( "====================\n" );
+	Con_Printf( "64 bit string pool statistics\n" );
+	Con_Printf( "====================\n" );
+	Con_Printf( "string array size: %lu\n", str64.maxstringarray );
+	Con_Printf( "total alloc %lu\n", str64.totalalloc );
+	Con_Printf( "maximum array usage: %lu\n", str64.maxalloc );
+	Con_Printf( "overflow counter: %lu\n", str64.numoverflows );
+	Con_Printf( "dup string counter: %lu\n", str64.numdups );
 }
 #endif
 
@@ -4450,9 +4450,7 @@ pfnEndSection
 */
 void pfnEndSection( const char *pszSection )
 {
-	if( !Q_stricmp( "oem_end_credits", pszSection ))
-		Host_Credits ();
-	else Cbuf_AddText( va( "endgame \"%s\"\n", pszSection ));
+	Cbuf_AddText( va( "endgame \"%s\"\n", pszSection ));
 }
 
 /*

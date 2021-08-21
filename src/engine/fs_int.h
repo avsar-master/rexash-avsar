@@ -121,7 +121,7 @@ typedef struct fs_api_s
 	qboolean (*FS_AddPack_Fullpath)( const char *pakfile, qboolean *already_loaded, qboolean keep_plain_dirs, int flags );
 
 	// log spew
-	void (*Msg)( const char *pMsg, ... );
+	void (*Con_Printf)( const char *pMsg, ... );
 
 	// memory utils
 	void *(*_Mem_Alloc)( size_t size, const char *filename, int fileline );

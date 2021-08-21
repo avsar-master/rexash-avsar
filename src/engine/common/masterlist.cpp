@@ -118,7 +118,7 @@ static void NET_AddMaster_f( void )
 {
 	if( Cmd_Argc() != 2 )
 	{
-		Msg( "Usage: addmaster <address>\n");
+		Con_Printf( "Usage: addmaster <address>\n");
 		return;
 	}
 
@@ -155,12 +155,12 @@ static void NET_ListMasters_f( void )
 	master_t *list;
 	int i;
 
-	Msg( "Master servers\n=============\n" );
+	Con_Printf( "Master servers\n=============\n" );
 
 
 	for( i = 1, list = ml.list; list; i++, list = list->next )
 	{
-		Msg( "%d\t%s\n", i, list->address );
+		Con_Printf( "%d\t%s\n", i, list->address );
 	}
 }
 

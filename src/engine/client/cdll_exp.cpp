@@ -39,6 +39,8 @@ GNU General Public License for more details.
 #include "voice.h"
 #include "cdll_exp_api.h"
 
+#include "vgui/ISurface.h"
+#include "vgui_controls/controls.h"
 
 /*
 =========
@@ -621,6 +623,9 @@ set color for anything
 */
 void pfnDrawSetTextColor( float r, float g, float b )
 {
+	//AVSARTODO
+	vgui2::surface()->DrawSetTextColor(r * 255, g * 255, b * 255, 255);
+
 	// bound color and convert to byte
 	clgame.ds.textColor[0] = (byte)bound( 0, r * 255, 255 );
 	clgame.ds.textColor[1] = (byte)bound( 0, g * 255, 255 );
@@ -654,7 +659,7 @@ prints directly into console (can skip notify)
 void pfnConsolePrint( const char *string )
 {
 	if( !string || !*string ) return;
-	if( *string != 1 ) Msg( "%s", string ); // show notify
+	if( *string != 1 ) Con_Printf( "%s", string ); // show notify
 	else Con_NPrintf( 0, "%s", (char *)string + 1 ); // skip notify
 }
 
@@ -1556,7 +1561,7 @@ AVSARTODO: call CareerUI
 */
 void* GetCareerGameInterface( void )
 {
-	Msg( "^1Career GameInterface called!\n" );
+	Con_Printf( "^1Career GameInterface called!\n" );
 	return NULL;
 }
 
@@ -1652,6 +1657,13 @@ AVSARTODO: implement
 void pfnVguiWrap2_GetMouseDelta( int *x, int *y )
 {
 }
+
+
+void* pfnVGui_GetPanel()
+{
+	return NULL;
+}
+
 
 // engine callbacks
 cl_enginefunc_t cl_enginefuncs = 

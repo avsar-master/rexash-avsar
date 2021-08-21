@@ -233,11 +233,6 @@ void R_ClearStaticEntities()
 
 }
 
-void Host_Credits()
-{
-
-}
-
 qboolean UI_CreditsActive()
 {
 	return false;
