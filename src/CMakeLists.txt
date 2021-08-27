@@ -1,5 +1,4 @@
 add_subdirectory(external)
-add_subdirectory(filesystem_helper)
 add_subdirectory(engine)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -221,7 +220,7 @@ target_include_directories(vgui_controls PRIVATE
     ./pm_shared
 )
 
-target_link_libraries(vgui_controls PRIVATE filesystem_helper tier0 tier1 wrapper)
+target_link_libraries(vgui_controls PRIVATE tier0 tier1 wrapper)
 
 add_library(wrapper STATIC
     wrapper/deadfilesystem.cpp

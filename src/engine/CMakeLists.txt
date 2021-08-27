@@ -215,6 +215,7 @@ set(XASH_ENGINE_CLIENT_SOURCES
    client/vgui2/udll_int.cpp
    client/vgui2/vgui_draw.cpp
    client/vgui2/vgui_int.cpp
+   ../public/FileSystem_Helpers.cpp
    ../tier1/interface.cpp
    ../vgui2/vgui_surfacelib/FontAmalgam.cpp
    ../vgui2/vgui_surfacelib/FontManager.cpp

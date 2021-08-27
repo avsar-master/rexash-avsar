@@ -20,7 +20,7 @@
 #include <vgui_controls/AnimationController.h>
 
 #include <filesystem.h>
-#include <filesystem_helper/FileSystem_Helpers.h>
+#include <public/FileSystem_Helpers.h>
 
 #include <stdio.h>
 #include <math.h>
